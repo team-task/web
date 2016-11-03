@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/css/tt.css" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/components/login.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/components/workspace.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/directives.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/lib/angular-mongolab.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/routes.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/services.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/tt.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/manifest.json" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/views/login.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/views/workspace.html" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

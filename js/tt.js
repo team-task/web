@@ -1,6 +1,15 @@
 angular.module('team-task', [
-    'ui.router', 'ngResource', 'ui.bootstrap', 'angular.filter'
+    'ui.router', 'ngResource', 'mongolabResourceHttp', 'ui.bootstrap', 'angular.filter', 'ngAvatar'
 ])
+.constant('MONGOLAB_CONFIG', {API_KEY: 'YXgR-q92vuVCKlSm-ji3nplDTE7rHIQh', DB_NAME: 'tt'})
+.run(function ($rootScope, $state, $window) {
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+        var currentUser = angular.fromJson($window.sessionStorage.getItem('usuarioLogado'));
+        if(currentUser) {
+            $rootScope.usuarioLogado = currentUser;
+        }
+    });
+})
 .filter ('sumByKey', function () {
 	return function(data, key) {
         if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
@@ -15,7 +24,6 @@ angular.module('team-task', [
         return sum;
     };
 });
-
 
 $(document).ready(function () {
 	$(document).on('click', '.panel-heading span.clickable', function(e){

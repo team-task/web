@@ -3,7 +3,7 @@ angular.module('team-task')
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'views/directives/header.html',
+        templateUrl: 'views/header.html',
         controller: ['$scope', '$rootScope', function ($scope, $rootScope) {
             
         }]
