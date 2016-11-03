@@ -27,7 +27,6 @@ function($scope, $rootScope, $state, Pessoa, $window) {
 				var nomeSimples = nomes[0];
 				if(nomes.length > 1) {
 					iniciais += nomes[1].substring(0, 1);
-					nomeSimples += " " + nomes[1];
 				}
 				logado.iniciais = iniciais.toUpperCase();
 				logado.nomeSimples = nomeSimples;

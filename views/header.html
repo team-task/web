@@ -19,17 +19,25 @@
                     <li>
                         <a class="dropdown-toggle clickable" data-toggle="dropdown">
                             <ng-avatar class="tt-avatar-header" width="27" initials="{{usuarioLogado.iniciais}}" auto-color="true"></ng-avatar>
-                            &nbsp;{{usuarioLogado.nomeSimples}}
+                            &nbsp;{{usuarioLogado.nomeSimples}}&nbsp;<span class="caret"></span>
+                        </a>
                         <ul class="dropdown-menu dropdown-user">
                             <li>
-                                <a ui-sref="home"><i class="fa fa-user fa-fw"></i>&nbsp;Meu Perfil</a>
-                            </li>
-                            <li>
-                                <a ui-sref="home"><i class="fa fa-gear fa-fw"></i>&nbsp;Configurações</a>
+                                <div class="navigation-header-usermenu-info">
+                                    <ng-avatar class="tt-avatar-menu" width="50" initials="{{usuarioLogado.iniciais}}" auto-color="true"></ng-avatar>
+                                    <div class="avatar-menu-name">
+                                        {{usuarioLogado.nome}}
+                                        <a ui-sref="login" class="profile-link">Perfil</a>
+                                    </div>
+                                </div>
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a ui-sref="home"><i class="fa fa-sign-out fa-fw"></i>&nbsp;Sair</a>
+                                <a ui-sref="workspace"><i class="fa fa-gear fa-fw"></i>&nbsp;Configurações</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a ui-sref="login"><i class="fa fa-sign-out fa-fw"></i>&nbsp;Sair</a>
                             </li>
                         </ul>
                     </li>

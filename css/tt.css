@@ -4,6 +4,7 @@ html {
 
 body {
     height: 100%;
+    background-color: #f8f8f8;
 }
 
 .mainsec {
@@ -136,4 +137,43 @@ form.login label {
 .tt-avatar-header img {
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     margin-right: 9px;
+}
+
+.tt-avatar-menu {
+    float: left;
+}
+
+.avatar-menu-name {
+    float: right;
+    width: 160px;
+    min-height: 50px;
+}
+
+.navigation-header-usermenu-info {
+    width: 250px;
+    padding: 11px 14px;
+    min-height: 72px;
+}
+
+.profile-link {
+    color: #4680bf;
+    display: block;
+    margin-top: 5px;
+    padding: 0!important;
+}
+
+.global-navigation-panel {
+    background-color: #ffffff;
+}
+
+.task-list-panel {
+    background-color: #ffffff;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+    background-color: #ffffff;
 }
