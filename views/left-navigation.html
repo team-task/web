@@ -1,0 +1,23 @@
+<div class="global-navigation-panel">
+    <div class="navbar-default navbar-side-menu" role="navigation">
+        <ul class="nav" id="side-menu">
+            <li>
+                <a data-toggle="collapse" aria-expanded="false" aria-controls="collapseProjects"
+                   data-target="#collapseProjects">PROJETOS</a>
+                <ul class="nav collapse" id="collapseProjects">
+                    <li ng-repeat="projeto in projetos">
+                       <a>{{projeto.nome}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-divider"></li>
+            <li>
+                <a ui-sref="workspace-projects">PESSOAS</a>
+            </li>
+            <li class="nav-divider"></li>
+            <li>
+                <a ui-sref="workspace-projects">GRUPOS</a>
+            </li>
+        </ul>
+    </div>
+</div>

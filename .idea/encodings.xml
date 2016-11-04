@@ -11,7 +11,7 @@
     <file url="file://$PROJECT_DIR$/js/tt.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/manifest.json" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/views/login.html" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/views/workspace.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/views/workspace-projects.html" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

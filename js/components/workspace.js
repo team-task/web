@@ -1,5 +1,5 @@
 angular.module('team-task')
-    .controller('WorkspaceController', [ '$scope', '$rootScope', '$state',
-        function($scope, $rootScope, $state) {
+    .controller('WorkspaceProjectsController', [ '$scope', '$rootScope', '$state', 'Projeto',
+        function($scope, $rootScope, $state, Projeto) {
 
         } ]);

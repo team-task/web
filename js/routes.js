@@ -7,9 +7,9 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             templateUrl: 'views/login.html',
             controller: 'LoginController'
         })
-        .state('workspace', {
-            url: '/workspace',
-            templateUrl: 'views/workspace.html',
-            controller: 'WorkspaceController'
+        .state('workspace-projects', {
+            url: '/workspace/projects',
+            templateUrl: 'views/workspace-projects.html',
+            controller: 'WorkspaceProjectsController'
         });
 });

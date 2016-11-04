@@ -31,7 +31,7 @@ function($scope, $rootScope, $state, Pessoa, $window) {
 				logado.iniciais = iniciais.toUpperCase();
 				logado.nomeSimples = nomeSimples;
 				$window.sessionStorage.setItem('usuarioLogado', angular.toJson(pessoas[0]));
-				$state.go('workspace');
+				$state.go('workspace-projects');
 			} else {
 				$scope.errorLogin = "Login e ou senha inválidos";
 				waitingDialog.hide();
