@@ -18,17 +18,34 @@ body {
     overflow: hidden;
 }
 
-#wrapper.login-wrapper .content {
-    height: 66.833%;
-    background-color: #40cd65;
-    overflow: auto;
+.wrapper section {
+    padding-top: 9px;
 }
 
-#wrapper.login-wrapper .header .logo img {
-    max-width: 100%;
+#wrapper.login-wrapper .content {
+    height: 66.833%;
+    max-width: 60%;
+    background-color: #40cd65;
+    overflow: auto;
+    margin: 0 auto;
+}
+
+#wrapper.login-wrapper .header .logo .img-fundo {
+    z-index: -1;
     position: absolute;
-    bottom: 25%;
     left: 50%;
+    max-width: 60%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+#wrapper.login-wrapper .header .logo .img-logo {
+    position: absolute;
+    left: 50%;
+    top: 50px;
     -webkit-transform: translateX(-50%);
     -moz-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
@@ -37,7 +54,6 @@ body {
 }
 
 #wrapper.login-wrapper .header .logo {
-    max-width: 60%;
     height: 100%;
     margin: 0 auto;
     position: relative;
@@ -180,4 +196,8 @@ form.login label {
     width: 100%;
     height: 30px;
     background-color: #ffffff;
+}
+
+.pointer-action {
+    cursor: pointer;
 }

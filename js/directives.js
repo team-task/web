@@ -39,6 +39,9 @@ angular.module('team-task')
                         });
                     }
                 });
+                $scope.addToFav = function () {
+                    console.log('added to favs');
+                };
             }]
         };
     });
