@@ -150,6 +150,10 @@ form.login label {
     }
 }
 
+.tt-brand {
+   padding: 5px 15px;
+}
+
 .space-top {
     margin-top: 20px;
 }
@@ -160,6 +164,14 @@ form.login label {
 
 .tt-navbar {
     height: 52px;
+}
+
+.tt-navbar-links a {
+    color: #333333;
+}
+
+.tt-sub-menu {
+    padding-left: 15px;
 }
 
 .tt-avatar-header {
@@ -216,4 +228,9 @@ form.login label {
 
 .pointer-action {
     cursor: pointer;
+}
+
+.mini-progress {
+    height: 6px;
+    margin-bottom: 0;
 }
