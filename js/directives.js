@@ -14,8 +14,8 @@ angular.module('team-task')
             restrict: 'A',
             replace: true,
             templateUrl: 'views/left-navigation.html',
-            controller: ['$scope', '$rootScope', 'Projeto', 'Grupo', 'Atividade',
-                function ($scope, $rootScope, Projeto, Grupo, Atividade) {
+            controller: ['$scope', '$rootScope', 'Projeto', 'Grupo', 'Atividade', '$filter',
+                function ($scope, $rootScope, Projeto, Grupo, Atividade, $filter) {
                     var idusuario = $rootScope.usuarioLogado._id.$oid;
                     var qGrupo = {
                         "$or": [
@@ -38,14 +38,18 @@ angular.module('team-task')
                             Projeto.query(pQuery).then(function (projetos) {
                                 $scope.projetos = projetos;
                             });
-                            var aQuery = {
-
-                            };
-                            Atividade.query(aQuery).then(function () {
-
-                            });
                             $scope.grupos = grupos;
-
+                            var aQuery = {
+                                "grupo": {
+                                    "$in": listaGrupos
+                                }
+                            };
+                            Atividade.query(aQuery).then(function (atividades) {
+                                $scope.atividades = atividades;
+                                angular.forEach(grupos, function (grupo, idGrupo) {
+                                    grupo.atividades = $filter('filter')(atividades, {'grupo' : grupo._id.$oid});
+                                });
+                            });
                         }
                     });
                     $scope.addToFav = function () {

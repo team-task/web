@@ -24,9 +24,10 @@
                                 data-target="#collapseActivities" class="pointer-action pull-right fa fa-arrow-down"></span>
                 </a>
                 <ul class="nav collapse" id="collapseActivities">
-                    <li class="tt-sub-menu" ng-repeat="atividade in atividades">
-                        <a ui-sref="activity({'id': atividade._id.$oid})">
-                            {{atividade.nome}}
+                    <li class="tt-sub-menu" ng-repeat="grupo in grupos">
+                        <a ui-sref="activity({'id': grupo._id.$oid})">
+                            {{grupo.nome}}
+                            <span class="badge pull-right">{{grupo.atividades.length}}</span>
                         </a>
                     </li>
                 </ul>
