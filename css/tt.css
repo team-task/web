@@ -187,6 +187,11 @@ form.login label {
     float: left;
 }
 
+.tt-avatar-table {
+    float: left;
+    margin-right: 5px;
+}
+
 .avatar-menu-name {
     float: right;
     width: 160px;

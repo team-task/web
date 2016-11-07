@@ -1,4 +1,4 @@
-<div class="wrapper" ng-controller="WorkspaceProjectsController">
+<div class="wrapper" ng-controller="WorkspaceActivitiesController">
     <header header>
     </header>
     <div class="progress mini-progress" ng-show="showLoading">
@@ -12,29 +12,29 @@
             <div left-navigation></div>
         </div>
         <div class="col-md-9">
-            <div class="task-list-panel container-fluid" ng-init="initWorkspaceProjects()">
+            <div class="task-list-panel container-fluid" ng-init="initWorkspaceActivities()">
                 <div>
 
                 </div>
                 <table datatable="ng" dt-options="dtOptions" class="table table-hover">
                     <thead>
                         <tr>
-                            <td>Projeto</td>
-                            <td>Inicio</td>
-                            <td>Até</td>
-                            <td>Duração</td>
-                            <td>Status</td>
+                            <td>Grupo</td>
                             <td>Atividades</td>
+                            <td>Gerente</td>
+                            <td>Recursos</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="projeto in projetos">
-                            <td>{{projeto.nome}}</td>
-                            <td>{{projeto.inicio.$date | date}}</td>
-                            <td>{{projeto.fim.$date | date}}</td>
-                            <td>{{projeto.fim.$date | amDifference : projeto.inicio.$date : 'days'}}</td>
-                            <td>{{projeto.status}}</td>
-                            <td>{{projeto.atividades.length}}</td>
+                        <tr ng-repeat="grupo in grupos">
+                            <td>{{grupo.nome}}</td>
+                            <td>{{grupo.atividades.length}}</td>
+                            <td><ng-avatar width="27" class="tt-avatar-table" auto-color="true" initials="{{grupo.pessoaGerente.iniciais}}"></ng-avatar></td>
+                            <td>
+                                <span ng-repeat="recurso in grupo.pessoaRecurso">
+                                    <ng-avatar width="27" class="tt-avatar-table" initials="{{recurso.iniciais}}" auto-color="true"></ng-avatar>
+                                </span>&nbsp;
+                            </td>
                         </tr>
                     </tbody>
                 </table>
