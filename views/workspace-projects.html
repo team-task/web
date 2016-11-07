@@ -24,6 +24,7 @@
                             <td>Até</td>
                             <td>Duração</td>
                             <td>Status</td>
+                            <td>Atividades</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,6 +34,7 @@
                             <td>{{projeto.fim.$date | date}}</td>
                             <td>{{projeto.fim.$date | amDifference : projeto.inicio.$date : 'days'}}</td>
                             <td>{{projeto.status}}</td>
+                            <td>{{projeto.atividades.length}}</td>
                         </tr>
                     </tbody>
                 </table>

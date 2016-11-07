@@ -18,7 +18,18 @@
             </li>
             <li class="nav-divider"></li>
             <li>
-                <a ui-sref="workspace-projects" class="pointer-action">Atividades</a>
+                <a ui-sref="workspace-projects" class="pointer-action">
+                    Atividades
+                    &nbsp;<span data-toggle="collapse" aria-expanded="false" aria-controls="collapseActivities"
+                                data-target="#collapseActivities" class="pointer-action pull-right fa fa-arrow-down"></span>
+                </a>
+                <ul class="nav collapse" id="collapseActivities">
+                    <li class="tt-sub-menu" ng-repeat="atividade in atividades">
+                        <a ui-sref="activity({'id': atividade._id.$oid})">
+                            {{atividade.nome}}
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-divider"></li>
             <li>
