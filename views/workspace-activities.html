@@ -7,43 +7,54 @@
             <span class="sr-only">100% Complete</span>
         </div>
     </div>
-    <section>
-        <div class="col-md-3">
-            <div left-navigation></div>
-        </div>
-        <div class="col-md-9">
-            <div class="task-list-panel container-fluid" ng-init="initWorkspaceActivities()">
-                <div>
-
-                </div>
-                <table datatable="ng" dt-options="dtOptions" class="table table-hover">
-                    <thead>
+    <div class="container-fluid tt-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div left-navigation></div>
+            </div>
+            <div class="col-md-9">
+                <div class="task-list-panel container-fluid" ng-init="initWorkspaceActivities()">
+                    <div>
+                        <h3 class="page-header">
+                            Atividades
+                            <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"><i class="fa fa-plus"></i></button>
+                        </h3>
+                    </div>
+                    <table datatable="ng" dt-options="dtAOptions" class="table table-hover">
+                        <thead>
                         <tr>
                             <td>Grupo</td>
                             <td>Atividades</td>
                             <td>Gerente</td>
                             <td>Recursos</td>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <tr ng-repeat="grupo in grupos">
                             <td>{{grupo.nome}}</td>
                             <td>{{grupo.atividades.length}}</td>
-                            <td><ng-avatar width="27" class="tt-avatar-table" auto-color="true" initials="{{grupo.pessoaGerente.iniciais}}"></ng-avatar></td>
+                            <td>
+                                <ng-avatar width="27" bind="true" class="tt-avatar-table" auto-color="true"
+                                           initials="{{grupo.pessoaGerente.iniciais}}"></ng-avatar>
+                            </td>
                             <td>
                                 <span ng-repeat="recurso in grupo.pessoaRecurso">
-                                    <ng-avatar width="27" class="tt-avatar-table" initials="{{recurso.iniciais}}" auto-color="true"></ng-avatar>
+                                    <ng-avatar width="27" bind="true" class="tt-avatar-table"
+                                               initials="{{recurso.iniciais}}" auto-color="true"></ng-avatar>
                                 </span>&nbsp;
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+    <!--
     <footer class="footer">
         <div class="container text-right">
             <a class="text-muted" ui-sref="workspace">Ajuda ?</a>
         </div>
     </footer>
+    -->
 </div>

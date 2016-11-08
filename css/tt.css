@@ -1,5 +1,6 @@
 html {
     height: 100%;
+    flex: 1;
 }
 
 body {
@@ -18,8 +19,12 @@ body {
     overflow: hidden;
 }
 
-.wrapper section {
+.wrapper .tt-container {
     padding-top: 9px;
+}
+
+.container-fluid, .row {
+    height: 100%;
 }
 
 #wrapper.login-wrapper .content {
@@ -238,4 +243,36 @@ form.login label {
 .mini-progress {
     height: 6px;
     margin-bottom: 0;
+}
+
+.collapse-link {
+    width: 36px;
+    height: 40px;
+    padding: 12px 10px;
+}
+
+.tt-navbar-links .link-leftnavigation {
+    width: 250px;
+}
+
+.collapse-link:hover {
+    background-color: #eee;
+
+}
+
+.tt-btn-round {
+    border-radius: 50%;
+}
+
+.btn-edit-project {
+    display: none;
+}
+
+.tb-project-name:hover > .btn-edit-project {
+    display: inline;
+}
+
+.btn-edit-project:hover {
+    cursor: pointer;
+    color: #0000FF;
 }

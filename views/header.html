@@ -18,13 +18,13 @@
                 <ul class="nav navbar-nav navbar-top-links navbar-right">
                     <li>
                         <a class="dropdown-toggle clickable" data-toggle="dropdown">
-                            <ng-avatar class="tt-avatar-header" width="27" initials="{{usuarioLogado.iniciais}}" auto-color="true"></ng-avatar>
+                            <ng-avatar class="tt-avatar-header" bind="true" width="27" initials="{{usuarioLogado.iniciais}}" auto-color="true"></ng-avatar>
                             &nbsp;{{usuarioLogado.nomeSimples}}&nbsp;<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
                             <li>
                                 <div class="navigation-header-usermenu-info">
-                                    <ng-avatar class="tt-avatar-menu" width="50" initials="{{usuarioLogado.iniciais}}" auto-color="true"></ng-avatar>
+                                    <ng-avatar class="tt-avatar-menu" bind="true" width="50" initials="{{usuarioLogado.iniciais}}" auto-color="true"></ng-avatar>
                                     <div class="avatar-menu-name">
                                         {{usuarioLogado.nome}}
                                         <a ui-sref="login" class="profile-link">Perfil</a>

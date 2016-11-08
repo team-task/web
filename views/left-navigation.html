@@ -2,11 +2,10 @@
     <div class="navbar-default navbar-side-menu tt-navbar-links" role="navigation">
         <ul class="nav" id="side-menu">
             <li>
-                <a ui-sref="workspace-projects" class="pointer-action">Projetos
-                    &nbsp;<span data-toggle="collapse" aria-expanded="false" aria-controls="collapseProjects"
-                                data-target="#collapseProjects" class="pointer-action pull-right fa fa-arrow-down"></span>
-                </a>
-                <ul class="nav collapse" id="collapseProjects">
+                <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseProjects"
+                      data-target="#collapseProjects" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
+                <a ui-sref="workspace-projects" class="pointer-action link-leftnavigation">Projetos</a>
+                <ul class="nav" id="collapseProjects">
                     <li class="tt-sub-menu" ng-repeat="projeto in projetos">
                         <a ui-sref="project({'id' : projeto._id.$oid})" class="pointer-action">
                             {{projeto.nome}}
@@ -18,12 +17,10 @@
             </li>
             <li class="nav-divider"></li>
             <li>
-                <a ui-sref="workspace-activities" class="pointer-action">
-                    Atividades
-                    &nbsp;<span data-toggle="collapse" aria-expanded="false" aria-controls="collapseActivities"
-                                data-target="#collapseActivities" class="pointer-action pull-right fa fa-arrow-down"></span>
-                </a>
-                <ul class="nav collapse" id="collapseActivities">
+                <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseActivities"
+                      data-target="#collapseActivities" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
+                <a ui-sref="workspace-activities" class="pointer-action link-leftnavigation">Atividades</a>
+                <ul class="nav" id="collapseActivities">
                     <li class="tt-sub-menu" ng-repeat="grupo in grupos">
                         <a ui-sref="activity({'id': grupo._id.$oid})">
                             {{grupo.nome}}

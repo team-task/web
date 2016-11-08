@@ -16,6 +16,9 @@ angular.module('team-task')
             templateUrl: 'views/left-navigation.html',
             controller: ['$scope', '$rootScope', 'Projeto', 'Grupo', 'Atividade', '$filter',
                 function ($scope, $rootScope, Projeto, Grupo, Atividade, $filter) {
+
+                    $scope.new_palette = ["#d3e22b","#bbd534","#a6ca3a","#8fbe3d","#79b340","#63aa42","#48a044","#249744"];
+
                     var idusuario = $rootScope.usuarioLogado._id.$oid;
                     var qGrupo = {
                         "$or": [

@@ -11,6 +11,9 @@ angular.module('team-task', [
         }
     });
 })
+    .config(function() {
+
+    })
 .filter ('sumByKey', function () {
 	return function(data, key) {
         if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
