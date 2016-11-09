@@ -54,7 +54,8 @@
 
             <div class="form-group">
                 <label for="designado">Desigando para</label>
-                <select id="designado" class="form-control" ng-model="atividadeNova.designado">
+                <select id="designado" class="form-control" ng-model="atividadeNova.designado"
+                        ng-options="recurso.nome for recurso in listaRecursos">
                 </select>
             </div>
 

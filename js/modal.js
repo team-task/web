@@ -83,10 +83,12 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalNewActivityController',
-    function ($scope, $rootScope, projetoSelecionado, $state, Grupo) {
+    function ($scope, $rootScope, projetoSelecionado, $state, Grupo, Pessoa) {
 
         $scope.projeto = projetoSelecionado;
         $scope.atividadeNova = {};
+        $scope.grupo = {};
+        $scope.listaRecursos = [];
 
         $scope.initModalNewActivity = function () {
             $scope.atividadeNova = {
@@ -115,6 +117,30 @@ angular.module('team-task')
                 $scope.atividadeNova.fim = moment().businessAdd(($scope.atividadeNova.duracao - 1)).toDate();
             } else {
                 $scope.atividadeNova.fim = null;
+            }
+        };
+
+        $scope.carregaPessoas = function () {
+            $scope.listaRecursos = [];
+            if($scope.grupo) {
+                Grupo.getById($scope.grupo._id.$oid).then(function (grupo) {
+                    if(grupo) {
+                        var arrayOids = [];
+                        for(var i = 0; i < grupo.recursos.length; i++) {
+                            arrayOids.push({"$oid" : grupo.recursos[i]});
+                        }
+                        var pQuery = {
+                            "_id": {
+                                "$in" : arrayOids
+                            }
+                        };
+                        Pessoa.query(pQuery).then(function (pessoas) {
+                            if(pessoas[0]) {
+                                $scope.listaRecursos = pessoas;
+                            }
+                        })
+                    }
+                });
             }
         };
 
