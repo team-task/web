@@ -28,7 +28,7 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditProjectController',
-    function ($scope, $rootScope, Projeto, $state, projetoEdicao) {
+    function ($scope, $rootScope, Projeto, $state, projetoEdicao, $uibModal) {
 
         $scope.projeto = {};
 
@@ -37,7 +37,30 @@ angular.module('team-task')
         };
 
         $scope.deleteProject = function () {
-
+            if($scope.projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/delete-project.html',
+                        controller: function ($scope, projetoExclusao) {
+                            $scope.projeto = projetoExclusao;
+                            $scope.ok = function () {
+                                $scope.$close(true);
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            projetoExclusao: function () {
+                                return $scope.projeto;
+                            }
+                        }
+                    }).result.then(function () {
+                        console.log('hit ok');
+                    }, function () {
+                        console.log('hit cancel');
+                    });
+            }
         };
 
         $scope.ok = function () {
