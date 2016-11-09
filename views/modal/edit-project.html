@@ -1,10 +1,26 @@
 <div class="modal-header text-center">
-    <h4 class="modal-title">Editar Projeto&nbsp;<span><i class="fa fa-trash-o"></i></span></h4>
+    <h4 class="modal-title">Editar Projeto&nbsp;<span ng-click="deleteProject()"><i class="fa fa-trash-o"></i></span></h4>
 </div>
 <div class="modal-body" ng-init="initModalNewProject()">
     <div class="panel panel-primary">
         <div class="panel-body">
-
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" class="form-control" ng-model="projeto.status">
+                    <option value="Ativo">Ativo</option>
+                    <option value="Suspenso">Suspenso</option>
+                    <option value="Cancelado">Cancelado</option>
+                    <option value="Concluído">Concluído</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="alerta">Alerta</label>
+                <select id="alerta" class="form-control" ng-model="projeto.alerta">
+                    <option value="verde">Verde</option>
+                    <option value="amarelo">Amarelo</option>
+                    <option value="vermelho">Vermelho</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>

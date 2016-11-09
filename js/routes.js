@@ -19,7 +19,7 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
         })
         .state('project', {
             url: '/project/:id',
-            templateUrl: 'views/workspace-projects.html',
-            controller: 'WorkspaceProjectsController'
+            templateUrl: 'views/project.html',
+            controller: 'ProjectController'
         });
 });

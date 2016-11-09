@@ -38,7 +38,12 @@ angular.module('team-task')
                 $uibModal
                     .open({
                         templateUrl: 'views/modal/edit-project.html',
-                        controller: 'ModalEditProjectController'
+                        controller: 'ModalEditProjectController',
+                        resolve: {
+                            projetoEdicao: function () {
+                                return projeto;
+                            }
+                        }
                     }).result.then(function () {
                     }, function () {
                     });

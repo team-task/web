@@ -28,8 +28,17 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditProjectController',
-    function ($scope, $rootScope, Projeto, $state) {
+    function ($scope, $rootScope, Projeto, $state, projetoEdicao) {
 
+        $scope.projeto = {};
+
+        $scope.initModalNewProject = function () {
+            $scope.projeto = projetoEdicao;
+        };
+
+        $scope.deleteProject = function () {
+
+        };
 
         $scope.ok = function () {
 
