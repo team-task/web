@@ -1,0 +1,67 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Nova Atividade para o projeto {{projeto.nome}}</h4>
+</div>
+<div class="modal-body" ng-init="initModalNewActivity()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" class="form-control" ng-model="atividadeNova.nome"
+                       placeholder="Nome da nova atividade">
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <input type="text" readonly class="form-control" ng-model="atividadeNova.status"
+                       placeholder="Status da atividade">
+            </div>
+
+            <!--
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" class="form-control" ng-model="atividadeNova.status">
+                    <option value="Aguardando">Aguardando</option>
+                    <option value="Iniciada">Iniciada</option>
+                    <option value="Cancelada">Cancelada</option>
+                    <option value="Concluída">Concluída</option>
+                </select>
+            </div>
+            -->
+            <div class="form-group">
+                <label>Inicio</label>
+                <input type="date" class="form-control" ng-model="atividadeNova.inicio"
+                       placeholder="Data de Inicio" ng-change="calculaFim();">
+            </div>
+
+            <div class="form-group">
+                <label>Duração</label>
+                <input type="number" min="0" max="999" step="1" class="form-control" ng-model="atividadeNova.duracao"
+                       placeholder="Duração" ng-change="calculaFim();">
+            </div>
+
+            <div class="form-group">
+                <label>Até</label>
+                <input type="date" readonly class="form-control" ng-model="atividadeNova.fim"
+                       placeholder="Data de Fim">
+            </div>
+
+            <div class="form-group">
+                <label for="grupo">Grupo</label>
+                <select id="grupo" class="form-control" ng-model="grupo" ng-options="grupo.nome for grupo in listaGrupos"
+                        ng-change="carregaPessoas();">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="designado">Desigando para</label>
+                <select id="designado" class="form-control" ng-model="atividadeNova.designado">
+                </select>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

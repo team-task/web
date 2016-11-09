@@ -276,3 +276,44 @@ form.login label {
     cursor: pointer;
     color: #0000FF;
 }
+
+.tt-bgcolor-blue{
+    background-color: #17ACFF
+}
+
+.tt-bgcolor-dark-blue{
+    background-color: #1A88FF
+}
+
+.tt-bgcolor-light-blue{
+    background-color: #17BEFF
+}
+
+.tt-bgcolor-green{
+    background-color: #17EA00
+}
+
+.tt-bgcolor-dark-grey{
+    background-color: #424B55
+}
+
+.tt-bgcolor-dark-grey{
+    background-color: #424B55
+}
+
+.tt-bgcolor-light-grey{
+    background-color: #52606E
+}
+
+.tt-bgcolor-grey{
+    background-color: #4B5866
+}
+
+.tt-bgcolor-light-green{
+    background-color: #5CFF40
+}
+
+.tt-bgcolor-dark-green{
+    background-color: #29D311
+}
+

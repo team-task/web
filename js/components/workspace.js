@@ -6,7 +6,12 @@ angular.module('team-task')
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
 
             $scope.initWorkspaceProjects = function () {
+                loadTable();
+            };
+
+            function loadTable () {
                 $scope.showLoading = true;
+                $scope.listaProjetos = [];
                 var idusuario = $rootScope.usuarioLogado._id.$oid;
                 var qGrupo = {
                     "$or": [
@@ -32,7 +37,7 @@ angular.module('team-task')
                         });
                     }
                 });
-            };
+            }
 
             $scope.editarProjeto = function (projeto) {
                 $uibModal
@@ -45,6 +50,7 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {
+                        loadTable();
                     }, function () {
                     });
             };
@@ -55,6 +61,7 @@ angular.module('team-task')
                         templateUrl: 'views/modal/new-project.html',
                         controller: 'ModalNewProjectController'
                     }).result.then(function () {
+                        loadTable();
                     }, function () {
                     });
             }

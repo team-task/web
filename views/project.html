@@ -17,7 +17,7 @@
                     <div>
                         <h3 class="page-header">
                             Projeto&nbsp;{{projeto.nome}}
-                            <button ng-click="novoProjeto();" class="btn btn-danger btn-sm tt-btn-round"><i
+                            <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"><i
                                     class="fa fa-plus"></i></button>
                         </h3>
                     </div>
@@ -28,11 +28,11 @@
                         <thead>
                         <tr>
                             <td>Projeto</td>
-                            <td>Inicio</td>
-                            <td>Até</td>
-                            <td>Duração</td>
-                            <td>Designado</td>
                             <td>Status</td>
+                            <td>Inicio</td>
+                            <td>Duração</td>
+                            <td>Até</td>
+                            <td>Designado</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -40,14 +40,15 @@
                             <td class="tb-project-name">
                                 <a ui-sref="activity({'id' : atividade._id.$oid})">{{atividade.nome}}</a>
                             </td>
+                            <td>{{atividade.status}}</td>
                             <td>{{atividade.inicio.$date | date}}</td>
-                            <td>{{atividade.fim.$date | date}}</td>
                             <td>{{atividade.fim.$date | amDifference : projeto.inicio.$date : 'days'}}</td>
+                            <td>{{atividade.fim.$date | date}}</td>
                             <td>
                                 <ng-avatar width="27" bind="true" class="tt-avatar-table" auto-color="true"
                                            initials="{{atividade.pessoaDesignado.iniciais}}"></ng-avatar>
                             </td>
-                            <td>{{atividade.status}}</td>
+
                         </tr>
                         </tbody>
                     </table>

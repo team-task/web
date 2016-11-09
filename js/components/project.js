@@ -34,7 +34,7 @@ angular.module('team-task')
 
             };
 
-            $scope.editarProjeto = function (projeto) {
+            $scope.editarAtividade = function (projeto) {
                 $uibModal
                     .open({
                         templateUrl: 'views/modal/edit-project.html',
@@ -49,11 +49,16 @@ angular.module('team-task')
                     });
             };
 
-            $scope.novoProjeto = function () {
+            $scope.novaAtividade = function () {
                 $uibModal
                     .open({
-                        templateUrl: 'views/modal/new-project.html',
-                        controller: 'ModalNewProjectController'
+                        templateUrl: 'views/modal/new-activity.html',
+                        controller: 'ModalNewActivityController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            }
+                        }
                     }).result.then(function () {
                     }, function () {
                     });
