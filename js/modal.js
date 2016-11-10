@@ -83,11 +83,11 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalNewActivityController',
-    function ($scope, $rootScope, projetoSelecionado, $state, Grupo, Pessoa) {
+    function ($scope, $rootScope, projetoSelecionado, $state, Time, Pessoa) {
 
         $scope.projeto = projetoSelecionado;
         $scope.atividadeNova = {};
-        $scope.grupo = {};
+        $scope.time = {};
         $scope.listaRecursos = [];
 
         $scope.initModalNewActivity = function () {
@@ -99,14 +99,14 @@ angular.module('team-task')
                 "fim": null,
                 "designado" : ""
             };
-            $scope.listaGrupos = [];
+            $scope.listaTimes = [];
 
             var idusuario = $rootScope.usuarioLogado._id.$oid;
-            var qGrupo = {"gerente": idusuario};
-            Grupo.query(qGrupo).then(function (grupos) {
+            var qTime = {"lider": idusuario};
+            Time.query(qTime).then(function (times) {
 
-                if (grupos[0]) {
-                    $scope.listaGrupos = grupos;
+                if (times[0]) {
+                    $scope.listaTimes = times;
                 }
             });
 
@@ -122,12 +122,12 @@ angular.module('team-task')
 
         $scope.carregaPessoas = function () {
             $scope.listaRecursos = [];
-            if($scope.grupo) {
-                Grupo.getById($scope.grupo._id.$oid).then(function (grupo) {
-                    if(grupo) {
+            if($scope.time) {
+                Time.getById($scope.time._id.$oid).then(function (time) {
+                    if(time) {
                         var arrayOids = [];
-                        for(var i = 0; i < grupo.recursos.length; i++) {
-                            arrayOids.push({"$oid" : grupo.recursos[i]});
+                        for(var i = 0; i < time.recursos.length; i++) {
+                            arrayOids.push({"$oid" : time.recursos[i]});
                         }
                         var pQuery = {
                             "_id": {

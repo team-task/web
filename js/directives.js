@@ -14,43 +14,43 @@ angular.module('team-task')
             restrict: 'A',
             replace: true,
             templateUrl: 'views/left-navigation.html',
-            controller: ['$scope', '$rootScope', 'Projeto', 'Grupo', 'Atividade', '$filter',
-                function ($scope, $rootScope, Projeto, Grupo, Atividade, $filter) {
+            controller: ['$scope', '$rootScope', 'Projeto', 'Time', 'Atividade', '$filter',
+                function ($scope, $rootScope, Projeto, Time, Atividade, $filter) {
 
                     $scope.new_palette = ["#d3e22b","#bbd534","#a6ca3a","#8fbe3d","#79b340","#63aa42","#48a044","#249744"];
 
                     var idusuario = $rootScope.usuarioLogado._id.$oid;
-                    var qGrupo = {
+                    var qTime = {
                         "$or": [
-                            {"gerente": idusuario},
+                            {"lider": idusuario},
                             {"recursos": idusuario}
                         ]
                     };
-                    Grupo.query(qGrupo).then(function (grupos) {
+                    Time.query(qTime).then(function (times) {
 
-                        if (grupos[0]) {
-                            var listaGrupos = [];
-                            for (var i = 0; i < grupos.length; i++) {
-                                listaGrupos.push(grupos[i]._id.$oid);
+                        if (times[0]) {
+                            var listaTimes = [];
+                            for (var i = 0; i < times.length; i++) {
+                                listaTimes.push(times[i]._id.$oid);
                             }
                             var pQuery = {
                                 "$or": [
                                     {"administrador": idusuario}
-                                    , {"grupo": {"$in": listaGrupos}}]
+                                    , {"time": {"$in": listaTimes}}]
                             };
                             Projeto.query(pQuery).then(function (projetos) {
                                 $scope.projetos = projetos;
                             });
-                            $scope.grupos = grupos;
+                            $scope.times = times;
                             var aQuery = {
-                                "grupo": {
-                                    "$in": listaGrupos
+                                "time": {
+                                    "$in": listaTimes
                                 }
                             };
                             Atividade.query(aQuery).then(function (atividades) {
                                 $scope.atividades = atividades;
-                                angular.forEach(grupos, function (grupo, idGrupo) {
-                                    grupo.atividades = $filter('filter')(atividades, {'grupo' : grupo._id.$oid});
+                                angular.forEach(times, function (time, idTime) {
+                                    time.atividades = $filter('filter')(atividades, {'time' : time._id.$oid});
                                 });
                             });
                         }

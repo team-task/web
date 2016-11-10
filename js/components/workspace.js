@@ -1,7 +1,7 @@
 angular.module('team-task')
-    .controller('WorkspaceProjectsController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Grupo',
+    .controller('WorkspaceProjectsController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Time',
         'DTOptionsBuilder', '$resource', '$uibModal',
-        function ($scope, $rootScope, $state, Projeto, Atividade, Grupo, DTOptionsBuilder, $resource, $uibModal) {
+        function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
 
@@ -13,23 +13,23 @@ angular.module('team-task')
                 $scope.showLoading = true;
                 $scope.listaProjetos = [];
                 var idusuario = $rootScope.usuarioLogado._id.$oid;
-                var qGrupo = {
+                var qTime = {
                     "$or": [
-                        {"gerente": idusuario},
+                        {"lider": idusuario},
                         {"recursos": idusuario}
                     ]
                 };
-                Grupo.query(qGrupo).then(function (grupos) {
+                Time.query(qTime).then(function (times) {
 
-                    if (grupos[0]) {
-                        var listaGrupos = [];
-                        for (var i = 0; i < grupos.length; i++) {
-                            listaGrupos.push(grupos[i]._id.$oid);
+                    if (times[0]) {
+                        var listaTimes = [];
+                        for (var i = 0; i < times.length; i++) {
+                            listaTimes.push(times[i]._id.$oid);
                         }
                         var pQuery = {
                             "$or": [
                                 {"administrador": idusuario}
-                                , {"grupo": {"$in": listaGrupos}}]
+                                , {"time": {"$in": listaTimes}}]
                         };
                         Projeto.query(pQuery).then(function (projetos) {
                             $scope.listaProjetos = projetos;
@@ -68,9 +68,9 @@ angular.module('team-task')
         }]);
 
 angular.module('team-task')
-    .controller('WorkspaceActivitiesController', ['$scope', '$rootScope', '$state', 'Atividade', 'Grupo',
+    .controller('WorkspaceActivitiesController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
         'DTOptionsBuilder', '$resource', '$filter', 'Pessoa',
-        function ($scope, $rootScope, $state, Atividade, Grupo, DTOptionsBuilder, $resource, $filter, Pessoa) {
+        function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa) {
             $scope.showLoading = false;
 
             if (!$scope.dtAOptions) {
@@ -81,42 +81,42 @@ angular.module('team-task')
 
                 $scope.showLoading = true;
                 var idusuario = $rootScope.usuarioLogado._id.$oid;
-                var qGrupo = {
+                var qTime = {
                     "$or": [
-                        {"gerente": idusuario},
+                        {"lider": idusuario},
                         {"recursos": idusuario}
                     ]
                 };
-                Grupo.query(qGrupo).then(function (grupos) {
+                Time.query(qTime).then(function (times) {
 
-                    if (grupos[0]) {
-                        var listaGrupos = [];
+                    if (times[0]) {
+                        var listaTimes = [];
                         var admins = [];
                         var recursos = [];
-                        for (var i = 0; i < grupos.length; i++) {
-                            listaGrupos.push(grupos[i]._id.$oid);
-                            //gerente
-                            var adminFound = $filter('filter')(admins, {'_id': {'$oid': grupos[i].gerente}});
+                        for (var i = 0; i < times.length; i++) {
+                            listaTimes.push(times[i]._id.$oid);
+                            //lider
+                            var adminFound = $filter('filter')(admins, {'_id': {'$oid': times[i].lider}});
                             if (!adminFound || adminFound.length == 0) {
-                                Pessoa.getById(grupos[i].gerente).then(function (gerente) {
+                                Pessoa.getById(times[i].lider).then(function (lider) {
 
-                                    var nomes = gerente.nome.split(" ");
+                                    var nomes = lider.nome.split(" ");
                                     var iniciais = nomes[0].substring(0, 1);
                                     var nomeSimples = nomes[0];
                                     if (nomes.length > 1) {
                                         iniciais += nomes[1].substring(0, 1);
                                     }
-                                    gerente.iniciais = iniciais.toUpperCase();
-                                    gerente.nomeSimples = nomeSimples;
+                                    lider.iniciais = iniciais.toUpperCase();
+                                    lider.nomeSimples = nomeSimples;
 
-                                    admins.push(gerente);
+                                    admins.push(lider);
                                 });
                             }
                             //recursos
-                            for (var a = 0; a < grupos[i].recursos.length; a++) {
-                                var recursoFound = $filter('filter')(recursos, {'_id': {'$oid': grupos[i].recursos[a]}});
+                            for (var a = 0; a < times[i].recursos.length; a++) {
+                                var recursoFound = $filter('filter')(recursos, {'_id': {'$oid': times[i].recursos[a]}});
                                 if (!recursoFound || recursoFound.length == 0) {
-                                    Pessoa.getById(grupos[i].recursos[a]).then(function (recurso) {
+                                    Pessoa.getById(times[i].recursos[a]).then(function (recurso) {
 
                                         var nomes = recurso.nome.split(" ");
                                         var iniciais = nomes[0].substring(0, 1);
@@ -133,29 +133,29 @@ angular.module('team-task')
                             }
                         }
                         var aQuery = {
-                            "grupo": {
-                                "$in": listaGrupos
+                            "time": {
+                                "$in": listaTimes
                             }
                         };
                         Atividade.query(aQuery).then(function (atividades) {
                             $scope.atividades = atividades;
-                            angular.forEach(grupos, function (grupo, idGrupo) {
-                                grupo.atividades = $filter('filter')(atividades, {'grupo': grupo._id.$oid});
-                                //obj gerente
-                                var gerentesFilter = $filter('filter')(admins, {'_id': {'$oid': grupo.gerente}});
-                                if (gerentesFilter.length > 0) {
-                                    grupo.pessoaGerente = gerentesFilter[0];
+                            angular.forEach(times, function (time, idTime) {
+                                time.atividades = $filter('filter')(atividades, {'time': time._id.$oid});
+                                //obj lider
+                                var lidersFilter = $filter('filter')(admins, {'_id': {'$oid': time.lider}});
+                                if (lidersFilter.length > 0) {
+                                    time.pessoaLider = lidersFilter[0];
                                 }
                                 //obj recursos
-                                grupo.pessoaRecurso = [];
-                                for (var z = 0; z < grupo.recursos.length; z++) {
-                                    var recursosFilter = $filter('filter')(recursos, {'_id': {'$oid': grupo.recursos[z]}});
+                                time.pessoaRecurso = [];
+                                for (var z = 0; z < time.recursos.length; z++) {
+                                    var recursosFilter = $filter('filter')(recursos, {'_id': {'$oid': time.recursos[z]}});
                                     if (recursosFilter.length > 0) {
-                                        grupo.pessoaRecurso.push(recursosFilter[0]);
+                                        time.pessoaRecurso.push(recursosFilter[0]);
                                     }
                                 }
                             });
-                            $scope.grupos = grupos;
+                            $scope.times = times;
                             $scope.showLoading = false;
                         });
                     }

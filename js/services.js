@@ -9,6 +9,6 @@ angular.module('team-task')
 	.factory('Projeto', function ($mongolabResourceHttp) {
 		return $mongolabResourceHttp('projeto');
 	})
-	.factory('Grupo', function ($mongolabResourceHttp) {
-		return $mongolabResourceHttp('grupo');
+	.factory('Time', function ($mongolabResourceHttp) {
+		return $mongolabResourceHttp('time');
 	});

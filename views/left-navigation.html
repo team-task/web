@@ -21,10 +21,10 @@
                       data-target="#collapseActivities" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
                 <a ui-sref="workspace-activities" class="pointer-action link-leftnavigation">Atividades</a>
                 <ul class="nav" id="collapseActivities">
-                    <li class="tt-sub-menu" ng-repeat="grupo in grupos">
-                        <a ui-sref="activity({'id': grupo._id.$oid})">
-                            {{grupo.nome}}
-                            <span class="badge pull-right">{{grupo.atividades.length}}</span>
+                    <li class="tt-sub-menu" ng-repeat="time in times">
+                        <a ui-sref="activity({'id': time._id.$oid})">
+                            {{time.nome}}
+                            <span class="badge pull-right">{{time.atividades.length}}</span>
                         </a>
                     </li>
                 </ul>

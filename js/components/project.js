@@ -1,7 +1,7 @@
 angular.module('team-task')
-    .controller('ProjectController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Grupo',
+    .controller('ProjectController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Time',
         'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa',
-        function ($scope, $rootScope, $state, Projeto, Atividade, Grupo, DTOptionsBuilder, $resource, $uibModal,
+        function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal,
                   $stateParams, Pessoa) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
