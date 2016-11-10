@@ -23,22 +23,22 @@
                     <table datatable="ng" dt-options="dtAOptions" class="table table-hover">
                         <thead>
                         <tr>
+                            <td>Atividade</td>
                             <td>Time</td>
-                            <td>Atividades</td>
                             <td>Lider</td>
                             <td>Recursos</td>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="time in times">
-                            <td>{{time.nome}}</td>
-                            <td>{{time.atividades.length}}</td>
+                        <tr ng-repeat="atividade in atividades">
+                            <td>{{atividade.nome}}</td>
+                            <td>{{atividade.timeObj.nome}}</td>
                             <td>
                                 <ng-avatar width="27" bind="true" class="tt-avatar-table" auto-color="true"
-                                           initials="{{time.pessoaLider.iniciais}}"></ng-avatar>
+                                           initials="{{atividade.timeObj.pessoaLider.iniciais}}"></ng-avatar>
                             </td>
                             <td>
-                                <span ng-repeat="recurso in time.pessoaRecurso">
+                                <span ng-repeat="recurso in atividade.timeObj.pessoaRecurso">
                                     <ng-avatar width="27" bind="true" class="tt-avatar-table"
                                                initials="{{recurso.iniciais}}" auto-color="true"></ng-avatar>
                                 </span>&nbsp;

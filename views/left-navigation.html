@@ -7,10 +7,10 @@
                 <a ui-sref="workspace-projects" class="pointer-action link-leftnavigation">Projetos</a>
                 <ul class="nav" id="collapseProjects">
                     <li class="tt-sub-menu" ng-repeat="projeto in projetos">
-                        <a ui-sref="project({'id' : projeto._id.$oid})" class="pointer-action">
+                        <span ng-click="addToFav();" class="pointer-action pull-right fa collapse-link"
+                              ng-class="usuarioLogado.favorito === projeto._id.$oid ? 'fa-star' : 'fa-star-o'"></span>
+                        <a ui-sref="project({'id' : projeto._id.$oid})" class="pointer-action link-leftnavigation-project">
                             {{projeto.nome}}
-                            <span ng-click="addToFav();" class="pointer-action pull-right fa"
-                            ng-class="usuarioLogado.favorito === projeto._id.$oid ? 'fa-star' : 'fa-star-o'"></span>
                         </a>
                     </li>
                 </ul>

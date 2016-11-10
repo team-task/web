@@ -255,6 +255,10 @@ form.login label {
     width: 250px;
 }
 
+.tt-navbar-links .link-leftnavigation-project {
+    width: 230px;
+}
+
 .collapse-link:hover {
     background-color: #eee;
 
