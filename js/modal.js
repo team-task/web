@@ -89,6 +89,7 @@ angular.module('team-task')
         $scope.atividadeNova = {};
         $scope.time = {};
         $scope.listaRecursos = [];
+        $scope.showSelectLoading = false;
 
         $scope.initModalNewActivity = function () {
             $scope.atividadeNova = {
@@ -122,6 +123,7 @@ angular.module('team-task')
 
         $scope.carregaPessoas = function () {
             $scope.listaRecursos = [];
+            $scope.showSelectLoading = true;
             if($scope.time) {
                 Time.getById($scope.time._id.$oid).then(function (time) {
                     if(time) {
@@ -137,6 +139,7 @@ angular.module('team-task')
                         Pessoa.query(pQuery).then(function (pessoas) {
                             if(pessoas[0]) {
                                 $scope.listaRecursos = pessoas;
+                                $scope.showSelectLoading = false;
                             }
                         })
                     }
