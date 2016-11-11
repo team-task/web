@@ -6,7 +6,11 @@
         <div class="panel-body">
             <div class="form-group">
                 <label>Nome do Projeto</label>
-                <input type="text" class="form-control" ng-model="novoProjeto.nome" placeholder="Nome do novo projeto">
+                <input type="text" class="form-control" ng-focus="errorProjectName = ''"
+                       ng-model="novoProjeto.nome" placeholder="Nome do novo projeto">
+                <span ng-show="errorProjectName !==''" class="help-block alert-danger">
+                    {{errorProjectName}}
+                </span>
             </div>
         </div>
     </div>

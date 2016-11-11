@@ -9,16 +9,19 @@ angular.module('team-task')
         $scope.novoProjeto.fim = null;
 
         $scope.initModalNewProject = function () {
-
+            $scope.errorProjectName = "";
         };
 
         $scope.ok = function () {
-
-            $scope.novoProjeto.administrador = $rootScope.usuarioLogado._id.$oid;
-            $scope.novoProjeto.$save().then(function () {
-                $state.go('workspace-projects');
-                $scope.$close(true);
-            });
+            if($scope.novoProjeto.nome) {
+                $scope.novoProjeto.administrador = $rootScope.usuarioLogado._id.$oid;
+                $scope.novoProjeto.$save().then(function () {
+                    $state.go('workspace-projects');
+                    $scope.$close(true);
+                });
+            } else {
+                $scope.errorProjectName = "O Nome é obrigatório na criação do projeto.";
+            }
         };
 
         $scope.cancel = function () {
