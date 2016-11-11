@@ -17,7 +17,8 @@
                     <div>
                         <h3 class="page-header">
                             Atividades
-                            <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"><i class="fa fa-plus"></i></button>
+                            <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"><i
+                                    class="fa fa-plus"></i></button>
                         </h3>
                     </div>
                     <table datatable="ng" dt-options="dtAOptions" class="table table-hover">
@@ -34,13 +35,14 @@
                             <td>{{atividade.nome}}</td>
                             <td>{{atividade.timeObj.nome}}</td>
                             <td>
-                                <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" class="tt-avatar-table" fontsize="14"
-                                                  avatarborder="true" data="{{atividade.timeObj.pessoaLider.iniciais}}"></ng-letter-avatar>
+                                <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"
+                                                  class="tt-avatar-table" fontsize="14"
+                                                  data="{{atividade.timeObj.pessoaLider.iniciais}}"></ng-letter-avatar>
                             </td>
                             <td>
                                 <span ng-repeat="recurso in atividade.timeObj.pessoaRecurso">
-                                    <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"  class="tt-avatar-table" fontsize="14"
-                                                      avatarborder="true" data="{{recurso.iniciais}}"></ng-letter-avatar>
+                                    <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
+                                                      data="{{recurso.iniciais}}"></ng-letter-avatar>
                                 </span>&nbsp;
                             </td>
                         </tr>

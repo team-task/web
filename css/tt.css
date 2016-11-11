@@ -12,6 +12,15 @@ body {
     height: 100%;
 }
 
+.mainsec.ng-enter {
+    transition: .5s;
+    opacity: 0;
+}
+
+.mainsec.ng-enter-active {
+    opacity: 1;
+}
+
 .initsec {
     height: 100%;
 }
