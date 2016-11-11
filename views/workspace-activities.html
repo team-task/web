@@ -30,17 +30,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="atividade in atividades">
+                        <tr ng-repeat="atividade in listaAtividades">
                             <td>{{atividade.nome}}</td>
                             <td>{{atividade.timeObj.nome}}</td>
                             <td>
-                                <ng-avatar width="27" bind="true" class="tt-avatar-table" auto-color="true"
-                                           initials="{{atividade.timeObj.pessoaLider.iniciais}}"></ng-avatar>
+                                <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" class="tt-avatar-table" fontsize="14"
+                                                  avatarborder="true" data="{{atividade.timeObj.pessoaLider.iniciais}}"></ng-letter-avatar>
                             </td>
                             <td>
                                 <span ng-repeat="recurso in atividade.timeObj.pessoaRecurso">
-                                    <ng-avatar width="27" bind="true" class="tt-avatar-table"
-                                               initials="{{recurso.iniciais}}" auto-color="true"></ng-avatar>
+                                    <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"  class="tt-avatar-table" fontsize="14"
+                                                      avatarborder="true" data="{{recurso.iniciais}}"></ng-letter-avatar>
                                 </span>&nbsp;
                             </td>
                         </tr>

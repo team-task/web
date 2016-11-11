@@ -75,7 +75,7 @@ angular.module('team-task')
             $scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
 
             function loadTable() {
-                $scope.atividades = [];
+                $scope.listaAtividades = [];
                 $scope.showLoading = true;
                 var idusuario = $rootScope.usuarioLogado._id.$oid;
                 var qTime = {
@@ -94,11 +94,12 @@ angular.module('team-task')
                             "time": {
                                 "$in": listaTimes
                             },
-                            "status" : ["aguardando", "iniciada"]
+                            "status" : {
+                                "$in" : ["aguardando", "iniciada"]
+                            }
                         };
                         Atividade.query(aQuery).then(function (atividades) {
-                            $scope.atividades = atividades;
-                            angular.forEach($scope.atividades, function (atividade, idAtividade) {
+                            angular.forEach(atividades, function (atividade, idAtividade) {
                                 var _id = {
                                     "_id" : {
                                         "$oid" : atividade.time
@@ -109,7 +110,6 @@ angular.module('team-task')
                                     time = time[0];
                                     time.pessoaLider = {};
                                     time.pessoaRecurso = [];
-
                                     Pessoa.getById(time.lider).then(function (lider) {
 
                                         var nomes = lider.nome.split(" ");
@@ -120,7 +120,6 @@ angular.module('team-task')
                                         }
                                         lider.iniciais = iniciais.toUpperCase();
                                         lider.nomeSimples = nomeSimples;
-
                                         time.pessoaLider = lider;
                                     });
                                     for (var a = 0; a < time.recursos.length; a++) {
@@ -137,12 +136,13 @@ angular.module('team-task')
                                             recurso.nomeSimples = nomeSimples;
 
                                             time.pessoaRecurso.push(recurso);
-                                        });
 
+                                        });
                                     }
                                     atividade.timeObj = time;
                                 }
                             });
+                            $scope.listaAtividades = atividades;
                             $scope.showLoading = false;
                         });
                     }

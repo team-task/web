@@ -45,8 +45,8 @@
                             <td>{{atividade.fim.$date | amDifference : projeto.inicio.$date : 'days'}}</td>
                             <td>{{atividade.fim.$date | date}}</td>
                             <td>
-                                <ng-avatar width="27" bind="true" class="tt-avatar-table" auto-color="true"
-                                           initials="{{atividade.pessoaDesignado.iniciais}}"></ng-avatar>
+                                <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"  class="tt-avatar-table" fontsize="14"
+                                                  avatarborder="true" data="{{atividade.pessoaDesignado.iniciais}}"></ng-letter-avatar>
                             </td>
 
                         </tr>

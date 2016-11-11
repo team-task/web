@@ -7,9 +7,10 @@ function($scope, $rootScope, $state, Pessoa, $window) {
 	$scope.initLogin = function () {
 		$rootScope.loginBody = {
 				'overflow': 'hidden'
-		}
+		};
+
 	};
-	
+
 	$scope.login = function () {
 		var usuario = $scope.usuario;
 		var senha = $scope.senha;
@@ -31,6 +32,7 @@ function($scope, $rootScope, $state, Pessoa, $window) {
 				logado.iniciais = iniciais.toUpperCase();
 				logado.nomeSimples = nomeSimples;
 				$window.sessionStorage.setItem('usuarioLogado', angular.toJson(pessoas[0]));
+
 				$state.go('workspace-projects');
 			} else {
 				$scope.errorLogin = "Login e ou senha inválidos";

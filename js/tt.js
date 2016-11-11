@@ -1,5 +1,5 @@
 angular.module('team-task', [
-    'ui.router', 'ngResource', 'mongolabResourceHttp', 'ui.bootstrap', 'angular.filter', 'ngAvatar', 'angularMoment',
+    'ui.router', 'ngResource', 'mongolabResourceHttp', 'ui.bootstrap', 'angular.filter', 'ngLetterAvatar', 'angularMoment',
     'datatables'
 ])
 .constant('MONGOLAB_CONFIG', {API_KEY: 'YXgR-q92vuVCKlSm-ji3nplDTE7rHIQh', DB_NAME: 'tt'})
