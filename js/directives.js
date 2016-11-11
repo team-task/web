@@ -44,6 +44,9 @@ angular.module('team-task')
                             var aQuery = {
                                 "time": {
                                     "$in": listaTimes
+                                },
+                                "status": {
+                                    "$in": ["aguardando", "iniciada"]
                                 }
                             };
                             Atividade.query(aQuery).then(function (atividades) {

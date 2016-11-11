@@ -115,7 +115,7 @@ angular.module('team-task')
 
         $scope.calculaFim = function () {
             if($scope.atividadeNova.duracao !== 0 && $scope.atividadeNova.inicio) {
-                $scope.atividadeNova.fim = moment().businessAdd(($scope.atividadeNova.duracao - 1)).toDate();
+                $scope.atividadeNova.fim = moment($scope.atividadeNova.inicio).businessAdd(($scope.atividadeNova.duracao - 1)).toDate();
             } else {
                 $scope.atividadeNova.fim = null;
             }

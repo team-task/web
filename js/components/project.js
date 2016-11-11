@@ -5,11 +5,6 @@ angular.module('team-task')
                   $stateParams, Pessoa, DTColumnDefBuilder) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
-            $scope.dtOptions.columnDefs = [{
-                "targets": [6],
-                "searchable": true,
-                "visible": false
-            }];
 
             $scope.initWorkspaceProject = function () {
                 $scope.showLoading = true;

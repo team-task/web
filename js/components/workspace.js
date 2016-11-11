@@ -95,15 +95,16 @@ angular.module('team-task')
                             "time": {
                                 "$in": listaTimes
                             },
-                            "status" : {
-                                "$in" : ["aguardando", "iniciada"]
+                            "status": {
+                                "$in": ["aguardando", "iniciada"]
                             }
                         };
                         Atividade.query(aQuery).then(function (atividades) {
                             angular.forEach(atividades, function (atividade, idAtividade) {
+                                atividade.lider = "";
                                 var _id = {
-                                    "_id" : {
-                                        "$oid" : atividade.time
+                                    "_id": {
+                                        "$oid": atividade.time
                                     }
                                 };
                                 var time = $filter('filter')(times, _id);
@@ -122,6 +123,7 @@ angular.module('team-task')
                                         lider.iniciais = iniciais.toUpperCase();
                                         lider.nomeSimples = nomeSimples;
                                         time.pessoaLider = lider;
+                                        atividade.lider = lider.nome;
                                     });
                                     for (var a = 0; a < time.recursos.length; a++) {
 
@@ -135,9 +137,7 @@ angular.module('team-task')
                                             }
                                             recurso.iniciais = iniciais.toUpperCase();
                                             recurso.nomeSimples = nomeSimples;
-
                                             time.pessoaRecurso.push(recurso);
-
                                         });
                                     }
                                     atividade.timeObj = time;
