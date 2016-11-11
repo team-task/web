@@ -1,10 +1,15 @@
 angular.module('team-task')
     .controller('ProjectController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa',
+        'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa', 'DTColumnDefBuilder',
         function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal,
-                  $stateParams, Pessoa) {
+                  $stateParams, Pessoa, DTColumnDefBuilder) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
+            $scope.dtOptions.columnDefs = [{
+                "targets": [6],
+                "searchable": true,
+                "visible": false
+            }];
 
             $scope.initWorkspaceProject = function () {
                 $scope.showLoading = true;

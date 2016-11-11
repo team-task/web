@@ -17,14 +17,20 @@
                     <div>
                         <h3 class="page-header">
                             Atividades
+                            <!--
                             <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"><i
                                     class="fa fa-plus"></i></button>
+                                    -->
                         </h3>
                     </div>
-                    <table datatable="ng" dt-options="dtAOptions" class="table table-hover">
+                    <table datatable="ng" dt-options="dtAOptions" class="table table-hover table-responsive">
                         <thead>
                         <tr>
                             <td>Atividade</td>
+                            <td>Status</td>
+                            <td>Inicio</td>
+                            <td>Duração</td>
+                            <td>Até</td>
                             <td>Time</td>
                             <td>Lider</td>
                             <td>Recursos</td>
@@ -33,16 +39,24 @@
                         <tbody>
                         <tr ng-repeat="atividade in listaAtividades">
                             <td>{{atividade.nome}}</td>
+                            <td>{{atividade.status}}</td>
+
+                            <td>{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                            <td>{{atividade.fim.$date | amDifference : projeto.inicio.$date : 'days'}}</td>
+                            <td>{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
+
                             <td>{{atividade.timeObj.nome}}</td>
                             <td>
                                 <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"
                                                   class="tt-avatar-table" fontsize="14"
-                                                  data="{{atividade.timeObj.pessoaLider.iniciais}}"></ng-letter-avatar>
+                                                  data="{{atividade.timeObj.pessoaLider.iniciais}}"
+                                                  uib-tooltip="{{atividade.timeObj.pessoaLider.nome}}"></ng-letter-avatar>
                             </td>
                             <td>
                                 <span ng-repeat="recurso in atividade.timeObj.pessoaRecurso">
                                     <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
-                                                      data="{{recurso.iniciais}}"></ng-letter-avatar>
+                                                      data="{{recurso.iniciais}}"
+                                                      uib-tooltip="{{recurso.nome}}"></ng-letter-avatar>
                                 </span>&nbsp;
                             </td>
                         </tr>

@@ -24,7 +24,8 @@
                     <div>
 
                     </div>
-                    <table datatable="ng" dt-options="dtOptions" class="table table-hover">
+                    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"
+                           class="table table-hover">
                         <thead>
                         <tr>
                             <td>Projeto</td>
@@ -33,6 +34,7 @@
                             <td>Duração</td>
                             <td>Até</td>
                             <td>Designado</td>
+                            <td>Pessoa</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -41,14 +43,16 @@
                                 <a ui-sref="activity({'id' : atividade._id.$oid})">{{atividade.nome}}</a>
                             </td>
                             <td>{{atividade.status}}</td>
-                            <td>{{atividade.inicio.$date | date}}</td>
+                            <td>{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>{{atividade.fim.$date | amDifference : projeto.inicio.$date : 'days'}}</td>
-                            <td>{{atividade.fim.$date | date}}</td>
+                            <td>{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>
-                                <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"  class="tt-avatar-table" fontsize="14"
-                                                  avatarborder="true" data="{{atividade.pessoaDesignado.iniciais}}"></ng-letter-avatar>
+                                <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"
+                                                  class="tt-avatar-table" fontsize="14"
+                                                  data="{{atividade.pessoaDesignado.iniciais}}"
+                                                  uib-tooltip="{{atividade.pessoaDesignado.nome}}"></ng-letter-avatar>
                             </td>
-
+                            <td>{{atividade.pessoaDesignado.nome}}</td>
                         </tr>
                         </tbody>
                     </table>

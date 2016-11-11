@@ -17,7 +17,8 @@
                     <div>
                         <h3 class="page-header">
                             Projetos
-                            <button ng-click="novoProjeto();" class="btn btn-danger btn-sm tt-btn-round"><i class="fa fa-plus"></i></button>
+                            <button ng-click="novoProjeto();" class="btn btn-danger btn-sm tt-btn-round"><i
+                                    class="fa fa-plus"></i></button>
                         </h3>
                     </div>
                     <div>
@@ -28,8 +29,8 @@
                         <tr>
                             <td>Projeto</td>
                             <td>Inicio</td>
-                            <td>Até</td>
                             <td>Duração</td>
+                            <td>Até</td>
                             <td>Status</td>
                             <td>Alerta</td>
                             <td>Atividades</td>
@@ -39,16 +40,19 @@
                         <tr ng-repeat="projeto in listaProjetos">
                             <td class="tb-project-name">
                                 <a ui-sref="project({'id' : projeto._id.$oid})">{{projeto.nome}}</a>&nbsp;
-                                <span ng-show="usuarioLogado._id.$oid === projeto.administrador" class="btn-edit-project" ng-click="editarProjeto(projeto);"><i class="fa fa-pencil-square-o"></i></span>
+                                <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
+                                      class="btn-edit-project" ng-click="editarProjeto(projeto);"><i
+                                        class="fa fa-pencil-square-o"></i></span>
                             </td>
-                            <td>{{projeto.inicio.$date | date}}</td>
-                            <td>{{projeto.fim.$date | date}}</td>
+                            <td>{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>{{projeto.fim.$date | amDifference : projeto.inicio.$date : 'days'}}</td>
+                            <td>{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>{{projeto.status}}</td>
                             <td>
-                                <span class="label label-success" ng-show="projeto.alerta === 'verde'">verde</span>
-                                <span class="label label-warning" ng-show="projeto.alerta === 'amarelo'">amarelo</span>
-                                <span class="label label-danger" ng-show="projeto.alerta === 'vermelho'">vermelho</span>
+                                <span class="label"
+                                      ng-class="projeto.alerta === 'verde' ? 'label-success' : projeto.alerta === 'amarelo' ? 'label-warning' : 'label-danger'">
+                                    {{projeto.alerta}}
+                                </span>
                             </td>
                             <td>{{projeto.atividades.length}}</td>
                         </tr>
