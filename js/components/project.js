@@ -40,17 +40,22 @@ angular.module('team-task')
                 });
             }
 
-            $scope.editarAtividade = function (projeto) {
+            $scope.editarAtividade = function (indice) {
                 $uibModal
                     .open({
-                        templateUrl: 'views/modal/edit-project.html',
-                        controller: 'ModalEditProjectController',
+                        templateUrl: 'views/modal/edit-activity.html',
+                        controller: 'ModalEditActivityController',
                         resolve: {
-                            projetoEdicao: function () {
-                                return projeto;
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            },
+                            indice : function () {
+                                return indice;
                             }
                         }
                     }).result.then(function () {
+                        loadProject();
+                        $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
             };

@@ -61,7 +61,10 @@
                         <tbody>
                         <tr ng-repeat="atividade in projeto.atividades">
                             <td class="tb-project-name">
-                                <a ui-sref="activity({'id' : atividade._id.$oid})">{{atividade.nome}}</a>
+                                <a ng-click="mostrarDetalheAtividade($index)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
+                                <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
+                                      class="btn-edit-project" ng-click="editarAtividade($index);"><i
+                                        class="fa fa-pencil-square-o"></i></span>
                             </td>
                             <td>{{atividade.status}}</td>
                             <td>{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
