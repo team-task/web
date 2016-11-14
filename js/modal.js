@@ -59,10 +59,10 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {
-                        console.log('hit ok');
+
                         deleteProject();
                     }, function () {
-                        console.log('hit cancel');
+
                     });
             }
         };
@@ -182,25 +182,47 @@ angular.module('team-task')
                 var fimAtividade = $scope.atividadeNova.fim.$date;
 
                 //possui a data inicio
-                if (projetoSelecionado.inicio.$date) {
+                if (projetoSelecionado.inicio && projetoSelecionado.inicio.$date) {
                     //verficar se data da atividade é menor que a do projeto para poder atualizar
                     if (moment(projetoSelecionado.inicio.$date).isAfter(moment(inicioAtividade))) {
                         projetoSelecionado.inicio.$date = inicioAtividade;
                     }
                 } else {
-                    projetoSelecionado.inicio.$date = inicioAtividade;
+                    if(projetoSelecionado.inicio) {
+                        projetoSelecionado.inicio.$date = inicioAtividade;
+                    } else {
+
+                        projetoSelecionado.inicio = {
+                            "$date": inicioAtividade
+                        }
+                    }
                 }
 
-                if (projetoSelecionado.fim.$date) {
+                if (projetoSelecionado.fim && projetoSelecionado.fim.$date) {
                     if (moment(projetoSelecionado.inicio.$date).isBefore(moment(fimAtividade))) {
                         projetoSelecionado.fim.$date = fimAtividade;
                     }
                 } else {
-                    projetoSelecionado.fim.$date = fimAtividade;
+                    if(projetoSelecionado.fim) {
+                        projetoSelecionado.fim.$date = fimAtividade;
+                    } else {
+                        projetoSelecionado.fim = {
+                            "$date" : fimAtividade
+                        }
+                    }
                 }
 
+                if(projetoSelecionado.atividades) {
+                    projetoSelecionado.atividades.push($scope.atividadeNova);
+                } else {
+                    projetoSelecionado.atividades = [];
+                    projetoSelecionado.atividades.push($scope.atividadeNova);
+                }
 
-                projetoSelecionado.atividades.push($scope.atividadeNova);
+                if($scope.atividadeNova.designado) {
+                    $scope.atividadeNova.designado = $scope.atividadeNova.designado._id.$oid;
+                }
+
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);
                 });
