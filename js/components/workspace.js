@@ -51,6 +51,7 @@ angular.module('team-task')
                         }
                     }).result.then(function () {
                         loadTable();
+                        $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
             };
@@ -62,6 +63,7 @@ angular.module('team-task')
                         controller: 'ModalNewProjectController'
                     }).result.then(function () {
                         loadTable();
+                        $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
             }

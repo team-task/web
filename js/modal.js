@@ -16,7 +16,6 @@ angular.module('team-task')
             if ($scope.novoProjeto.nome) {
                 $scope.novoProjeto.administrador = $rootScope.usuarioLogado._id.$oid;
                 $scope.novoProjeto.$save().then(function () {
-                    $state.go('workspace-projects');
                     $scope.$close(true);
                 });
             } else {
@@ -199,7 +198,7 @@ angular.module('team-task')
                 }
 
                 if (projetoSelecionado.fim && projetoSelecionado.fim.$date) {
-                    if (moment(projetoSelecionado.inicio.$date).isBefore(moment(fimAtividade))) {
+                    if (moment(projetoSelecionado.fim.$date).isBefore(moment(fimAtividade))) {
                         projetoSelecionado.fim.$date = fimAtividade;
                     }
                 } else {
@@ -222,7 +221,7 @@ angular.module('team-task')
                 if($scope.atividadeNova.designado) {
                     $scope.atividadeNova.designado = $scope.atividadeNova.designado._id.$oid;
                 }
-                projetoSelecionado.duracao = (moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days', true)) + 1;
+                projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);

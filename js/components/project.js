@@ -67,6 +67,7 @@ angular.module('team-task')
                         }
                     }).result.then(function () {
                         loadProject();
+                        $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
             }
