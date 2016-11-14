@@ -1,5 +1,5 @@
 <div class="modal-header text-center">
-    <h4 class="modal-title">Nova Atividade para o projeto {{projeto.nome}}</h4>
+    <h4 class="modal-title">Nova Atividade para: {{projeto.nome}}</h4>
 </div>
 <div class="modal-body" ng-init="initModalNewActivity()">
     <div class="panel panel-primary">
@@ -7,7 +7,10 @@
             <div class="form-group">
                 <label>Nome</label>
                 <input type="text" class="form-control" ng-model="atividadeNova.nome"
-                       placeholder="Nome da nova atividade">
+                       placeholder="Nome da nova atividade" ng-focus="activityNameErro = ''">
+                <span ng-show="activityNameErro !==''" class="help-block alert-danger">
+                    {{activityNameErro}}
+                </span>
             </div>
 
             <div class="form-group">
@@ -29,19 +32,26 @@
             -->
             <div class="form-group">
                 <label>Inicio</label>
-                <input type="date" class="form-control" ng-model="atividadeNova.inicio"
-                       placeholder="Data de Inicio" ng-change="calculaFim();">
+                <input type="date" class="form-control" ng-model="atividadeNova.inicio.$date"
+                       placeholder="Data de Inicio" ng-change="calculaFim();"
+                       ng-focus="activityInicioErro = ''">
+                <span ng-show="activityInicioErro !==''" class="help-block alert-danger">
+                    {{activityInicioErro}}
+                </span>
             </div>
 
             <div class="form-group">
                 <label>Duração</label>
-                <input type="number" min="0" max="999" step="1" class="form-control" ng-model="atividadeNova.duracao"
-                       placeholder="Duração" ng-change="calculaFim();">
+                <input type="number" min="1" max="999" step="1" class="form-control" ng-model="atividadeNova.duracao"
+                       placeholder="Duração" ng-change="calculaFim();" ng-focus="activityDuracaoErro = ''">
+                <span ng-show="activityDuracaoErro !==''" class="help-block alert-danger">
+                    {{activityDuracaoErro}}
+                </span>
             </div>
 
             <div class="form-group">
                 <label>Até</label>
-                <input type="date" readonly class="form-control" ng-model="atividadeNova.fim"
+                <input type="date" readonly class="form-control" ng-model="atividadeNova.fim.$date"
                        placeholder="Data de Fim">
             </div>
 

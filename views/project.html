@@ -17,8 +17,10 @@
                     <div>
                         <h3 class="page-header">
                             {{projeto.nome}}
-                            <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"><i
-                                    class="fa fa-plus"></i></button>
+                            <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"
+                                    uib-tooltip="Nova Atividade">
+                                <i class="fa fa-plus"></i>
+                            </button>
                         </h3>
                     </div>
                     <div>
@@ -34,6 +36,7 @@
                             <td>Duração</td>
                             <td>Até</td>
                             <td>Designado</td>
+
                         </tr>
                         </thead>
                         <tbody>
@@ -51,6 +54,7 @@
                                                   data="{{atividade.pessoaDesignado.iniciais}}"
                                                   uib-tooltip="{{atividade.pessoaDesignado.nome}}"></ng-letter-avatar>
                             </td>
+
                         </tr>
                         </tbody>
                     </table>

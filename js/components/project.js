@@ -7,32 +7,38 @@ angular.module('team-task')
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
 
             $scope.initWorkspaceProject = function () {
+                loadProject();
+            };
+
+            function loadProject() {
                 $scope.showLoading = true;
 
                 Projeto.getById($stateParams.id).then(function (projeto) {
                     if(projeto) {
-                        $scope.projeto = projeto;
                         angular.forEach(projeto.atividades, function (atividade, idAtividade) {
-                            Pessoa.getById(atividade.designado).then(function (pessoa) {
-                                if(pessoa) {
-                                    var nomes = pessoa.nome.split(" ");
-                                    var iniciais = nomes[0].substring(0, 1);
-                                    var nomeSimples = nomes[0];
-                                    if (nomes.length > 1) {
-                                        iniciais += nomes[1].substring(0, 1);
-                                    }
-                                    pessoa.iniciais = iniciais.toUpperCase();
-                                    pessoa.nomeSimples = nomeSimples;
+                            if(atividade.designado) {
+                                Pessoa.getById(atividade.designado).then(function (pessoa) {
+                                    if (pessoa) {
+                                        var nomes = pessoa.nome.split(" ");
+                                        var iniciais = nomes[0].substring(0, 1);
+                                        var nomeSimples = nomes[0];
+                                        if (nomes.length > 1) {
+                                            iniciais += nomes[1].substring(0, 1);
+                                        }
+                                        pessoa.iniciais = iniciais.toUpperCase();
+                                        pessoa.nomeSimples = nomeSimples;
 
-                                    atividade.pessoaDesignado = pessoa;
-                                }
-                            });
+                                        atividade.pessoaDesignado = pessoa;
+                                        atividade.nomeDesignado = pessoa.nome;
+                                    }
+                                });
+                            }
                         });
+                        $scope.projeto = projeto;
                         $scope.showLoading = false;
                     }
                 });
-
-            };
+            }
 
             $scope.editarAtividade = function (projeto) {
                 $uibModal
@@ -60,6 +66,7 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {
+                        loadProject();
                     }, function () {
                     });
             }
