@@ -13,7 +13,7 @@ angular.module('team-task')
         };
 
         $scope.ok = function () {
-            if($scope.novoProjeto.nome) {
+            if ($scope.novoProjeto.nome) {
                 $scope.novoProjeto.administrador = $rootScope.usuarioLogado._id.$oid;
                 $scope.novoProjeto.$save().then(function () {
                     $state.go('workspace-projects');
@@ -40,7 +40,7 @@ angular.module('team-task')
         };
 
         $scope.deleteProject = function () {
-            if($scope.projeto) {
+            if ($scope.projeto) {
                 $uibModal
                     .open({
                         templateUrl: 'views/modal/delete-project.html',
@@ -67,7 +67,7 @@ angular.module('team-task')
             }
         };
 
-        function deleteProject () {
+        function deleteProject() {
             $scope.projeto.$remove().then(function () {
                 $scope.$close(true);
             });
@@ -98,10 +98,10 @@ angular.module('team-task')
             $scope.atividadeNova = {
                 "nome": "",
                 "status": "Aguardando",
-                "inicio": {"$date" : new Date()},
+                "inicio": {"$date": new Date()},
                 "duracao": 1,
-                "fim": {"$date" : new Date()},
-                "designado" : ""
+                "fim": {"$date": new Date()},
+                "designado": ""
             };
             $scope.listaTimes = [];
 
@@ -117,7 +117,7 @@ angular.module('team-task')
         };
 
         $scope.calculaFim = function () {
-            if($scope.atividadeNova.duracao !== 0 && $scope.atividadeNova.inicio.$date) {
+            if ($scope.atividadeNova.duracao !== 0 && $scope.atividadeNova.inicio.$date) {
                 $scope.atividadeNova.fim.$date = moment($scope.atividadeNova.inicio.$date).businessAdd(($scope.atividadeNova.duracao - 1)).toDate();
             } else {
                 $scope.atividadeNova.fim.$date = null;
@@ -127,20 +127,20 @@ angular.module('team-task')
         $scope.carregaPessoas = function () {
             $scope.listaRecursos = [];
             $scope.showSelectLoading = true;
-            if($scope.time) {
+            if ($scope.time) {
                 Time.getById($scope.time._id.$oid).then(function (time) {
-                    if(time) {
+                    if (time) {
                         var arrayOids = [];
-                        for(var i = 0; i < time.recursos.length; i++) {
-                            arrayOids.push({"$oid" : time.recursos[i]});
+                        for (var i = 0; i < time.recursos.length; i++) {
+                            arrayOids.push({"$oid": time.recursos[i]});
                         }
                         var pQuery = {
                             "_id": {
-                                "$in" : arrayOids
+                                "$in": arrayOids
                             }
                         };
                         Pessoa.query(pQuery).then(function (pessoas) {
-                            if(pessoas[0]) {
+                            if (pessoas[0]) {
                                 $scope.listaRecursos = pessoas;
                                 $scope.showSelectLoading = false;
                             }
@@ -150,23 +150,23 @@ angular.module('team-task')
             }
         };
 
-        function novaAtividadeValida () {
+        function novaAtividadeValida() {
             var valido = true;
             $scope.activityNameErro = "";
             $scope.activityInicioErro = "";
             $scope.activityDuracaoErro = "";
 
-            if(!$scope.atividadeNova.nome) {
+            if (!$scope.atividadeNova.nome) {
                 $scope.activityNameErro = "O Nome é obrigatório na criação da atividade.";
                 valido = false;
             }
 
-            if(!$scope.atividadeNova.inicio.$date) {
+            if (!$scope.atividadeNova.inicio.$date) {
                 $scope.activityInicioErro = "O Inicio é obrigatório na criação da atividade.";
                 valido = false;
             }
 
-            if(!$scope.atividadeNova.duracao || $scope.atividadeNova.duracao === 0) {
+            if (!$scope.atividadeNova.duracao || $scope.atividadeNova.duracao === 0) {
                 $scope.activityDuracaoErro = "A Duração é obrigatório  e deve ser maior que zero na criação da atividade.";
                 valido = false;
             }
@@ -177,21 +177,29 @@ angular.module('team-task')
 
         $scope.ok = function () {
 
-            if(novaAtividadeValida()) {
+            if (novaAtividadeValida()) {
                 var inicioAtividade = $scope.atividadeNova.inicio.$date;
                 var fimAtividade = $scope.atividadeNova.fim.$date;
 
                 //possui a data inicio
-                if(projetoSelecionado.inicio) {
+                if (projetoSelecionado.inicio.$date) {
                     //verficar se data da atividade é menor que a do projeto para poder atualizar
-                    if(moment(projetoSelecionado.inicio.$date).isAfter(moment(inicioAtividade))) {
+                    if (moment(projetoSelecionado.inicio.$date).isAfter(moment(inicioAtividade))) {
                         projetoSelecionado.inicio.$date = inicioAtividade;
                     }
+                } else {
+                    projetoSelecionado.inicio.$date = inicioAtividade;
+                }
 
-                    if(moment(projetoSelecionado.inicio.$date).isBefore(moment(fimAtividade))) {
+                if (projetoSelecionado.fim.$date) {
+                    if (moment(projetoSelecionado.inicio.$date).isBefore(moment(fimAtividade))) {
                         projetoSelecionado.fim.$date = fimAtividade;
                     }
+                } else {
+                    projetoSelecionado.fim.$date = fimAtividade;
                 }
+
+
                 projetoSelecionado.atividades.push($scope.atividadeNova);
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);
