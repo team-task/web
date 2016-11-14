@@ -1,10 +1,18 @@
 angular.module('team-task')
     .controller('ProjectController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa', 'DTColumnDefBuilder',
+        'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa', '$interval',
         function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal,
-                  $stateParams, Pessoa, DTColumnDefBuilder) {
+                  $stateParams, Pessoa, $interval) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
+
+            /*
+            timer futuro
+            $interval(function () {
+                loadProject();
+                $rootScope.$emit("CallLoadMenus", {});
+            }, 30000);
+            */
 
             $scope.initWorkspaceProject = function () {
                 loadProject();

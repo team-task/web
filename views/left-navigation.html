@@ -7,8 +7,12 @@
                 <a ui-sref="workspace-projects" class="pointer-action link-leftnavigation">Projetos</a>
                 <ul class="nav" id="collapseProjects">
                     <li class="tt-sub-menu" ng-repeat="projeto in projetos">
-                        <span ng-click="addToFav();" class="pointer-action pull-right fa collapse-link"
-                              ng-class="usuarioLogado.favorito === projeto._id.$oid ? 'fa-star' : 'fa-star-o'"></span>
+                        <div class="pull-right collapse-link"
+                              ng-class="projeto.alerta === 'vermelho' ? 'alerta-vermelho' :
+                               projeto.alerta === 'amarelo' ? 'alerta-amarelo' : 'alerta-verde'"
+                                uib-tooltip="{{projeto.alerta}}">
+                            <div class="alerta-square"></div>
+                        </div>
                         <a ui-sref="project({'id' : projeto._id.$oid})" class="pointer-action link-leftnavigation-project">
                             {{projeto.nome}}
                         </a>

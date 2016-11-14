@@ -192,6 +192,24 @@ form.login label {
     padding-left: 15px;
 }
 
+.alerta-square {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.alerta-vermelho > .alerta-square {
+    background-color: #d9534f;
+}
+
+.alerta-verde > .alerta-square {
+    background-color: #5cb85c;
+}
+
+.alerta-amarelo > .alerta-square {
+    background-color: #f0ad4e;
+}
+
 .tt-avatar-header {
     float: left;
 }
