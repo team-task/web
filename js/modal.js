@@ -222,6 +222,7 @@ angular.module('team-task')
                 if($scope.atividadeNova.designado) {
                     $scope.atividadeNova.designado = $scope.atividadeNova.designado._id.$oid;
                 }
+                projetoSelecionado.duracao = (moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days', true)) + 1;
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);
