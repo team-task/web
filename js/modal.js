@@ -179,6 +179,7 @@ angular.module('team-task')
         $scope.ok = function () {
 
             if (novaAtividadeValida()) {
+                waitingDialog.show('Salvando atividade. Aguarde');
                 var inicioAtividade = $scope.atividadeNova.inicio.$date;
                 var fimAtividade = $scope.atividadeNova.fim.$date;
 
@@ -226,6 +227,7 @@ angular.module('team-task')
                 projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
+                    waitingDialog.hide();
                     $scope.$close(true);
                 });
             }
@@ -238,7 +240,7 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditActivityController',
-    function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa) {
+    function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa, $uibModal) {
         $scope.projeto = {};
         $scope.indice = 0;
         $scope.time = {};
@@ -374,6 +376,70 @@ angular.module('team-task')
                 });
             }
         };
+
+        $scope.deleteActivity = function () {
+            if ($scope.projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/delete-activity.html',
+                        controller: function ($scope, atividadeExclusao) {
+                            $scope.atividade = atividadeExclusao;
+                            $scope.ok = function () {
+                                $scope.$close(true);
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            atividadeExclusao: function () {
+                                return $scope.projeto.atividades[$scope.indice];
+                            }
+                        }
+                    }).result.then(function () {
+                        executeDeleteActivity();
+                    }, function () {
+
+                    });
+            }
+        };
+
+        function executeDeleteActivity () {
+            waitingDialog.show('Excluido atividade. Aguarde');
+            projetoSelecionado.atividades.splice(indice, 1);
+            if(projetoSelecionado.atividades.length > 0) {
+                var menorDataInicio = null;
+                var maiorDataFim = null;
+                for (var i = 0; i < projetoSelecionado.atividades.length; i++) {
+                    if (!menorDataInicio) {
+                        menorDataInicio = projetoSelecionado.atividades[i].inicio.$date;
+                    } else {
+                        if (moment(menorDataInicio).isAfter(moment(projetoSelecionado.atividades[i].inicio.$date))) {
+                            menorDataInicio = projetoSelecionado.atividades[i].inicio.$date;
+                        }
+                    }
+                    if (!maiorDataFim) {
+                        maiorDataFim = projetoSelecionado.atividades[i].fim.$date;
+                    } else {
+                        if (moment(maiorDataFim).isBefore(moment(projetoSelecionado.atividades[i].fim.$date))) {
+                            maiorDataFim = projetoSelecionado.atividades[i].fim.$date;
+                        }
+                    }
+                }
+                projetoSelecionado.inicio = { "$date": menorDataInicio };
+                projetoSelecionado.fim = { "$date": maiorDataFim };
+                projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
+
+            } else {
+                projetoSelecionado.inicio = null;
+                projetoSelecionado.fim = null;
+                projetoSelecionado.duracao = null;
+            }
+            projetoSelecionado.$saveOrUpdate().then(function () {
+                waitingDialog.hide();
+                $scope.$close(true);
+            });
+        }
 
         $scope.cancel = function () {
             $scope.$dismiss();

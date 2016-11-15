@@ -1,0 +1,13 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Excluindo {{atividade.nome}}</h4>
+</div>
+<div class="modal-body">
+    <div class="alert alert-danger" role="alert">
+        <p>Você deseja excluir a atividade:&nbsp;<strong>{{atividade.nome}}</strong>&nbsp;?</p>
+        <p>O inicio e fim do projeto podem ser alterados por esta alteração.</p>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

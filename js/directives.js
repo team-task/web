@@ -43,7 +43,7 @@ angular.module('team-task')
                                 var pQuery = {
                                     "$or": [
                                         {"administrador": idusuario}
-                                        , {"time": {"$in": listaTimes}}]
+                                        , {"atividades.designado": idusuario}]
                                 };
                                 Projeto.query(pQuery).then(function (projetos) {
                                     $scope.projetos = projetos;
