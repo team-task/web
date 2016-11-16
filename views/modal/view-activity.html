@@ -1,0 +1,47 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">{{projeto.atividades[indice].nome}}</h4>
+</div>
+<div class="modal-body" ng-init="initModalEditActivity()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label>Status</label>
+                <input type="text" readonly class="form-control" ng-model="projeto.atividades[indice].status"
+                       placeholder="Status da atividade">
+            </div>
+
+            <div class="form-group">
+                <label>Inicio</label>
+                <input type="date" readonly class="form-control" ng-model="projeto.atividades[indice].inicio.$date"
+                       placeholder="Data de Inicio">
+            </div>
+
+            <div class="form-group">
+                <label>Duração</label>
+                <input type="number" readonly min="1" max="999" step="1" class="form-control" ng-model="projeto.atividades[indice].duracao"
+                       placeholder="Duração">
+            </div>
+
+            <div class="form-group">
+                <label>Até</label>
+                <input type="date" readonly class="form-control" ng-model="projeto.atividades[indice].fim.$date"
+                       placeholder="Data de Fim">
+            </div>
+
+            <div class="form-group" ng-show="designado != null">
+                <label for="designado">Desigando para</label>
+                <input id="designado" readonly class="form-control" ng-model="designado.nome">
+            </div>
+
+            <div class="form-group">
+                <label for="notas">Notas</label>
+                <textarea readonly id="notas" class="form-control" ng-model="projeto.atividades[indice].notas"></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Fechar</button>
+</div>

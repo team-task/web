@@ -446,3 +446,34 @@ angular.module('team-task')
             $scope.$dismiss();
         };
     });
+
+
+angular.module('team-task')
+    .controller('ModalViewActivityController',
+    function ($scope, projetoSelecionado, indice, Pessoa) {
+        $scope.indice = 0;
+
+        $scope.initModalEditActivity = function () {
+            $scope.indice = indice;
+            $scope.listaTimes = [];
+            if(projetoSelecionado.atividades[indice].inicio.$date) {
+                projetoSelecionado.atividades[indice].inicio.$date =
+                    moment(projetoSelecionado.atividades[indice].inicio.$date).toDate();
+                projetoSelecionado.atividades[indice].fim.$date =
+                    moment(projetoSelecionado.atividades[indice].fim.$date).toDate();
+            }
+
+            if(projetoSelecionado.atividades[indice].designado) {
+                Pessoa.getById(projetoSelecionado.atividades[indice].designado).then(function (designado) {
+                    if (designado) {
+                        $scope.designado = designado;
+                    }
+                })
+            }
+            $scope.projeto = projetoSelecionado;
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });

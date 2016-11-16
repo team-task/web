@@ -83,5 +83,23 @@ angular.module('team-task')
                         $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
-            }
+            };
+
+            $scope.mostrarDetalheAtividade = function (indice) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-activity.html',
+                        controller: 'ModalViewActivityController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            },
+                            indice : function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
+            };
         }]);
