@@ -26,7 +26,7 @@
                 <a ui-sref="workspace-activities" class="pointer-action link-leftnavigation">Atividades</a>
                 <ul class="nav" id="collapseActivities">
                     <li class="tt-sub-menu" ng-repeat="time in times">
-                        <a ui-sref="activity({'id': time._id.$oid})">
+                        <a ui-sref="team-activities({'id': time._id.$oid})">
                             {{time.nome}}
                             <span class="badge pull-right">{{time.atividades.length}}</span>
                         </a>
