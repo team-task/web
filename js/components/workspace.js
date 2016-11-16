@@ -103,7 +103,6 @@ angular.module('team-task')
                         };
                         Atividade.query(aQuery).then(function (atividades) {
                             angular.forEach(atividades, function (atividade, idAtividade) {
-                                atividade.lider = "";
                                 var _id = {
                                     "_id": {
                                         "$oid": atividade.time
@@ -112,8 +111,8 @@ angular.module('team-task')
                                 var time = $filter('filter')(times, _id);
                                 if (time && time.length > 0) {
                                     time = time[0];
-                                    time.pessoaLider = {};
-                                    time.pessoaRecurso = [];
+                                    atividade.pessoaLider = {};
+                                    atividade.pessoaRecurso = {};
                                     Pessoa.getById(time.lider).then(function (lider) {
 
                                         var nomes = lider.nome.split(" ");
@@ -124,24 +123,22 @@ angular.module('team-task')
                                         }
                                         lider.iniciais = iniciais.toUpperCase();
                                         lider.nomeSimples = nomeSimples;
-                                        time.pessoaLider = lider;
-                                        atividade.lider = lider.nome;
+                                        atividade.pessoaLider = lider;
                                     });
-                                    for (var a = 0; a < time.recursos.length; a++) {
 
-                                        Pessoa.getById(time.recursos[a]).then(function (recurso) {
 
-                                            var nomes = recurso.nome.split(" ");
-                                            var iniciais = nomes[0].substring(0, 1);
-                                            var nomeSimples = nomes[0];
-                                            if (nomes.length > 1) {
-                                                iniciais += nomes[1].substring(0, 1);
-                                            }
-                                            recurso.iniciais = iniciais.toUpperCase();
-                                            recurso.nomeSimples = nomeSimples;
-                                            time.pessoaRecurso.push(recurso);
-                                        });
-                                    }
+                                    Pessoa.getById(atividade.designado).then(function (recurso) {
+
+                                        var nomes = recurso.nome.split(" ");
+                                        var iniciais = nomes[0].substring(0, 1);
+                                        var nomeSimples = nomes[0];
+                                        if (nomes.length > 1) {
+                                            iniciais += nomes[1].substring(0, 1);
+                                        }
+                                        recurso.iniciais = iniciais.toUpperCase();
+                                        recurso.nomeSimples = nomeSimples;
+                                        atividade.pessoaRecurso = recurso;
+                                    });
                                     atividade.timeObj = time;
                                 }
                             });
