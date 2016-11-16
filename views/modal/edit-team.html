@@ -1,0 +1,92 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Editando Atividade de: {{projeto.nome}}&nbsp;<span class="pointer-action" ng-click="deleteActivity()"><i class="fa fa-trash-o"></i></span></h4>
+</div>
+<div class="modal-body" ng-init="initModalEditActivity()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" class="form-control" ng-model="projeto.atividades[indice].nome"
+                       placeholder="Nome da nova atividade" ng-focus="activityNameErro = ''">
+                <span ng-show="activityNameErro !==''" class="help-block alert-danger">
+                    {{activityNameErro}}
+                </span>
+            </div>
+
+            <!--
+            <div class="form-group">
+                <label>Status</label>
+                <input type="text" readonly class="form-control" ng-model="atividadeNova.status"
+                       placeholder="Status da atividade">
+            </div>
+            -->
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" class="form-control" ng-model="projeto.atividades[indice].status">
+                    <option value="Aguardando">Aguardando</option>
+                    <option value="Iniciada">Iniciada</option>
+                    <option value="Cancelada">Cancelada</option>
+                    <option value="Concluída">Concluída</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Inicio</label>
+                <input type="date" class="form-control" ng-model="projeto.atividades[indice].inicio.$date"
+                       placeholder="Data de Inicio" ng-change="calculaFim();"
+                       ng-focus="activityInicioErro = ''">
+                <span ng-show="activityInicioErro !==''" class="help-block alert-danger">
+                    {{activityInicioErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>Duração</label>
+                <input type="number" min="1" max="999" step="1" class="form-control" ng-model="projeto.atividades[indice].duracao"
+                       placeholder="Duração" ng-change="calculaFim();" ng-focus="activityDuracaoErro = ''">
+                <span ng-show="activityDuracaoErro !==''" class="help-block alert-danger">
+                    {{activityDuracaoErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>Até</label>
+                <input type="date" readonly class="form-control" ng-model="projeto.atividades[indice].fim.$date"
+                       placeholder="Data de Fim">
+            </div>
+
+            <div class="form-group">
+                <label for="time">Time</label>
+                <select id="time" class="form-control" ng-model="time" ng-options="time.nome for time in listaTimes"
+                        ng-change="carregaPessoas();" aria-describedby="helpBlock">
+                </select>
+                <span id="helpBlock" class="help-block" ng-show="showSelectLoading">
+                    <div class="progress mini-progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar"
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                        </div>
+                    </div>
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="designado">Desigando para</label>
+                <select id="designado" class="form-control" ng-model="projeto.atividades[indice].designado"
+                        ng-options="recurso._id.$oid as recurso.nome for recurso in listaRecursos">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="notas">Notas</label>
+                <textarea id="notas" class="form-control" ng-model="projeto.atividades[indice].notas"></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

@@ -447,6 +447,69 @@ angular.module('team-task')
         };
     });
 
+angular.module('team-task')
+    .controller('ModalEditTeamController',
+    function ($scope, timeSelecionado) {
+
+        $scope.initModalEditTeam = function () {
+
+        };
+
+        $scope.ok = function () {
+            $scope.$close(true);
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
+
+angular.module('team-task')
+    .controller('ModalViewTeamController',
+    function ($scope, timeSelecionado) {
+
+        $scope.initModalViewTeam = function () {
+
+        };
+
+        $scope.ok = function () {
+            $scope.$close(true);
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
+
+angular.module('team-task')
+    .controller('ModalNewTeamController',
+    function ($scope, $rootScope, Time) {
+        $scope.timeNovo = {};
+        $scope.recursosPessoas = [];
+        $scope.initModalNewTeam = function () {
+            var idusuario = $rootScope.usuarioLogado._id.$oid;
+            $scope.timeNovo = new Time();
+            $scope.timeNovo.nome = "";
+            $scope.timeNovo.status = "Ativo";
+            $scope.timeNovo.descricao = "";
+            $scope.timeNovo.recursos = [];
+            $scope.timeNovo.tecnologias = [];
+            $scope.timeNovo.lider = idusuario;
+            $scope.teamNameErro = "";
+        };
+
+        $scope.adicionarPessoaRecurso = function (time) {
+
+        };
+
+        $scope.ok = function () {
+            $scope.$close(true);
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
 
 angular.module('team-task')
     .controller('ModalViewActivityController',

@@ -1,0 +1,54 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Novo Time</h4>
+</div>
+<div class="modal-body" ng-init="initModalNewTeam()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" class="form-control" ng-model="timeNovo.nome"
+                       placeholder="Nome do time" ng-focus="teamNameErro = ''">
+                <span ng-show="teamNameErro !==''" class="help-block alert-danger">
+                    {{teamNameErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="notas">Descricao</label>
+                <textarea id="notas" class="form-control" ng-model="timeNovo.descricao" placeholder="Descrição do Time">
+                </textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" class="form-control" ng-model="timeNovo.status">
+                    <option value="Ativo">Ativo</option>
+                    <option value="Inativo">Inativo</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Recursos</label>
+                &nbsp;
+                <button class="btn btn-success btn-sm tt-btn-round" uib-tooltip="Adicionar recurso"
+                        ng-click="adicionarPessoaRecurso(timeNovo);">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <div class="list-group">
+                    <div class="list-group-item" ng-repeat="pessoa in recursosPessoas">
+                        {{pessoa.nome}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tecnologias</label>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

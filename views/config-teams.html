@@ -1,0 +1,68 @@
+<div class="wrapper" ng-controller="ConfigTeamsController">
+    <header header>
+    </header>
+    <div class="progress mini-progress" ng-show="showLoading">
+        <div class="progress-bar progress-bar-striped active" role="progressbar"
+             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            <span class="sr-only">100% Complete</span>
+        </div>
+    </div>
+    <div class="container-fluid tt-container">
+        <div class="row">
+            <ol class="breadcrumb">
+                <li><a ui-sref="workspace-projects">Projetos</a></li>
+                <li class="active">Times</li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="task-list-panel container-fluid" ng-init="initConfigTeams()">
+                    <div>
+                        <h3 class="page-header">
+                            Times
+                            <button ng-click="novoTime();" class="btn btn-danger btn-sm tt-btn-round"
+                                    uib-tooltip="Novo Time">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div>
+
+                    </div>
+                    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"
+                           class="table table-hover">
+                        <thead>
+                        <tr>
+                            <td>Nome</td>
+                            <td>Status</td>
+                            <td>Recursos</td>
+                            <td>Tecnologias</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="time in times">
+                            <td class="tb-project-name">
+                                <a ng-click="mostrarDetalheTime(time)" class="pointer-action">{{time.nome}}</a>&nbsp;
+                                <span ng-show="usuarioLogado._id.$oid === time.lider"
+                                      class="btn-edit-project" ng-click="editarTime(time);"><i
+                                        class="fa fa-pencil-square-o"></i></span>
+                            </td>
+                            <td>{{time.status}}</td>
+                            <td>
+                                <span ng-repeat="recurso in time.pessoaRecurso">
+                                    <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
+                                                      data="{{recurso.iniciais}}"
+                                                      uib-tooltip="{{recurso.nome}}"></ng-letter-avatar>
+                                </span>
+                            </td>
+                            <td>
+                                <span ng-repeat="tec in time.tecnologias">{{tec}}&nbsp;</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

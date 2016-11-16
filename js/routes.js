@@ -26,5 +26,11 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             templateUrl: 'views/project.html',
             reloadOnSearch: false,
             controller: 'ProjectController'
+        })
+        .state('config-teams', {
+            url: '/teams',
+            templateUrl: 'views/config-teams.html',
+            reloadOnSearch: false,
+            controller: 'ConfigTeamsController'
         });
 });
