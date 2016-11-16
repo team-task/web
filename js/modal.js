@@ -221,9 +221,6 @@ angular.module('team-task')
                     projetoSelecionado.atividades.push($scope.atividadeNova);
                 }
 
-                if($scope.atividadeNova.designado) {
-                    $scope.atividadeNova.designado = $scope.atividadeNova.designado._id.$oid;
-                }
                 projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
@@ -240,7 +237,7 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditActivityController',
-    function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa, $uibModal) {
+    function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa, $uibModal, $filter) {
         $scope.projeto = {};
         $scope.indice = 0;
         $scope.time = {};
@@ -263,6 +260,13 @@ angular.module('team-task')
             Time.query(qTime).then(function (times) {
                 if (times[0]) {
                     $scope.listaTimes = times;
+                    if(projetoSelecionado.atividades[indice].designado) {
+                        var timeParaRecurso = $filter("filter")(times, {"recursos": projetoSelecionado.atividades[indice].designado});
+                        if(timeParaRecurso.length > 0) {
+                            $scope.time = timeParaRecurso[0];
+                        }
+                        $scope.carregaPessoas();
+                    }
                 }
             });
 
@@ -366,9 +370,6 @@ angular.module('team-task')
                     }
                 }
 
-                if($scope.projeto.atividades[$scope.indice].designado) {
-                    $scope.projeto.atividades[$scope.indice].designado = $scope.projeto.atividades[$scope.indice].designado._id.$oid;
-                }
                 projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
 
                 projetoSelecionado.$saveOrUpdate().then(function () {

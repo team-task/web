@@ -74,7 +74,7 @@
             <div class="form-group">
                 <label for="designado">Desigando para</label>
                 <select id="designado" class="form-control" ng-model="projeto.atividades[indice].designado"
-                        ng-options="recurso.nome for recurso in listaRecursos">
+                        ng-options="recurso._id.$oid as recurso.nome for recurso in listaRecursos">
                 </select>
             </div>
 
