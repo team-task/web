@@ -76,4 +76,21 @@ angular.module('team-task')
             $scope.initTeamActivities = function () {
                 loadTable();
             };
+
+            $scope.novaAtividadeTime = function () {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/new-team-activity.html',
+                        controller: 'ModalNewTeamActivityController',
+                        resolve: {
+                            timeSelecionado: function () {
+                                return $scope.time;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadTable();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            };
         }]);

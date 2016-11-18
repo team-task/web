@@ -540,3 +540,87 @@ angular.module('team-task')
             $scope.$dismiss();
         };
     });
+
+angular.module('team-task')
+    .controller('ModalNewTeamActivityController',
+    function ($scope, $rootScope, $state, timeSelecionado, Pessoa, Atividade) {
+        $scope.time = timeSelecionado;
+        $scope.showSelectLoading = false;
+        $scope.pessoas = [];
+
+        $scope.initModalNewTeamActivity = function () {
+            $scope.atividadeNova = new Atividade();
+            $scope.atividadeNova.nome = "";
+            $scope.atividadeNova.status = "Aguardando";
+            $scope.atividadeNova.inicio =  {"$date": new Date()};
+            $scope.atividadeNova.duracao= 1;
+            $scope.atividadeNova.fim =  {"$date": new Date()};
+            $scope.atividadeNova.designado = null;
+            $scope.atividadeNova.notas = "";
+
+            var idusuario = $rootScope.usuarioLogado._id.$oid;
+
+            var listaIdPessoa = [];
+            for(var i = 0; i < $scope.time.recursos.length; i++) {
+                listaIdPessoa.push({"$oid" : $scope.time.recursos[i]});
+            }
+            var pQuery = {
+                "_id": {
+                    "$in": listaIdPessoa
+                }
+            };
+
+            Pessoa.query(pQuery).then(function (pessoas) {
+                $scope.pessoas = pessoas;
+            });
+
+        };
+
+        $scope.calculaFim = function () {
+            if ($scope.atividadeNova.duracao !== 0 && $scope.atividadeNova.inicio.$date) {
+                $scope.atividadeNova.fim.$date = moment($scope.atividadeNova.inicio.$date).businessAdd(($scope.atividadeNova.duracao - 1)).toDate();
+            } else {
+                $scope.atividadeNova.fim.$date = null;
+            }
+        };
+
+        function novaAtividadeValida() {
+            var valido = true;
+            $scope.activityNameErro = "";
+            $scope.activityInicioErro = "";
+            $scope.activityDuracaoErro = "";
+
+            if (!$scope.atividadeNova.nome) {
+                $scope.activityNameErro = "O Nome é obrigatório na criação da atividade.";
+                valido = false;
+            }
+
+            if (!$scope.atividadeNova.inicio.$date) {
+                $scope.activityInicioErro = "O Inicio é obrigatório na criação da atividade.";
+                valido = false;
+            }
+
+            if (!$scope.atividadeNova.duracao || $scope.atividadeNova.duracao === 0) {
+                $scope.activityDuracaoErro = "A Duração é obrigatório  e deve ser maior que zero na criação da atividade.";
+                valido = false;
+            }
+
+            return valido;
+        }
+
+        $scope.ok = function () {
+
+            if (novaAtividadeValida()) {
+                waitingDialog.show('Salvando atividade. Aguarde');
+
+                $scope.atividadeNova.$saveOrUpdate().then(function () {
+                    waitingDialog.hide();
+                    $scope.$close(true);
+                });
+            }
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
