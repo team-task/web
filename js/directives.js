@@ -14,8 +14,8 @@ angular.module('team-task')
             restrict: 'A',
             replace: true,
             templateUrl: 'views/left-navigation.html',
-            controller: ['$scope', '$rootScope', 'Projeto', 'Time', 'Atividade', '$filter',
-                function ($scope, $rootScope, Projeto, Time, Atividade, $filter) {
+            controller: ['$scope', '$rootScope', 'Projeto', 'Time', 'Atividade', '$filter', 'Pessoa',
+                function ($scope, $rootScope, Projeto, Time, Atividade, $filter, Pessoa) {
 
                     loadMenus();
 
@@ -26,6 +26,7 @@ angular.module('team-task')
                     function loadMenus() {
                         $scope.projetos = [];
                         $scope.atividades = [];
+                        $scope.trabalhoPessoas = [];
                         var idusuario = $rootScope.usuarioLogado._id.$oid;
                         var qTime = {
                             "$or": [
@@ -61,6 +62,20 @@ angular.module('team-task')
                                     $scope.atividades = atividades;
                                     angular.forEach(times, function (time, idTime) {
                                         time.atividades = $filter('filter')(atividades, {'time' : time._id.$oid});
+                                    });
+
+                                });
+                                var recursosTotais = [];
+                                for(var a = 0;a < times.length; a++) {
+                                    recursosTotais = recursosTotais.concat(times[a].recursos);
+                                }
+                                recursosTotais = $filter('unique')(recursosTotais);
+                                angular.forEach(recursosTotais, function (rec, idRec) {
+                                    Pessoa.getById(rec).then(function (pessoa) {
+                                        if(pessoa) {
+                                            pessoa.quantidadeAtividades = 0;
+                                            $scope.trabalhoPessoas.push(pessoa);
+                                        }
                                     });
                                 });
                             }

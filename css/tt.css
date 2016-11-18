@@ -283,11 +283,11 @@ form.login label {
 }
 
 .tt-navbar-links .link-leftnavigation {
-    width: 250px;
+    width: calc(100% - 40px);
 }
 
 .tt-navbar-links .link-leftnavigation-project {
-    width: 230px;
+    width: calc(100% - 40px);
 }
 
 .collapse-link:hover {

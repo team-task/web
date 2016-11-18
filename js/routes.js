@@ -38,6 +38,17 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             templateUrl: 'views/team-activities.html',
             reloadOnSearch: false,
             controller: 'TeamActivitiesController'
+        })
+        .state('workspace-workforce', {
+            url: '/workspace/workforce',
+            templateUrl: 'views/workspace-workforce.html',
+            reloadOnSearch: false,
+            controller: 'WorkspaceWorkforceController'
+        })
+        .state('workforce', {
+            url: '/workforce/:id',
+            templateUrl: 'views/workforce.html',
+            reloadOnSearch: false,
+            controller: 'WorkforceController'
         });
-
 });

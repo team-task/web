@@ -5,7 +5,7 @@
                 <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseProjects"
                       data-target="#collapseProjects" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
                 <a ui-sref="workspace-projects" class="pointer-action link-leftnavigation">Projetos</a>
-                <ul class="nav" id="collapseProjects">
+                <ul class="nav collapse in" id="collapseProjects">
                     <li class="tt-sub-menu" ng-repeat="projeto in projetos">
                         <div class="pull-right collapse-link"
                               ng-class="projeto.alerta === 'vermelho' ? 'alerta-vermelho' :
@@ -24,7 +24,7 @@
                 <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseActivities"
                       data-target="#collapseActivities" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
                 <a ui-sref="workspace-activities" class="pointer-action link-leftnavigation">Atividades</a>
-                <ul class="nav" id="collapseActivities">
+                <ul class="nav collapse in" id="collapseActivities">
                     <li class="tt-sub-menu" ng-repeat="time in times">
                         <a ui-sref="team-activities({'id': time._id.$oid})">
                             {{time.nome}}
@@ -35,7 +35,17 @@
             </li>
             <li class="nav-divider"></li>
             <li>
-                <a ui-sref="workspace-projects" class="pointer-action">Carga de Trabalho</a>
+                <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseWorkforce"
+                      data-target="#collapseWorkforce" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
+                <a ui-sref="workspace-workforce" class="pointer-action link-leftnavigation">Carga de Trabalho</a>
+                <ul class="nav collapse in" id="collapseWorkforce">
+                    <li class="tt-sub-menu" ng-repeat="pessoa in trabalhoPessoas">
+                        <a ui-sref="workforce({'id': pessoa._id.$oid})">
+                            {{pessoa.nome}}
+                            <span class="badge pull-right">{{pessoa.quantidadeAtividades}}</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>
