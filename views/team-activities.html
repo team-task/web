@@ -74,7 +74,7 @@
                         <tbody>
                         <tr ng-repeat="atividade in time.atividades">
                             <td class="tb-project-name">
-                                <a ng-click="mostrarDetalheAtividade(atividade)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
+                                <a ng-click="mostrarDetalheAtividadeTime(atividade)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
                                 <span ng-show="usuarioLogado._id.$oid === time.lider"
                                       class="btn-edit-project" ng-click="editarAtividadeTime(atividade);"><i
                                         class="fa fa-pencil-square-o"></i></span>

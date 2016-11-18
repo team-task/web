@@ -114,4 +114,20 @@ angular.module('team-task')
                     }, function () {
                     });
             };
+
+            $scope.mostrarDetalheAtividadeTime = function (atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-team-activity.html',
+                        controller: 'ModalViewTeamActivityController',
+                        resolve: {
+                            atividadeSelecionada: function () {
+                                return atividade;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
+            };
+
         }]);
