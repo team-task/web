@@ -551,14 +551,13 @@ angular.module('team-task')
         $scope.initModalNewTeamActivity = function () {
             $scope.atividadeNova = new Atividade();
             $scope.atividadeNova.nome = "";
-            $scope.atividadeNova.status = "Aguardando";
+            $scope.atividadeNova.status = "aguardando";
             $scope.atividadeNova.inicio =  {"$date": new Date()};
             $scope.atividadeNova.duracao= 1;
             $scope.atividadeNova.fim =  {"$date": new Date()};
             $scope.atividadeNova.designado = null;
             $scope.atividadeNova.notas = "";
-
-            var idusuario = $rootScope.usuarioLogado._id.$oid;
+            $scope.atividadeNova.time = timeSelecionado._id.$oid;
 
             var listaIdPessoa = [];
             for(var i = 0; i < $scope.time.recursos.length; i++) {

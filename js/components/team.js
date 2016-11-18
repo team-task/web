@@ -52,18 +52,19 @@ angular.module('team-task')
                         };
                         Atividade.query(aQuery).then(function (atividades) {
                             angular.forEach(atividades, function (atividade, idAtividade) {
-                                Pessoa.getById(atividade.designado).then(function (recurso) {
-                                    var nomes = recurso.nome.split(" ");
-                                    var iniciais = nomes[0].substring(0, 1);
-                                    var nomeSimples = nomes[0];
-                                    if (nomes.length > 1) {
-                                        iniciais += nomes[1].substring(0, 1);
-                                    }
-                                    recurso.iniciais = iniciais.toUpperCase();
-                                    recurso.nomeSimples = nomeSimples;
-                                    atividade.pessoaRecurso = recurso;
-                                });
-
+                                if(atividade.designado) {
+                                    Pessoa.getById(atividade.designado).then(function (recurso) {
+                                        var nomes = recurso.nome.split(" ");
+                                        var iniciais = nomes[0].substring(0, 1);
+                                        var nomeSimples = nomes[0];
+                                        if (nomes.length > 1) {
+                                            iniciais += nomes[1].substring(0, 1);
+                                        }
+                                        recurso.iniciais = iniciais.toUpperCase();
+                                        recurso.nomeSimples = nomeSimples;
+                                        atividade.pessoaRecurso = recurso;
+                                    });
+                                }
                             });
                             $scope.time = time;
                             $scope.time.atividades = atividades;
