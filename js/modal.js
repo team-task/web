@@ -623,3 +623,122 @@ angular.module('team-task')
             $scope.$dismiss();
         };
     });
+
+
+angular.module('team-task')
+    .controller('ModalEditTeamActivityController',
+    function ($scope, $rootScope, $state, timeSelecionado, atividadeSelecionada, Pessoa, Atividade, $uibModal) {
+        $scope.time = timeSelecionado;
+        $scope.pessoas = [];
+
+        $scope.initModalEditTeamActivity = function () {
+            var listaIdPessoa = [];
+            for(var i = 0; i < $scope.time.recursos.length; i++) {
+                listaIdPessoa.push({"$oid" : $scope.time.recursos[i]});
+            }
+            var pQuery = {
+                "_id": {
+                    "$in": listaIdPessoa
+                }
+            };
+
+            Pessoa.query(pQuery).then(function (pessoas) {
+                $scope.pessoas = pessoas;
+            });
+
+            if(atividadeSelecionada.inicio.$date) {
+                atividadeSelecionada.inicio.$date =
+                    moment(atividadeSelecionada.inicio.$date).toDate();
+                atividadeSelecionada.fim.$date =
+                    moment(atividadeSelecionada.fim.$date).toDate();
+            }
+
+            $scope.atividade = atividadeSelecionada;
+
+        };
+
+        $scope.calculaFim = function () {
+            if ($scope.atividade.duracao !== 0 && $scope.atividade.inicio.$date) {
+                $scope.atividade.fim.$date = moment($scope.atividade.inicio.$date).businessAdd(($scope.atividade.duracao - 1)).toDate();
+            } else {
+                $scope.atividade.fim.$date = null;
+            }
+        };
+
+        function novaAtividadeValida() {
+            var valido = true;
+            $scope.activityNameErro = "";
+            $scope.activityInicioErro = "";
+            $scope.activityDuracaoErro = "";
+
+            if (!$scope.atividade.nome) {
+                $scope.activityNameErro = "O Nome é obrigatório na criação da atividade.";
+                valido = false;
+            }
+
+            if (!$scope.atividade.inicio.$date) {
+                $scope.activityInicioErro = "O Inicio é obrigatório na criação da atividade.";
+                valido = false;
+            }
+
+            if (!$scope.atividade.duracao || $scope.atividade.duracao === 0) {
+                $scope.activityDuracaoErro = "A Duração é obrigatório  e deve ser maior que zero na criação da atividade.";
+                valido = false;
+            }
+
+            return valido;
+        }
+
+        $scope.ok = function () {
+
+            if (novaAtividadeValida()) {
+                waitingDialog.show('Salvando atividade. Aguarde');
+                delete $scope.atividade.pessoaDesignado;
+                delete $scope.atividade.pessoaRecurso;
+                $scope.atividade.$saveOrUpdate().then(function () {
+                    waitingDialog.hide();
+                    $scope.$close(true);
+                });
+            }
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+
+        $scope.deleteTeamActivity = function () {
+            if ($scope.atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/delete-team-activity.html',
+                        controller: function ($scope, atividadeExclusao) {
+                            $scope.atividade = atividadeExclusao;
+                            $scope.ok = function () {
+                                $scope.$close(true);
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            atividadeExclusao: function () {
+                                return $scope.atividade;
+                            }
+                        }
+                    }).result.then(function () {
+                        executeDeleteTeamActivity();
+                    }, function () {
+
+                    });
+            }
+        };
+
+        function executeDeleteTeamActivity () {
+            waitingDialog.show('Excluido atividade. Aguarde');
+            atividadeSelecionada.$remove().then(function () {
+                waitingDialog.hide();
+                $scope.$close(true);
+            });
+        }
+
+    });

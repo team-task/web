@@ -126,19 +126,20 @@ angular.module('team-task')
                                         atividade.pessoaLider = lider;
                                     });
 
+                                    if(atividade.designado) {
+                                        Pessoa.getById(atividade.designado).then(function (recurso) {
 
-                                    Pessoa.getById(atividade.designado).then(function (recurso) {
-
-                                        var nomes = recurso.nome.split(" ");
-                                        var iniciais = nomes[0].substring(0, 1);
-                                        var nomeSimples = nomes[0];
-                                        if (nomes.length > 1) {
-                                            iniciais += nomes[1].substring(0, 1);
-                                        }
-                                        recurso.iniciais = iniciais.toUpperCase();
-                                        recurso.nomeSimples = nomeSimples;
-                                        atividade.pessoaRecurso = recurso;
-                                    });
+                                            var nomes = recurso.nome.split(" ");
+                                            var iniciais = nomes[0].substring(0, 1);
+                                            var nomeSimples = nomes[0];
+                                            if (nomes.length > 1) {
+                                                iniciais += nomes[1].substring(0, 1);
+                                            }
+                                            recurso.iniciais = iniciais.toUpperCase();
+                                            recurso.nomeSimples = nomeSimples;
+                                            atividade.pessoaRecurso = recurso;
+                                        });
+                                    }
                                     atividade.timeObj = time;
                                 }
                             });

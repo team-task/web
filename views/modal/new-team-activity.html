@@ -48,6 +48,7 @@
                 <label for="designado">Desigando para</label>
                 <select id="designado" class="form-control" ng-model="atividadeNova.designado"
                         ng-options="recurso._id.$oid as recurso.nome for recurso in pessoas">
+                    <option value="">Sem designação</option>
                 </select>
             </div>
 
