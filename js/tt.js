@@ -1,6 +1,6 @@
 angular.module('team-task', [
     'ui.router', 'ngResource', 'mongolabResourceHttp', 'ui.bootstrap', 'angular.filter', 'ngLetterAvatar', 'angularMoment',
-    'datatables', 'ngAnimate','gantt', 'gantt.table', 'gantt.tooltips', 'gantt.overlap'
+    'datatables', 'ngAnimate', 'gantt', 'gantt.table', 'gantt.tooltips', 'gantt.overlap'
 ])
     .constant('MONGOLAB_CONFIG', {API_KEY: 'YXgR-q92vuVCKlSm-ji3nplDTE7rHIQh', DB_NAME: 'tt'})
     .run(function (amMoment) {
@@ -21,19 +21,28 @@ angular.module('team-task', [
 
     })
     .filter('sumByKey', function () {
-    return function (data, key) {
-        if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
-            return 0;
-        }
+        return function (data, key) {
+            if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                return 0;
+            }
 
-        var sum = 0;
-        angular.forEach(data, function (obj, objKey) {
-            sum += parseFloat(obj[key]);
-        });
+            var sum = 0;
+            angular.forEach(data, function (obj, objKey) {
+                sum += parseFloat(obj[key]);
+            });
 
-        return sum;
-    };
-});
+            return sum;
+        };
+    })
+    .filter('timeMils', function () {
+        return function (data, key) {
+            if(data) {
+                return moment(data).toDate().getTime()
+            } else {
+                return 0
+            }
+        };
+    });
 
 $(document).ready(function () {
     $(document).on('click', '.panel-heading span.clickable', function (e) {

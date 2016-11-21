@@ -40,18 +40,17 @@
                         <tr ng-repeat="atividade in listaAtividades">
                             <td>{{atividade.nome}}</td>
                             <td>{{atividade.status}}</td>
-                            <td>{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                            <td data-order="{{atividade.inicio.$date | timeMils}}">{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>{{atividade.duracao}}</td>
-                            <td>{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
+                            <td data-order="{{atividade.fim.$date | timeMils}}">{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>{{atividade.timeObj.nome}}</td>
-                            <td>
+                            <td data-search="{{atividade.pessoaLider.nome}}">
                                 <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"
                                       class="tt-avatar-table" fontsize="14"
                                       data="{{atividade.pessoaLider.iniciais}}"
                                       uib-tooltip="{{atividade.pessoaLider.nome}}"></ng-letter-avatar>
                             </td>
-                            <td>
-
+                            <td data-search="{{atividade.pessoaRecurso.nome}}">
                                 <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
                                       data="{{atividade.pessoaRecurso.iniciais}}"
                                       uib-tooltip="{{atividade.pessoaRecurso.nome}}"></ng-letter-avatar>

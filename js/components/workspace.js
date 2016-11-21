@@ -76,6 +76,7 @@ angular.module('team-task')
             $scope.showLoading = false;
             $scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtAOptions.withOption('responsive', true);
+            $scope.dtAOptions.withOption('order', [[2,"asc"]]);
 
             function loadTable() {
                 $scope.listaAtividades = [];
@@ -276,7 +277,8 @@ angular.module('team-task')
                     "scale": 'day',
                     "width": true,
                     "currentDate": 'line',
-                    "tableHeaders": {'model.name': 'Recurso'}
+                    "tableHeaders": {'model.name': 'Recurso'},
+                    "sortMode": "model.name"
                 };
                 loadTable();
             };

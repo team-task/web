@@ -109,7 +109,8 @@ angular.module('team-task')
                     "scale": 'day',
                     "width": true,
                     "currentDate": 'line',
-                    "tableHeaders": {'model.name': 'Atividade'}
+                    "tableHeaders": {'model.name': 'Atividade'},
+                    "sortMode": "model.name"
                 };
                 loadTable();
             };

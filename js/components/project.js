@@ -5,7 +5,7 @@ angular.module('team-task')
                   $stateParams, Pessoa, $interval) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
-
+            $scope.dtOptions.withOption('order', [[2,"asc"]]);
             /*
             timer futuro
             $interval(function () {

@@ -39,7 +39,7 @@
                       data-target="#collapseWorkforce" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
                 <a ui-sref="workspace-workforce" class="pointer-action link-leftnavigation">Carga de Trabalho</a>
                 <ul class="nav collapse in" id="collapseWorkforce">
-                    <li class="tt-sub-menu" ng-repeat="pessoa in trabalhoPessoas">
+                    <li class="tt-sub-menu" ng-repeat="pessoa in trabalhoPessoas | orderBy: 'nome'">
                         <a ui-sref="workforce({'id': pessoa._id.$oid})">
                             {{pessoa.nome}}
                             <span class="badge pull-right">{{pessoa.quantidadeAtividades}}</span>
