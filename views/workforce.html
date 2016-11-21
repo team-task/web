@@ -13,10 +13,10 @@
                 <div left-navigation></div>
             </div>
             <div class="col-md-9">
-                <div class="task-list-panel container-fluid" ng-init="initWorkspaceProject()">
+                <div class="task-list-panel container-fluid" ng-init="initWorkforce()">
                     <div>
                         <h3 class="page-header">
-                            {{pessoa.nome}}
+                            {{cargaPessoa.nome}}
                             <!--
                             <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"
                                     uib-tooltip="Nova Atividade">
@@ -25,35 +25,18 @@
                             -->
                         </h3>
                     </div>
-                    <div>
 
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div gantt data=ganttData
+                                 current-date="ganttOptions.currentDate">
+                                <gantt-table headers="ganttOptions.tableHeaders"></gantt-table>
+                                <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
+                                <gantt-overlap></gantt-overlap>
+                            </div>
+                        </div>
                     </div>
-                    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"
-                           class="table table-hover">
-                        <thead>
-                        <tr>
-                            <td>Atividade</td>
-                            <td>Status</td>
-                            <td>Inicio</td>
-                            <td>Duração</td>
-                            <td>Até</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="atividade in atividades">
-                            <td class="tb-project-name">
-                                <a ng-click="mostrarDetalheAtividade($index)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
-                                <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
-                                      class="btn-edit-project" ng-click="editarAtividade($index);"><i
-                                        class="fa fa-pencil-square-o"></i></span>
-                            </td>
-                            <td>{{atividade.status}}</td>
-                            <td>{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
-                            <td>{{atividade.duracao}}</td>
-                            <td>{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+
                 </div>
             </div>
         </div>

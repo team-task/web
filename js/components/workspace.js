@@ -229,7 +229,7 @@ angular.module('team-task')
                                                             "name": projetos[p].atividades[at].nome,
                                                             "from": moment(projetos[p].atividades[at].inicio.$date),
                                                             "to": moment(projetos[p].atividades[at].fim.$date),
-                                                            "color": "#F1C232"
+                                                            "color": "#9FC5F8"
                                                         });
                                                     }
                                                 }
@@ -245,15 +245,8 @@ angular.module('team-task')
                 $scope.showLoading = false;
             }
 
-            $scope.canAutoWidth = function(scale) {
-                if (scale.match(/.*?hour.*?/) || scale.match(/.*?minute.*?/)) {
-                    return false;
-                }
-                return true;
-            };
-
             $scope.getColumnWidth = function(widthEnabled, scale, zoom) {
-                if (!widthEnabled && $scope.canAutoWidth(scale)) {
+                if (!widthEnabled) {
                     return undefined;
                 }
 
@@ -277,13 +270,13 @@ angular.module('team-task')
 
             $scope.initWorkspaceWorkforce = function () {
 
-
-
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.ganttOptions = {
                     "zoom": 1,
-                    "scale": "day",
-                    "width": true
+                    "scale": 'day',
+                    "width": true,
+                    "currentDate": 'line',
+                    "tableHeaders": {'model.name': 'Recurso'}
                 };
                 loadTable();
             };
