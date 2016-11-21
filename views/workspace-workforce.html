@@ -26,9 +26,36 @@
                         </h3>
                     </div>
                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span>Opções</span>
+                        </div>
                         <div class="panel-body">
-                            <div gantt data=ganttData>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="form-inline">
+                                        <div class="form-group text-center">
+                                            <label for="scale" class="control-label"><i class="fa fa-search"></i> Escala</label>
+                                            <br>
+                                            <select class="form-control" id="scale" ng-model="ganttOptions.scale">
+                                                <option value="day">Dia</option>
+                                                <option value="week">Semana</option>
+                                                <option value="2 weeks">2 Semanas</option>
+                                                <option value="month">Mês</option>
+                                                <option value="6 months">6 Meses</option>
+                                                <option value="year">Ano</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div gantt data=ganttData
+                                 column-width="getColumnWidth(ganttOptions.width, ganttOptions.scale, ganttOptions.zoom)">
                                 <gantt-table></gantt-table>
+                                <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
                             </div>
                         </div>
                     </div>
