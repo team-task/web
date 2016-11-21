@@ -1,8 +1,11 @@
 angular.module('team-task', [
     'ui.router', 'ngResource', 'mongolabResourceHttp', 'ui.bootstrap', 'angular.filter', 'ngLetterAvatar', 'angularMoment',
-    'datatables', 'ngAnimate'
+    'datatables', 'ngAnimate','gantt', 'gantt.table'
 ])
     .constant('MONGOLAB_CONFIG', {API_KEY: 'YXgR-q92vuVCKlSm-ji3nplDTE7rHIQh', DB_NAME: 'tt'})
+    .run(function (amMoment) {
+        amMoment.changeLocale('pt-br');
+    })
     .run(function ($rootScope, $state, $window) {
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var currentUser = angular.fromJson($window.sessionStorage.getItem('usuarioLogado'));

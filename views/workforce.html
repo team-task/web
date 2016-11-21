@@ -16,31 +16,14 @@
                 <div class="task-list-panel container-fluid" ng-init="initWorkspaceProject()">
                     <div>
                         <h3 class="page-header">
-                            {{projeto.nome}}
+                            {{pessoa.nome}}
+                            <!--
                             <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"
                                     uib-tooltip="Nova Atividade">
                                 <i class="fa fa-plus"></i>
                             </button>
+                            -->
                         </h3>
-
-                        <table class="table table-condensed">
-                            <thead>
-                            <tr>
-                                <td>Status</td>
-                                <td>Inicio</td>
-                                <td>Duração</td>
-                                <td>Até</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="active">
-                                <td>{{projeto.status}}</td>
-                                <td>{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
-                                <td>{{projeto.duracao}}</td>
-                                <td>{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
                     </div>
                     <div>
 
@@ -54,12 +37,10 @@
                             <td>Inicio</td>
                             <td>Duração</td>
                             <td>Até</td>
-                            <td>Designado</td>
-
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="atividade in projeto.atividades">
+                        <tr ng-repeat="atividade in atividades">
                             <td class="tb-project-name">
                                 <a ng-click="mostrarDetalheAtividade($index)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
                                 <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
@@ -70,13 +51,6 @@
                             <td>{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>{{atividade.duracao}}</td>
                             <td>{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
-                            <td>
-                                <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"
-                                                  class="tt-avatar-table" fontsize="14"
-                                                  data="{{atividade.pessoaDesignado.iniciais}}"
-                                                  uib-tooltip="{{atividade.pessoaDesignado.nome}}"></ng-letter-avatar>
-                            </td>
-
                         </tr>
                         </tbody>
                     </table>

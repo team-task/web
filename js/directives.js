@@ -74,7 +74,30 @@ angular.module('team-task')
                                     Pessoa.getById(rec).then(function (pessoa) {
                                         if(pessoa) {
                                             pessoa.quantidadeAtividades = 0;
-                                            $scope.trabalhoPessoas.push(pessoa);
+                                            var aQtdQuery = {
+                                                "time": {
+                                                    "$in": listaTimes
+                                                },
+                                                "designado": pessoa._id.$oid
+                                            };
+                                            Atividade.query(aQtdQuery).then(function (atividades) {
+                                                pessoa.quantidadeAtividades += atividades.length;
+                                                var pQtdQuery = {
+                                                    "administrador": idusuario,
+                                                    "status": "Ativo",
+                                                    "atividades.designado": pessoa._id.$oid
+                                                };
+                                                Projeto.query(pQtdQuery).then(function (projetos) {
+                                                    for (var p = 0; p < projetos.length; p++) {
+                                                        for (var at = 0; at < projetos[p].atividades.length; at++) {
+                                                            if(projetos[p].atividades[at].designado === pessoa._id.$oid) {
+                                                                pessoa.quantidadeAtividades++;
+                                                            }
+                                                        }
+                                                    }
+                                                    $scope.trabalhoPessoas.push(pessoa);
+                                                });
+                                            });
                                         }
                                     });
                                 });
