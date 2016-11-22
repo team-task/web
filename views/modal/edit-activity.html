@@ -58,9 +58,12 @@
 
             <div class="form-group">
                 <label for="time">Time</label>
-                <select id="time" class="form-control" ng-model="time" ng-options="time.nome for time in listaTimes"
-                        ng-change="carregaPessoas();" aria-describedby="helpBlock">
+                <select id="time" class="form-control" ng-model="projeto.atividades[indice].time" ng-options="time._id.$oid as time.nome for time in listaTimes"
+                        ng-change="carregaPessoas();" aria-describedby="helpBlock" ng-focus="activityTimeErro = ''">
                 </select>
+                <span ng-show="activityTimeErro !==''" class="help-block alert-danger">
+                    {{activityTimeErro}}
+                </span>
                 <span id="helpBlock" class="help-block" ng-show="showSelectLoading">
                     <div class="progress mini-progress">
                         <div class="progress-bar progress-bar-striped active" role="progressbar"

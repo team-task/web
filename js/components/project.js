@@ -5,7 +5,7 @@ angular.module('team-task')
                   $stateParams, Pessoa, $interval) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
-            $scope.dtOptions.withOption('order', [[2,"asc"]]);
+            $scope.dtOptions.withOption('order', [[3,"asc"]]);
             /*
             timer futuro
             $interval(function () {
@@ -38,6 +38,13 @@ angular.module('team-task')
 
                                         atividade.pessoaDesignado = pessoa;
                                         atividade.nomeDesignado = pessoa.nome;
+                                    }
+                                });
+                            }
+                            if(atividade.time) {
+                                Time.getById(atividade.time).then(function (time) {
+                                    if(time) {
+                                        atividade.nomeTime = time.nome;
                                     }
                                 });
                             }

@@ -90,7 +90,6 @@ angular.module('team-task')
 
         $scope.projeto = projetoSelecionado;
         $scope.atividadeNova = {};
-        $scope.time = {};
         $scope.listaRecursos = [];
         $scope.showSelectLoading = false;
 
@@ -102,7 +101,8 @@ angular.module('team-task')
                 "duracao": 1,
                 "fim": {"$date": new Date()},
                 "designado": "",
-                "notas": ""
+                "notas": "",
+                "time" : ""
             };
             $scope.listaTimes = [];
 
@@ -128,8 +128,8 @@ angular.module('team-task')
         $scope.carregaPessoas = function () {
             $scope.listaRecursos = [];
             $scope.showSelectLoading = true;
-            if ($scope.time) {
-                Time.getById($scope.time._id.$oid).then(function (time) {
+            if ($scope.atividadeNova.time) {
+                Time.getById($scope.atividadeNova.time).then(function (time) {
                     if (time) {
                         var arrayOids = [];
                         for (var i = 0; i < time.recursos.length; i++) {
@@ -156,6 +156,7 @@ angular.module('team-task')
             $scope.activityNameErro = "";
             $scope.activityInicioErro = "";
             $scope.activityDuracaoErro = "";
+            $scope.activityTimeErro = "";
 
             if (!$scope.atividadeNova.nome) {
                 $scope.activityNameErro = "O Nome é obrigatório na criação da atividade.";
@@ -169,6 +170,11 @@ angular.module('team-task')
 
             if (!$scope.atividadeNova.duracao || $scope.atividadeNova.duracao === 0) {
                 $scope.activityDuracaoErro = "A Duração é obrigatório  e deve ser maior que zero na criação da atividade.";
+                valido = false;
+            }
+
+            if(!$scope.atividadeNova.time) {
+                $scope.activityTimeErro = "O Time é obrigatorio na criação da atividade.";
                 valido = false;
             }
 
@@ -240,7 +246,6 @@ angular.module('team-task')
     function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa, $uibModal, $filter) {
         $scope.projeto = {};
         $scope.indice = 0;
-        $scope.time = {};
         $scope.listaRecursos = [];
         $scope.showSelectLoading = false;
 
@@ -261,10 +266,6 @@ angular.module('team-task')
                 if (times[0]) {
                     $scope.listaTimes = times;
                     if(projetoSelecionado.atividades[indice].designado) {
-                        var timeParaRecurso = $filter("filter")(times, {"recursos": projetoSelecionado.atividades[indice].designado});
-                        if(timeParaRecurso.length > 0) {
-                            $scope.time = timeParaRecurso[0];
-                        }
                         $scope.carregaPessoas();
                     }
                 }
@@ -285,8 +286,8 @@ angular.module('team-task')
         $scope.carregaPessoas = function () {
             $scope.listaRecursos = [];
             $scope.showSelectLoading = true;
-            if ($scope.time) {
-                Time.getById($scope.time._id.$oid).then(function (time) {
+            if (projetoSelecionado.atividades[indice].time) {
+                Time.getById(projetoSelecionado.atividades[indice].time).then(function (time) {
                     if (time) {
                         var arrayOids = [];
                         for (var i = 0; i < time.recursos.length; i++) {
@@ -313,6 +314,7 @@ angular.module('team-task')
             $scope.activityNameErro = "";
             $scope.activityInicioErro = "";
             $scope.activityDuracaoErro = "";
+            $scope.activityTimeErro = "";
 
             if (!$scope.projeto.atividades[$scope.indice].nome) {
                 $scope.activityNameErro = "O Nome é obrigatório na criação da atividade.";
@@ -329,6 +331,10 @@ angular.module('team-task')
                 valido = false;
             }
 
+            if(!$scope.atividadeNova.time) {
+                $scope.activityTimeErro = "O Time é obrigatorio na criação da atividade.";
+                valido = false;
+            }
 
             return valido;
         }
