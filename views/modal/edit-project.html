@@ -4,6 +4,16 @@
 <div class="modal-body" ng-init="initModalNewProject()">
     <div class="panel panel-primary">
         <div class="panel-body">
+
+            <div class="form-group">
+                <label>Nome do Projeto</label>
+                <input type="text" class="form-control" ng-focus="errorProjectName = ''"
+                       ng-model="projeto.nome" placeholder="Nome do novo projeto">
+                <span ng-show="errorProjectName !==''" class="help-block alert-danger">
+                    {{errorProjectName}}
+                </span>
+            </div>
+
             <div class="form-group">
                 <label for="status">Status</label>
                 <select id="status" class="form-control" ng-model="projeto.status">
