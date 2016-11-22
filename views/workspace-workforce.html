@@ -57,7 +57,9 @@
                             <div gantt data=ganttData
                                  column-width="getColumnWidth(ganttOptions.width, ganttOptions.scale, ganttOptions.zoom)"
                                  current-date="ganttOptions.currentDate"
-                                 sort-mode="ganttOptions.sortMode">
+                                 sort-mode="ganttOptions.sortMode"
+                                 daily="ganttOptions.daily"
+                                 task-content="ganttOptions.taskContent">
                                 <gantt-table headers="ganttOptions.tableHeaders"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
                                 <gantt-overlap></gantt-overlap>

@@ -230,7 +230,7 @@ angular.module('team-task')
                                                             "name": projetos[p].atividades[at].nome,
                                                             "from": moment(projetos[p].atividades[at].inicio.$date),
                                                             "to": moment(projetos[p].atividades[at].fim.$date),
-                                                            "color": "#9FC5F8"
+                                                            "color": "#F1C232"
                                                         });
                                                     }
                                                 }
@@ -278,7 +278,9 @@ angular.module('team-task')
                     "width": true,
                     "currentDate": 'line',
                     "tableHeaders": {'model.name': 'Recurso'},
-                    "sortMode": "model.name"
+                    "sortMode": "model.name",
+                    "daily": true,
+                    "taskContent": '<span></span>'
                 };
                 loadTable();
             };

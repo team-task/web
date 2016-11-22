@@ -1,7 +1,7 @@
 angular.module('team-task')
     .controller('WorkforceController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        'Pessoa', '$stateParams', 'Projeto',
-        function ($scope, $rootScope, $state, Atividade, Time, Pessoa, $stateParams, Projeto) {
+        'Pessoa', '$stateParams', 'Projeto', '$filter',
+        function ($scope, $rootScope, $state, Atividade, Time, Pessoa, $stateParams, Projeto, $filter) {
             $scope.showLoading = false;
 
             function loadTable() {
@@ -33,9 +33,13 @@ angular.module('team-task')
                                 Atividade.query(aQtdQuery).then(function (atividades) {
 
                                     for (var indexTimeAtividade = 0; indexTimeAtividade < atividades.length; indexTimeAtividade++) {
-
+                                        var time = $filter('filter')(times, {"_id" : {"$oid" : atividades[indexTimeAtividade].time}});
+                                        var nomeTime = "";
+                                        if(time && time.length > 0) {
+                                            nomeTime = time[0].nome + " / ";
+                                        }
                                         var rowAt = {
-                                            "name": atividades[indexTimeAtividade].nome
+                                            "name": nomeTime + atividades[indexTimeAtividade].nome
                                         };
                                         rowAt.tasks = [];
                                         rowAt.tasks.push({
@@ -56,7 +60,7 @@ angular.module('team-task')
                                             for (var at = 0; at < projetos[p].atividades.length; at++) {
                                                 if (projetos[p].atividades[at].designado === pessoa._id.$oid) {
                                                     var rowPr = {
-                                                        "name": projetos[p].atividades[at].nome
+                                                        "name": projetos[p].nome + " / " + projetos[p].atividades[at].nome
                                                     };
                                                     rowPr.tasks = [];
                                                     rowPr.tasks.push({

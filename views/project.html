@@ -61,7 +61,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="atividade in projeto.atividades">
-                            <td>{{atividade.nomeTime}}</td>
+                            <td data-order="{{atividade.nomeTime}}">{{atividade.nomeTime}}</td>
                             <td class="tb-project-name">
                                 <a ng-click="mostrarDetalheAtividade($index)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
                                 <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
