@@ -519,7 +519,7 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalViewActivityController',
-    function ($scope, projetoSelecionado, indice, Pessoa) {
+    function ($scope, projetoSelecionado, indice, Pessoa, Time) {
         $scope.indice = 0;
 
         $scope.initModalEditActivity = function () {
@@ -530,6 +530,14 @@ angular.module('team-task')
                     moment(projetoSelecionado.atividades[indice].inicio.$date).toDate();
                 projetoSelecionado.atividades[indice].fim.$date =
                     moment(projetoSelecionado.atividades[indice].fim.$date).toDate();
+            }
+
+            if(projetoSelecionado.atividades[indice].time) {
+                Time.getById(projetoSelecionado.atividades[indice].time).then(function (time) {
+                    if (time) {
+                        $scope.time = time;
+                    }
+                })
             }
 
             if(projetoSelecionado.atividades[indice].designado) {

@@ -29,6 +29,11 @@
                        placeholder="Data de Fim">
             </div>
 
+            <div class="form-group" ng-show="time != null">
+                <label for="time">Desigando para</label>
+                <input id="time" readonly class="form-control" ng-model="time.nome">
+            </div>
+
             <div class="form-group" ng-show="designado != null">
                 <label for="designado">Desigando para</label>
                 <input id="designado" readonly class="form-control" ng-model="designado.nome">
