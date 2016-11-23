@@ -110,10 +110,11 @@ angular.module('team-task')
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.ganttOptions = {
                     "zoom": 1,
-                    "scale": 'day',
+                    "scale": "week",
                     "width": true,
                     "currentDate": 'line',
                     "tableHeaders": {'model.name': 'Atividade'},
+                    "daily": true,
                     "sortMode": "model.from"
                 };
                 loadTable();

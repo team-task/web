@@ -29,8 +29,10 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div gantt data=ganttData
+                                 view-scale="ganttOptions.scale"
                                  current-date="ganttOptions.currentDate"
-                                 sort-mode="ganttOptions.sortMode">
+                                 sort-mode="ganttOptions.sortMode"
+                                 daily="ganttOptions.daily">
                                 <gantt-table headers="ganttOptions.tableHeaders"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
                                 <gantt-overlap></gantt-overlap>

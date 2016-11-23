@@ -55,11 +55,12 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div gantt data=ganttData
-                                 column-width="getColumnWidth(ganttOptions.width, ganttOptions.scale, ganttOptions.zoom)"
+                                 view-scale="ganttOptions.scale"
                                  current-date="ganttOptions.currentDate"
                                  sort-mode="ganttOptions.sortMode"
                                  daily="ganttOptions.daily"
-                                 task-content="ganttOptions.taskContent">
+                                 task-content="ganttOptions.taskContent"
+                                 headers="ganttOptions.headers">
                                 <gantt-table headers="ganttOptions.tableHeaders"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
                                 <gantt-overlap></gantt-overlap>
