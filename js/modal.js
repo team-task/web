@@ -337,7 +337,7 @@ angular.module('team-task')
                 valido = false;
             }
 
-            if (!$scope.atividadeNova.time) {
+            if (!$scope.projeto.atividades[$scope.indice].time) {
                 $scope.activityTimeErro = "O Time é obrigatorio na criação da atividade.";
                 valido = false;
             }
