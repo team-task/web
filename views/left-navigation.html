@@ -8,7 +8,7 @@
                     Projetos
                     &nbsp;<span ng-show="menuProjetoLoading" class="glyphicon glyphicon-refresh rotating"></span>
                 </a>
-                <ul class="nav collapse in" id="collapseProjects">
+                <ul class="nav collapse {{collapsed[0]}}" id="collapseProjects">
                     <li class="tt-sub-menu" ng-repeat="projeto in projetosMenu">
                         <div class="pull-right collapse-link"
                               ng-class="projeto.alerta === 'vermelho' ? 'alerta-vermelho' :
@@ -29,7 +29,7 @@
                 <a ui-sref="workspace-activities" class="pointer-action link-leftnavigation">Atividades
                     &nbsp;<span ng-show="menuAtividadesLoading" class="glyphicon glyphicon-refresh rotating"></span>
                 </a>
-                <ul class="nav collapse" id="collapseActivities">
+                <ul class="nav collapse {{collapsed[1]}}" id="collapseActivities">
                     <li class="tt-sub-menu" ng-repeat="time in timesMenu">
                         <a ui-sref="team-activities({'id': time._id.$oid})">
                             {{time.nome}}
@@ -45,7 +45,7 @@
                 <a ui-sref="workspace-workforce" class="pointer-action link-leftnavigation">Carga de Trabalho
                     &nbsp;<span ng-show="menuCargaLoading" class="glyphicon glyphicon-refresh rotating"></span>
                 </a>
-                <ul class="nav collapse" id="collapseWorkforce">
+                <ul class="nav collapse {{collapsed[2]}}" id="collapseWorkforce">
                     <li class="tt-sub-menu" ng-repeat="pessoa in trabalhoPessoasMenu | orderBy: 'nome'">
                         <a ui-sref="workforce({'id': pessoa._id.$oid})">
                             {{pessoa.nome}}

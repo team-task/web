@@ -14,17 +14,17 @@ angular.module('team-task')
             restrict: 'A',
             replace: true,
             templateUrl: 'views/left-navigation.html',
-            controller: ['$scope', '$rootScope', 'Projeto', 'Time', 'Atividade', '$filter', 'Pessoa',
-                function ($scope, $rootScope, Projeto, Time, Atividade, $filter, Pessoa) {
+            controller: ['$scope', '$rootScope', 'Projeto', 'Time', 'Atividade', '$filter', 'Pessoa', '$state', '$q',
+                function ($scope, $rootScope, Projeto, Time, Atividade, $filter, Pessoa, $state, $q) {
 
                     loadMenus();
+                    $scope.collapsed = $state.current.data.collapsed;
 
                     $rootScope.$on("CallLoadMenus", function(){
                         loadMenus();
                     });
 
                     function loadMenus() {
-
                         $scope.menuProjetoLoading = true;
                         $scope.menuAtividadesLoading = true;
                         $scope.menuCargaLoading = true;
@@ -75,8 +75,9 @@ angular.module('team-task')
                                             times[a].atividades = $filter('filter')(atividades, {'time': times[a]._id.$oid});
                                         }
                                         recursosTotais = $filter('unique')(recursosTotais);
+                                        var promisses = [];
                                         angular.forEach(recursosTotais, function (rec, idRec) {
-                                            Pessoa.getById(rec, {"sort": {"nome": 1}}).then(function (pessoa) {
+                                            var pessoaProm = Pessoa.getById(rec, {"sort": {"nome": 1}}).then(function (pessoa) {
                                                 if (pessoa) {
                                                     pessoa.quantidadeAtividades = 0;
                                                     var aQtdQuery = {
@@ -105,8 +106,11 @@ angular.module('team-task')
                                                     });
                                                 }
                                             });
+                                            promisses.push(pessoaProm);
                                         });
-                                        $scope.menuCargaLoading = false;
+                                        $q.all(promisses).then(function () {
+                                            $scope.menuCargaLoading = false;
+                                        });
                                     });
                                 }
                             });

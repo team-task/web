@@ -17,7 +17,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             controller: 'WorkspaceProjectsController',
             data: {
-                requiredlogin: true
+                requiredlogin: true,
+                collapsed: ["in", "", ""]
             }
 
         })
@@ -27,7 +28,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             controller: 'WorkspaceActivitiesController',
             data: {
-                requiredlogin: true
+                requiredlogin: true,
+                collapsed: ["", "in", ""]
             }
         })
         .state('project', {
@@ -36,7 +38,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             controller: 'ProjectController',
             data: {
-                requiredlogin: true
+                requiredlogin: true,
+                collapsed: ["in", "", ""]
             }
         })
         .state('config-teams', {
@@ -54,7 +57,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             controller: 'TeamActivitiesController',
             data: {
-                requiredlogin: true
+                requiredlogin: true,
+                collapsed: ["", "in", ""]
             }
         })
         .state('workspace-workforce', {
@@ -63,7 +67,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             controller: 'WorkspaceWorkforceController',
             data: {
-                requiredlogin: true
+                requiredlogin: true,
+                collapsed: ["", "", "in"]
             }
         })
         .state('workforce', {
@@ -72,7 +77,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             controller: 'WorkforceController',
             data: {
-                requiredlogin: true
+                requiredlogin: true,
+                collapsed: ["", "", "in"]
             }
         });
 });
