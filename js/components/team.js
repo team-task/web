@@ -10,7 +10,6 @@ angular.module('team-task')
             function loadTable() {
                 $scope.listaAtividades = [];
                 $scope.showLoading = true;
-                var idusuario = $rootScope.usuarioLogado._id.$oid;
                 Time.getById($stateParams.id).then(function (time) {
                     if (time) {
 

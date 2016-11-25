@@ -9,16 +9,17 @@ angular.module('team-task', [
     .run(function ($rootScope, $state, $window) {
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var currentUser = angular.fromJson($window.sessionStorage.getItem('usuarioLogado'));
-            if (currentUser) {
+            var requireLogin = toState.data.requiredlogin;
+            if (requireLogin && (!currentUser || typeof currentUser === 'undefined')) {
+                event.preventDefault();
+                $state.go('login');
+            } else {
                 $rootScope.usuarioLogado = currentUser;
             }
         });
         $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
             $rootScope.currentState = toState.name;
         });
-    })
-    .config(function () {
-
     })
     .filter('sumByKey', function () {
         return function (data, key) {

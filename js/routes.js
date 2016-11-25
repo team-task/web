@@ -6,49 +6,73 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             url: '/',
             templateUrl: 'views/login.html',
             reloadOnSearch: false,
-            controller: 'LoginController'
+            controller: 'LoginController',
+            data: {
+                requiredlogin: false
+            }
         })
         .state('workspace-projects', {
             url: '/workspace/projects',
             templateUrl: 'views/workspace-projects.html',
             reloadOnSearch: false,
-            controller: 'WorkspaceProjectsController'
+            controller: 'WorkspaceProjectsController',
+            data: {
+                requiredlogin: true
+            }
 
         })
         .state('workspace-activities', {
             url: '/workspace/activities',
             templateUrl: 'views/workspace-activities.html',
             reloadOnSearch: false,
-            controller: 'WorkspaceActivitiesController'
+            controller: 'WorkspaceActivitiesController',
+            data: {
+                requiredlogin: true
+            }
         })
         .state('project', {
             url: '/project/:id',
             templateUrl: 'views/project.html',
             reloadOnSearch: false,
-            controller: 'ProjectController'
+            controller: 'ProjectController',
+            data: {
+                requiredlogin: true
+            }
         })
         .state('config-teams', {
             url: '/teams',
             templateUrl: 'views/config-teams.html',
             reloadOnSearch: false,
-            controller: 'ConfigTeamsController'
+            controller: 'ConfigTeamsController',
+            data: {
+                requiredlogin: true
+            }
         })
         .state('team-activities', {
             url: '/activities/team/:id',
             templateUrl: 'views/team-activities.html',
             reloadOnSearch: false,
-            controller: 'TeamActivitiesController'
+            controller: 'TeamActivitiesController',
+            data: {
+                requiredlogin: true
+            }
         })
         .state('workspace-workforce', {
             url: '/workspace/workforce',
             templateUrl: 'views/workspace-workforce.html',
             reloadOnSearch: false,
-            controller: 'WorkspaceWorkforceController'
+            controller: 'WorkspaceWorkforceController',
+            data: {
+                requiredlogin: true
+            }
         })
         .state('workforce', {
             url: '/workforce/:id',
             templateUrl: 'views/workforce.html',
             reloadOnSearch: false,
-            controller: 'WorkforceController'
+            controller: 'WorkforceController',
+            data: {
+                requiredlogin: true
+            }
         });
 });
