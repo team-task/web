@@ -18,7 +18,8 @@
                         <h3 class="page-header">
                             {{projeto.nome}}
                             <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"
-                                    uib-tooltip="Nova Atividade">
+                                    uib-tooltip="Nova Atividade"
+                                    ng-show="usuarioLogado._id.$oid === projeto.administrador">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </h3>
