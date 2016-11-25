@@ -34,21 +34,36 @@
                         ng-click="adicionarPessoaRecurso(timeNovo);">
                     <i class="fa fa-plus"></i>
                 </button>
-                <div class="list-group">
-                    <div class="list-group-item" ng-repeat="pessoa in recursosPessoas">
-                        {{pessoa.nome}}
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="pessoa in recursosPessoas">
+                        {{pessoa.nome}}&nbsp;<a ng-click="removePessoa(pessoa);" class="close">x</a>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Tecnologias</label>
+
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="tecnologia" placeholder="Nome da tecnologia">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" uib-tooltip="Adicionar tecnologia"
+                                ng-click="adicionarTecnologia();">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="tec in timeNovo.tecnologias">
+                        {{tec}}&nbsp;<a ng-click="removeTecnologia(tec);" class="close">x</a>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
-    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+    <button type="button" class="btn btn-danger" ng-click="cancelNewTeam()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="confirmCreate()">Confirmar</button>
 </div>

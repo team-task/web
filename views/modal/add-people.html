@@ -1,0 +1,23 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Adicionar Pessoas</h4>
+</div>
+<div class="modal-body">
+    <ul class="list-group tt-list-add-people">
+        <li class="list-group-item active">
+            <input type="text" class="form-control" placeholder="Nome para pesquisa" ng-model="nome">
+        </li>
+        <li class="list-group-item" ng-repeat="pessoa in pessoasSelecao | filter:nome">
+            <div class="list-group-item-text">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" checklist-model="selecionados" checklist-value="pessoa">{{pessoa.nome}}
+                    </label>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

@@ -495,9 +495,10 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalNewTeamController',
-    function ($scope, $rootScope, Time) {
+    function ($scope, $rootScope, $uibModal, Time, $filter) {
         $scope.timeNovo = {};
         $scope.recursosPessoas = [];
+
         $scope.initModalNewTeam = function () {
             var idusuario = $rootScope.usuarioLogado._id.$oid;
             $scope.timeNovo = new Time();
@@ -508,18 +509,72 @@ angular.module('team-task')
             $scope.timeNovo.tecnologias = [];
             $scope.timeNovo.lider = idusuario;
             $scope.teamNameErro = "";
+            $scope.tecnologia = "";
+        };
+
+        $scope.cancelNewTeam = function () {
+            $scope.$dismiss();
         };
 
         $scope.adicionarPessoaRecurso = function (time) {
+            $uibModal
+                .open({
+                    templateUrl: 'views/modal/add-people.html',
+                    controller: function ($scope, parentScope, Pessoa) {
+                        var lista = [];
+                        $scope.selecionados = [];
+                        console.log(parentScope.timeNovo);
+                        for (var i = 0; i < parentScope.timeNovo.recursos.length; i++) {
+                            lista.push({"$oid": parentScope.timeNovo.recursos[i]});
+                        }
+                        var pQuery = {
+                            "_id": {
+                                "$nin": lista
+                            }
+                        };
+                        Pessoa.query(pQuery).then(function (pessoas) {
+                            $scope.pessoasSelecao = pessoas;
+                        });
+                        $scope.ok = function () {
 
+                            parentScope.recursosPessoas = parentScope.recursosPessoas.concat($scope.selecionados);
+                            for(var a = 0;a < $scope.selecionados.length; a++) {
+                                parentScope.timeNovo.recursos.push($scope.selecionados[a]._id.$oid);
+                            }
+                            $scope.$close(true);
+                        };
+                        $scope.cancel = function () {
+                            $scope.$dismiss();
+                        };
+                    },
+                    resolve: {
+                        parentScope: function () {
+                            return $scope;
+                        }
+                    }
+                }).result.then(function () {}, function () {});
         };
 
-        $scope.ok = function () {
-            $scope.$close(true);
+        $scope.removePessoa = function (pessoa) {
+            $scope.timeNovo.recursos = $filter('removeWith')($scope.timeNovo.recursos, pessoa._id.$oid);
+            $scope.recursosPessoas = $filter('removeWith')($scope.recursosPessoas, pessoa);
         };
 
-        $scope.cancel = function () {
-            $scope.$dismiss();
+        $scope.removeTecnologia = function (tecnologia) {
+            $scope.timeNovo.tecnologias = $filter('removeWith')($scope.timeNovo.tecnologias, tecnologia);
+        };
+
+        $scope.adicionarTecnologia = function () {
+            if($scope.tecnologia) {
+                $scope.timeNovo.tecnologias.push($scope.tecnologia);
+                $scope.tecnologia = "";
+            }
+        };
+
+        $scope.confirmCreate = function () {
+            $scope.timeNovo.$saveOrUpdate().then(function () {
+                $scope.$close(true);
+            });
         };
     });
 
