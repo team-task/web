@@ -348,8 +348,42 @@ angular.module('team-task')
         $scope.ok = function () {
 
             if (editacaoAtividadeValida()) {
+                /*
                 var inicioAtividade = $scope.projeto.atividades[$scope.indice].inicio.$date;
                 var fimAtividade = $scope.projeto.atividades[$scope.indice].fim.$date;
+                */
+
+                if (projetoSelecionado.atividades.length > 0) {
+                    var menorDataInicio = null;
+                    var maiorDataFim = null;
+                    for (var i = 0; i < projetoSelecionado.atividades.length; i++) {
+                        if (!menorDataInicio) {
+                            menorDataInicio = projetoSelecionado.atividades[i].inicio.$date;
+                        } else {
+                            if (moment(menorDataInicio).isAfter(moment(projetoSelecionado.atividades[i].inicio.$date))) {
+                                menorDataInicio = projetoSelecionado.atividades[i].inicio.$date;
+                            }
+                        }
+                        if (!maiorDataFim) {
+                            maiorDataFim = projetoSelecionado.atividades[i].fim.$date;
+                        } else {
+                            if (moment(maiorDataFim).isBefore(moment(projetoSelecionado.atividades[i].fim.$date))) {
+                                maiorDataFim = projetoSelecionado.atividades[i].fim.$date;
+                            }
+                        }
+                    }
+                    projetoSelecionado.inicio = {"$date": menorDataInicio};
+                    projetoSelecionado.fim = {"$date": maiorDataFim};
+                    projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
+
+                } else {
+                    projetoSelecionado.inicio = null;
+                    projetoSelecionado.fim = null;
+                    projetoSelecionado.duracao = null;
+                }
+
+
+                /*
 
                 //possui a data inicio
                 if (projetoSelecionado.inicio && projetoSelecionado.inicio.$date) {
@@ -383,6 +417,7 @@ angular.module('team-task')
                 }
 
                 projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
+                */
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);
