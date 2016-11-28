@@ -496,9 +496,12 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditTeamController',
-    function ($scope, timeSelecionado) {
+    function ($scope, timeEdicao) {
 
         $scope.initModalEditTeam = function () {
+            $scope.timeEdicao = timeEdicao;
+
+
 
         };
 
@@ -558,7 +561,7 @@ angular.module('team-task')
                     controller: function ($scope, parentScope, Pessoa) {
                         var lista = [];
                         $scope.selecionados = [];
-                        console.log(parentScope.timeNovo);
+
                         for (var i = 0; i < parentScope.timeNovo.recursos.length; i++) {
                             lista.push({"$oid": parentScope.timeNovo.recursos[i]});
                         }
@@ -607,9 +610,14 @@ angular.module('team-task')
         };
 
         $scope.confirmCreate = function () {
-            $scope.timeNovo.$saveOrUpdate().then(function () {
-                $scope.$close(true);
-            });
+
+            if($scope.timeNovo.nome) {
+                $scope.timeNovo.$saveOrUpdate().then(function () {
+                    $scope.$close(true);
+                });
+            } else {
+                $scope.teamNameErro = "O nome do Time é obrigatório";
+            }
         };
     });
 

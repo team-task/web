@@ -79,7 +79,7 @@ angular.module('team-task')
                         controller: 'ModalEditTeamController',
                         resolve: {
                             timeEdicao: function () {
-                                return projeto;
+                                return time;
                             }
                         }
                     }).result.then(function () {
