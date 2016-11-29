@@ -1,8 +1,8 @@
 angular.module('team-task')
-    .controller('ProjectController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa', '$interval',
-        function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal,
-                  $stateParams, Pessoa, $interval) {
+    .controller('ProjectController', ['$scope', '$rootScope', 'Projeto', 'Atividade', 'Time',
+        'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa', '$window',
+        function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal,
+                  $stateParams, Pessoa, $window) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtOptions.withOption('order', [[3,"asc"]]);
@@ -54,6 +54,46 @@ angular.module('team-task')
                     }
                 });
             }
+
+            $scope.copiarAtividade = function (indice) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/copy-activity.html',
+                        controller: 'ModalCopyProjectActivityController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            },
+                            indice : function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadProject();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            };
+
+            $scope.moverAtividade = function (indice) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/cut-activity.html',
+                        controller: 'ModalCutProjectActivityController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            },
+                            indice : function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadProject();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            };
 
             $scope.editarAtividade = function (indice) {
                 $uibModal

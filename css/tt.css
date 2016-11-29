@@ -307,6 +307,10 @@ form.login label {
     display: inline;
 }
 
+.tb-project-name:hover > .tt-dropdown > .btn-edit-project {
+    display: inline;
+}
+
 .btn-edit-project:hover {
     cursor: pointer;
     color: #0000FF;
@@ -384,4 +388,14 @@ form.login label {
 .tag .close {
     font-size: 14px;
     margin-left: 5px;
+}
+
+.tt-dropdown {
+    width: 16px;
+    height: 16px;
+    display: inline;
+}
+
+.tt-dropdown:hover {
+    cursor: pointer;
 }

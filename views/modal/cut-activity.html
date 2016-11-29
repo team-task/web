@@ -1,0 +1,23 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Recortando Atividade de: {{projeto.nome}}</h4>
+</div>
+<div class="modal-body" ng-init="initModalCutActivity()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="projeto">Projeto de Destino</label>
+                <select id="projeto" class="form-control" ng-model="projetoDestino" ng-options="projeto.nome for projeto in projetosParaCopia"
+                        aria-describedby="helpBlock" ng-focus="activityProjetoErro = ''">
+                    <option value="">Escolha o Projeto de destino</option>
+                </select>
+                <span ng-show="activityProjetoErro !==''" class="help-block alert-danger">
+                    {{activityProjetoErro}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>
