@@ -573,6 +573,55 @@ angular.module('team-task')
             }
         };
 
+        $scope.deleteTeam = function () {
+            $uibModal
+                .open({
+                    templateUrl: 'views/modal/delete-team.html',
+                    controller: function ($scope, timeExclusao, Atividade, Projeto, $q) {
+                        $scope.time = {};
+                        $scope.deleteDeny = true;
+                        $scope.initModalDeleteTeam = function () {
+                            $scope.time = timeExclusao;
+                            var promisses = [];
+                            //verificar se o time tem atividades ou projetos associados.
+                            var aQuery = {"time": timeExclusao._id.$oid};
+                            var pQuery = {"atividades.time": timeExclusao._id.$oid};
+                            var qtdTotal = 0;
+                            promisses.push(Atividade.query(aQuery).then(function (atividade) {
+                                if (atividade.length > 0) {
+                                    qtdTotal++;
+                                }
+                            }));
+                            promisses.push(Projeto.query(pQuery).then(function (projeto) {
+                                if (projeto.length > 0) {
+                                    qtdTotal++;
+                                }
+                            }));
+                            $q.all(promisses).then(function () {
+                                $scope.deleteDeny = qtdTotal > 0;
+                                $scope.qtdAtividades = qtdTotal;
+                            });
+                        };
+
+                        $scope.ok = function () {
+                            $scope.$close(true);
+                        };
+                        $scope.cancel = function () {
+                            $scope.$dismiss();
+                        };
+                    },
+                    resolve: {
+                        timeExclusao: function () {
+                            return $scope.timeEdicao;
+                        }
+                    }
+                }).result.then(function () {
+                    //executeDeleteActivity();
+                }, function () {
+
+                });
+        };
+
         $scope.ok = function () {
 
             if ($scope.timeEdicao.nome) {

@@ -1,13 +1,19 @@
 <div class="modal-header text-center">
-    <h4 class="modal-title">Excluindo {{atividade.nome}}</h4>
+    <h4 class="modal-title">Excluindo {{time.nome}}</h4>
 </div>
-<div class="modal-body">
-    <div class="alert alert-danger text-center" role="alert">
-        <p>Você deseja excluir a atividade:&nbsp;<strong>{{atividade.nome}}</strong>&nbsp;?</p>
-        <p>O inicio e fim do projeto podem ser alterados por esta alteração.</p>
+<div class="modal-body" ng-init="initModalDeleteTeam()">
+
+    <div ng-show="deleteDeny" class="alert alert-danger text-center" role="alert">
+        <p>Há {{qtdAtividades}} atividades de time e/ou projeto para o time:&nbsp;<strong>{{time.nome}}</strong>&nbsp;?</p>
+        <p>Mova ou Exclua as atividades antes de excluir o time.</p>
+    </div>
+    <div ng-show="!deleteDeny" class="alert alert-danger text-center" role="alert">
+        <p>Você deseja excluir o time:&nbsp;<strong>{{time.nome}}</strong>&nbsp;?</p>
+        <p>Excluir o time irá excluir todas as atividades de time e de projeto relacionados.</p>
+        <p>Causando recalculo da força de trabalho.</p>
     </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
-    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+    <button ng-show="!deleteDeny" type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
 </div>
