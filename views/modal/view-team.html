@@ -1,0 +1,44 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">{{timeView.nome}}</h4>
+</div>
+<div class="modal-body" ng-init="initModalViewTeam()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label for="notas">Descricao</label>
+                <textarea readonly id="notas" class="form-control" ng-model="timeView.descricao" placeholder="Descrição do Time">
+                </textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <input id="status" type="text" class="form-control" ng-model="timeView.status" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Recursos</label>
+
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="pessoa in recursosPessoas">
+                        {{pessoa.nome}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tecnologias</label>
+
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="tec in timeView.tecnologias">
+                        {{tec}}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-success" ng-click="fechar()">Fechar</button>
+</div>

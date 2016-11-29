@@ -88,4 +88,17 @@ angular.module('team-task')
                     });
             };
 
+            $scope.mostrarDetalheTime = function (time) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-team.html',
+                        controller: 'ModalViewTeamController',
+                        resolve: {
+                            timeSelecionado: function () {
+                                return time;
+                            }
+                        }
+                    }).result.then(function () {}, function () {});
+            };
+
         }]);

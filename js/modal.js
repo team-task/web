@@ -349,9 +349,9 @@ angular.module('team-task')
 
             if (editacaoAtividadeValida()) {
                 /*
-                var inicioAtividade = $scope.projeto.atividades[$scope.indice].inicio.$date;
-                var fimAtividade = $scope.projeto.atividades[$scope.indice].fim.$date;
-                */
+                 var inicioAtividade = $scope.projeto.atividades[$scope.indice].inicio.$date;
+                 var fimAtividade = $scope.projeto.atividades[$scope.indice].fim.$date;
+                 */
 
                 if (projetoSelecionado.atividades.length > 0) {
                     var menorDataInicio = null;
@@ -385,39 +385,39 @@ angular.module('team-task')
 
                 /*
 
-                //possui a data inicio
-                if (projetoSelecionado.inicio && projetoSelecionado.inicio.$date) {
-                    //verficar se data da atividade é menor que a do projeto para poder atualizar
-                    if (moment(projetoSelecionado.inicio.$date).isAfter(moment(inicioAtividade))) {
-                        projetoSelecionado.inicio.$date = inicioAtividade;
-                    }
-                } else {
-                    if (projetoSelecionado.inicio) {
-                        projetoSelecionado.inicio.$date = inicioAtividade;
-                    } else {
+                 //possui a data inicio
+                 if (projetoSelecionado.inicio && projetoSelecionado.inicio.$date) {
+                 //verficar se data da atividade é menor que a do projeto para poder atualizar
+                 if (moment(projetoSelecionado.inicio.$date).isAfter(moment(inicioAtividade))) {
+                 projetoSelecionado.inicio.$date = inicioAtividade;
+                 }
+                 } else {
+                 if (projetoSelecionado.inicio) {
+                 projetoSelecionado.inicio.$date = inicioAtividade;
+                 } else {
 
-                        projetoSelecionado.inicio = {
-                            "$date": inicioAtividade
-                        }
-                    }
-                }
+                 projetoSelecionado.inicio = {
+                 "$date": inicioAtividade
+                 }
+                 }
+                 }
 
-                if (projetoSelecionado.fim && projetoSelecionado.fim.$date) {
-                    if (moment(projetoSelecionado.fim.$date).isBefore(moment(fimAtividade))) {
-                        projetoSelecionado.fim.$date = fimAtividade;
-                    }
-                } else {
-                    if (projetoSelecionado.fim) {
-                        projetoSelecionado.fim.$date = fimAtividade;
-                    } else {
-                        projetoSelecionado.fim = {
-                            "$date": fimAtividade
-                        }
-                    }
-                }
+                 if (projetoSelecionado.fim && projetoSelecionado.fim.$date) {
+                 if (moment(projetoSelecionado.fim.$date).isBefore(moment(fimAtividade))) {
+                 projetoSelecionado.fim.$date = fimAtividade;
+                 }
+                 } else {
+                 if (projetoSelecionado.fim) {
+                 projetoSelecionado.fim.$date = fimAtividade;
+                 } else {
+                 projetoSelecionado.fim = {
+                 "$date": fimAtividade
+                 }
+                 }
+                 }
 
-                projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
-                */
+                 projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
+                 */
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);
@@ -496,17 +496,92 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditTeamController',
-    function ($scope, timeEdicao) {
-
+    function ($scope, timeEdicao, Pessoa, $uibModal, $filter) {
+        $scope.recursosPessoas = [];
         $scope.initModalEditTeam = function () {
             $scope.timeEdicao = timeEdicao;
 
-
+            var arrayOids = [];
+            for (var i = 0; i < timeEdicao.recursos.length; i++) {
+                arrayOids.push({"$oid": timeEdicao.recursos[i]});
+            }
+            var pQuery = {
+                "_id": {
+                    "$in": arrayOids
+                }
+            };
+            Pessoa.query(pQuery).then(function (pessoas) {
+                $scope.recursosPessoas = pessoas;
+            });
 
         };
 
+        $scope.adicionarPessoaRecurso = function (time) {
+            $uibModal
+                .open({
+                    templateUrl: 'views/modal/add-people.html',
+                    controller: function ($scope, parentScope, Pessoa) {
+                        var lista = [];
+                        $scope.selecionados = [];
+
+                        for (var i = 0; i < parentScope.timeEdicao.recursos.length; i++) {
+                            lista.push({"$oid": parentScope.timeEdicao.recursos[i]});
+                        }
+                        var pQuery = {
+                            "_id": {
+                                "$nin": lista
+                            }
+                        };
+                        Pessoa.query(pQuery).then(function (pessoas) {
+                            $scope.pessoasSelecao = pessoas;
+                        });
+                        $scope.ok = function () {
+
+                            parentScope.recursosPessoas = parentScope.recursosPessoas.concat($scope.selecionados);
+                            for (var a = 0; a < $scope.selecionados.length; a++) {
+                                parentScope.timeEdicao.recursos.push($scope.selecionados[a]._id.$oid);
+                            }
+                            $scope.$close(true);
+                        };
+                        $scope.cancel = function () {
+                            $scope.$dismiss();
+                        };
+                    },
+                    resolve: {
+                        parentScope: function () {
+                            return $scope;
+                        }
+                    }
+                }).result.then(function () {
+                }, function () {
+                });
+        };
+
+        $scope.removePessoa = function (pessoa) {
+            $scope.timeEdicao.recursos = $filter('removeWith')($scope.timeEdicao.recursos, pessoa._id.$oid);
+            $scope.recursosPessoas = $filter('removeWith')($scope.recursosPessoas, pessoa);
+        };
+
+        $scope.removeTecnologia = function (tecnologia) {
+            $scope.timeEdicao.tecnologias = $filter('removeWith')($scope.timeEdicao.tecnologias, tecnologia);
+        };
+
+        $scope.adicionarTecnologia = function () {
+            if ($scope.tecnologia) {
+                $scope.timeEdicao.tecnologias.push($scope.tecnologia);
+                $scope.tecnologia = "";
+            }
+        };
+
         $scope.ok = function () {
-            $scope.$close(true);
+
+            if ($scope.timeEdicao.nome) {
+                $scope.timeEdicao.$saveOrUpdate().then(function () {
+                    $scope.$close(true);
+                });
+            } else {
+                $scope.teamNameErro = "O nome do Time é obrigatório";
+            }
         };
 
         $scope.cancel = function () {
@@ -516,17 +591,25 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalViewTeamController',
-    function ($scope, timeSelecionado) {
-
+    function ($scope, timeSelecionado, Pessoa) {
+        $scope.recursosPessoas = [];
         $scope.initModalViewTeam = function () {
-
+            $scope.timeView = timeSelecionado;
+            var arrayOids = [];
+            for (var i = 0; i < timeSelecionado.recursos.length; i++) {
+                arrayOids.push({"$oid": timeSelecionado.recursos[i]});
+            }
+            var pQuery = {
+                "_id": {
+                    "$in": arrayOids
+                }
+            };
+            Pessoa.query(pQuery).then(function (pessoas) {
+                $scope.recursosPessoas = pessoas;
+            });
         };
 
-        $scope.ok = function () {
-            $scope.$close(true);
-        };
-
-        $scope.cancel = function () {
+        $scope.fechar = function () {
             $scope.$dismiss();
         };
     });
@@ -576,7 +659,7 @@ angular.module('team-task')
                         $scope.ok = function () {
 
                             parentScope.recursosPessoas = parentScope.recursosPessoas.concat($scope.selecionados);
-                            for(var a = 0;a < $scope.selecionados.length; a++) {
+                            for (var a = 0; a < $scope.selecionados.length; a++) {
                                 parentScope.timeNovo.recursos.push($scope.selecionados[a]._id.$oid);
                             }
                             $scope.$close(true);
@@ -590,7 +673,9 @@ angular.module('team-task')
                             return $scope;
                         }
                     }
-                }).result.then(function () {}, function () {});
+                }).result.then(function () {
+                }, function () {
+                });
         };
 
         $scope.removePessoa = function (pessoa) {
@@ -603,7 +688,7 @@ angular.module('team-task')
         };
 
         $scope.adicionarTecnologia = function () {
-            if($scope.tecnologia) {
+            if ($scope.tecnologia) {
                 $scope.timeNovo.tecnologias.push($scope.tecnologia);
                 $scope.tecnologia = "";
             }
@@ -611,7 +696,7 @@ angular.module('team-task')
 
         $scope.confirmCreate = function () {
 
-            if($scope.timeNovo.nome) {
+            if ($scope.timeNovo.nome) {
                 $scope.timeNovo.$saveOrUpdate().then(function () {
                     $scope.$close(true);
                 });
