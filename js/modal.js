@@ -616,11 +616,17 @@ angular.module('team-task')
                         }
                     }
                 }).result.then(function () {
-                    //executeDeleteActivity();
+                    executeDeleteTeam();
                 }, function () {
 
                 });
         };
+
+        function executeDeleteTeam () {
+            $scope.timeEdicao.$remove().then(function () {
+                $scope.$close(true);
+            });
+        }
 
         $scope.ok = function () {
 
