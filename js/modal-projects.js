@@ -6,12 +6,7 @@ angular.module('team-task')
         $scope.projeto = projetoSelecionado;
         $scope.initModalCopyActivity = function () {
             var pquery = {
-                "administrador": $rootScope.usuarioLogado._id.$oid,
-                "_id": {
-                    "$ne": {
-                        "$oid": projetoSelecionado._id.$oid
-                    }
-                }
+                "administrador": $rootScope.usuarioLogado._id.$oid
             };
             Projeto.query(pquery).then(function (projetos) {
                 $scope.projetosParaCopia = projetos;
