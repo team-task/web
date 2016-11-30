@@ -22,6 +22,20 @@
                                     ng-show="usuarioLogado._id.$oid === projeto.administrador">
                                 <i class="fa fa-plus"></i>
                             </button>
+                            <div class="dropdown pull-right">
+                                <button class="btn btn-primary btn-inverse tt-btn-bordeless"
+                                        data-toggle="dropdown" id="dropdownProjectMenu">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
+                                    <li><a ng-click="exportarTemplate();">
+                                        <i class="fa fa-cloud-upload"></i>&nbsp;Exportar Template</a>
+                                    </li>
+                                    <li><a ng-click="importarTemplate();">
+                                        <i class="fa fa-cloud-download"></i>&nbsp;Importar Template</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </h3>
 
                         <table class="table table-condensed">

@@ -299,6 +299,10 @@ form.login label {
     border-radius: 50%;
 }
 
+.tt-btn-bordeless {
+    border: none;
+}
+
 .btn-edit-project {
     display: none;
 }
