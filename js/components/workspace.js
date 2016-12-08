@@ -3,7 +3,7 @@ angular.module('team-task')
         'DTOptionsBuilder', '$resource', '$uibModal',
         function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal) {
             $scope.showLoading = false;
-            $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
+            //$scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
 
             $scope.initWorkspaceProjects = function () {
                 loadTable();
@@ -76,7 +76,8 @@ angular.module('team-task')
         'DTOptionsBuilder', '$resource', '$filter', 'Pessoa',
         function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa) {
             $scope.showLoading = false;
-            $scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
+            //$scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
+            $scope.dtAOptions = DTOptionsBuilder.newOptions();
             $scope.dtAOptions.withOption('responsive', true);
             $scope.dtAOptions.withOption('order', [[2,"asc"]]);
 
@@ -162,26 +163,19 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('WorkspaceWorkforceController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        '$resource', '$filter', 'Pessoa', 'Projeto', 'DTOptionsBuilder', '$q',
-        function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, DTOptionsBuilder, $q) {
+        '$resource', '$filter', 'Pessoa', 'Projeto', '$q', 'DTOptionsBuilder',
+        function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q, DTOptionsBuilder) {
             $scope.showLoading = false;
             $scope.ganttData = [];
-            $scope.dtInstance1 = {};
-            $scope.dtInstance2 = {};
+            $scope.listaAtividadesIniciandoTerminando = [];
 
-            $scope.dtIOptions = DTOptionsBuilder.newOptions()
-                .withLanguage($resource('js/dtOptions.json').get().$promise);
-
-            $scope.dtTOptions = DTOptionsBuilder.newOptions()
-                .withLanguage($resource('js/dtOptions.json').get().$promise);
-
-            $scope.listaAtividadesIniciando = [];
-            $scope.listaAtividadesTerminando = [];
+            $scope.dtOptions = DTOptionsBuilder.newOptions();
+            $scope.dtOptions.withOption('order', [[3,"asc"]]);
 
             function loadTable() {
                 $scope.showLoading = true;
-                $scope.listaAtividadesIniciando = [];
-                $scope.listaAtividadesTerminando = [];
+
+                $scope.listaAtividadesIniciandoTerminando = [];
                 var dataIniciando = moment().businessAdd(10, 'days');
                 var dataTerminando = moment().subtract(5, 'days');
                 $scope.dataIniciando = dataIniciando.toDate();
@@ -208,6 +202,8 @@ angular.module('team-task')
                             }
                             recursosTotais = $filter('unique')(recursosTotais);
                             var promisses = [];
+                            var aPromisses = [];
+                            var listaAtividades = [];
                             angular.forEach(recursosTotais, function (rec, idRec) {
                                 promisses.push(Pessoa.getById(rec).then(function (pessoa) {
                                     if (pessoa) {
@@ -283,7 +279,8 @@ angular.module('team-task')
                                                 }
                                             }
                                         };
-                                        Atividade.query(aIniciandoQuery).then(function (atividades) {
+
+                                        aPromisses.push(Atividade.query(aIniciandoQuery).then(function (atividades) {
                                             if(atividades.length > 0) {
                                                 angular.forEach(atividades, function (atividade, idAtividade) {
                                                     var time = $filter('filter')(times, {"_id" : {"$oid" : atividade.time}});
@@ -291,17 +288,21 @@ angular.module('team-task')
                                                     if(time && time.length > 0) {
                                                         nomeTime = time[0].nome + " / ";
                                                     }
-                                                    $scope.listaAtividadesIniciando.push({
+
+                                                    listaAtividades.push({
                                                         "nome": nomeTime + atividade.nome,
                                                         "inicio": atividade.inicio,
+                                                        "fim": atividade.fim,
                                                         "pessoaRecurso": {
                                                             "nome": pessoa.nome,
                                                             "iniciais": pessoa.iniciais
-                                                        }
+                                                        },
+                                                        "status": "Iniciando"
                                                     });
+
                                                 });
                                             }
-                                        });
+                                        }));
                                         var aTerminandoQuery = {
                                             "time": {
                                                 "$in": listaTimes
@@ -317,7 +318,7 @@ angular.module('team-task')
                                                 }
                                             }
                                         };
-                                        Atividade.query(aTerminandoQuery).then(function (atividades) {
+                                        aPromisses.push(Atividade.query(aTerminandoQuery).then(function (atividades) {
                                             if(atividades.length > 0) {
                                                 angular.forEach(atividades, function (atividade, idAtividade) {
                                                     var time = $filter('filter')(times, {"_id" : {"$oid" : atividade.time}});
@@ -325,21 +326,32 @@ angular.module('team-task')
                                                     if(time && time.length > 0) {
                                                         nomeTime = time[0].nome + " / ";
                                                     }
-                                                    $scope.listaAtividadesTerminando.push({
+
+                                                    listaAtividades.push({
                                                         "nome": nomeTime + atividade.nome,
                                                         "fim": atividade.fim,
+                                                        "inicio": atividade.inicio,
                                                         "pessoaRecurso": {
                                                             "nome": pessoa.nome,
                                                             "iniciais": pessoa.iniciais
-                                                        }
+                                                        },
+                                                        "status": "Terminando"
                                                     });
+
                                                 });
                                             }
-                                        });
+                                        }));
+
                                     }
                                 }));
                             });
-                            $q.all(promisses).then(function () { $scope.showLoading = false; });
+
+                            $q.all(promisses).then(function () {
+                                $scope.showLoading = false;
+                                $q.all(aPromisses).then(function () {
+                                    $scope.listaAtividadesIniciandoTerminando = listaAtividades;
+                                });
+                            });
                         }
                     });
                 }

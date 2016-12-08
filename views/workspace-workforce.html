@@ -70,21 +70,29 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Iniciando entre {{dataTerminando | date: 'dd/MM/yyyy'}} e {{dataIniciando | date: 'dd/MM/yyyy'}}
+                            Iniciando / Terminando entre {{dataTerminando | date: 'dd/MM/yyyy'}} e {{dataIniciando | date: 'dd/MM/yyyy'}}
                         </div>
                         <div class="panel-body">
-                            <table datatable="ng" dt-instance="dtInstance1" id="dt1" dt-options="dtIOptions"  class="table table-hover table-responsive">
+                            <table datatable="ng" class="table table-hover table-responsive" dt-options="dtOptions">
                                 <thead>
                                 <tr>
                                     <td>Atividade</td>
                                     <td>Inicio</td>
+                                    <td>Fim</td>
+                                    <td>Status</td>
                                     <td>Recurso</td>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="atividade in listaAtividadesIniciando">
+                                <tr ng-repeat="atividade in listaAtividadesIniciandoTerminando">
                                     <td>{{atividade.nome}}</td>
                                     <td data-order="{{atividade.inicio.$date | timeMils}}">{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                                    <td data-order="{{atividade.fim.$date | timeMils}}">{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
+                                    <td>
+                                        <span class="label text-uppercase" ng-class="atividade.status === 'Iniciando' ? 'label-primary' : 'label-warning'">
+                                            {{atividade.status}}
+                                        </span>
+                                    </td>
                                     <td data-search="{{atividade.pessoaRecurso.nome}}">
                                         <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
                                                           data="{{atividade.pessoaRecurso.iniciais}}"
@@ -96,33 +104,6 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Terminando entre {{dataTerminando | date: 'dd/MM/yyyy'}} e {{dataIniciando | date: 'dd/MM/yyyy'}}
-                        </div>
-                        <div class="panel-body">
-                            <table datatable="ng" dt-instance="dtInstance2" id="dt2" dt-options="dtTOptions" class="table table-hover table-responsive">
-                                <thead>
-                                <tr>
-                                    <td>Atividade</td>
-                                    <td>Fim</td>
-                                    <td>Recurso</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="atividade in listaAtividadesTerminando">
-                                    <td>{{atividade.nome}}</td>
-                                    <td data-order="{{atividade.fim.$date | timeMils}}">{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
-                                    <td data-search="{{atividade.pessoaRecurso.nome}}">
-                                        <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
-                                                          data="{{atividade.pessoaRecurso.iniciais}}"
-                                                          uib-tooltip="{{atividade.pessoaRecurso.nome}}"></ng-letter-avatar>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

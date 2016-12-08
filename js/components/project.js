@@ -4,7 +4,7 @@ angular.module('team-task')
         function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal,
                   $stateParams, Pessoa, $window) {
             $scope.showLoading = false;
-            $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
+            $scope.dtOptions = DTOptionsBuilder.newOptions();//.withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtOptions.withOption('order', [[3,"asc"]]);
             /*
             timer futuro
