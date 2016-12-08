@@ -167,15 +167,21 @@ angular.module('team-task')
         function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q, DTOptionsBuilder) {
             $scope.showLoading = false;
             $scope.ganttData = [];
-            $scope.listaAtividadesIniciandoTerminando = [];
+            $scope.listaAtividadesIniciando = [];
+            $scope.listaAtividadesTerminando = [];
 
             $scope.dtOptions = DTOptionsBuilder.newOptions();
-            $scope.dtOptions.withOption('order', [[3,"asc"]]);
+            $scope.dtOptions.withOption('order', [[1,"asc"]]);
+
+            $scope.dtOptions2 = DTOptionsBuilder.newOptions();
+            $scope.dtOptions2.withOption('order', [[2,"asc"]]);
 
             function loadTable() {
                 $scope.showLoading = true;
 
-                $scope.listaAtividadesIniciandoTerminando = [];
+                $scope.listaAtividadesIniciando = [];
+                $scope.listaAtividadesTerminando = [];
+
                 var dataIniciando = moment().businessAdd(10, 'days');
                 var dataTerminando = moment().subtract(5, 'days');
                 $scope.dataIniciando = dataIniciando.toDate();
@@ -203,7 +209,8 @@ angular.module('team-task')
                             recursosTotais = $filter('unique')(recursosTotais);
                             var promisses = [];
                             var aPromisses = [];
-                            var listaAtividades = [];
+                            var listaAtividadesI = [];
+                            var listaAtividadesT = [];
                             angular.forEach(recursosTotais, function (rec, idRec) {
                                 promisses.push(Pessoa.getById(rec).then(function (pessoa) {
                                     if (pessoa) {
@@ -289,7 +296,7 @@ angular.module('team-task')
                                                         nomeTime = time[0].nome + " / ";
                                                     }
 
-                                                    listaAtividades.push({
+                                                    listaAtividadesI.push({
                                                         "nome": nomeTime + atividade.nome,
                                                         "inicio": atividade.inicio,
                                                         "fim": atividade.fim,
@@ -327,7 +334,7 @@ angular.module('team-task')
                                                         nomeTime = time[0].nome + " / ";
                                                     }
 
-                                                    listaAtividades.push({
+                                                    listaAtividadesT.push({
                                                         "nome": nomeTime + atividade.nome,
                                                         "fim": atividade.fim,
                                                         "inicio": atividade.inicio,
@@ -349,7 +356,8 @@ angular.module('team-task')
                             $q.all(promisses).then(function () {
                                 $scope.showLoading = false;
                                 $q.all(aPromisses).then(function () {
-                                    $scope.listaAtividadesIniciandoTerminando = listaAtividades;
+                                    $scope.listaAtividadesIniciando = listaAtividadesI;
+                                    $scope.listaAtividadesTerminando = listaAtividadesT;
                                 });
                             });
                         }
