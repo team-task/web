@@ -162,16 +162,30 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('WorkspaceWorkforceController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        '$resource', '$filter', 'Pessoa', 'Projeto',
-        function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto) {
+        '$resource', '$filter', 'Pessoa', 'Projeto', 'DTOptionsBuilder', '$q',
+        function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, DTOptionsBuilder, $q) {
             $scope.showLoading = false;
-            /*
-             $scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
-             $scope.dtAOptions.withOption('responsive', true);
-             */
             $scope.ganttData = [];
+            $scope.dtInstance1 = {};
+            $scope.dtInstance2 = {};
+
+            $scope.dtIOptions = DTOptionsBuilder.newOptions()
+                .withLanguage($resource('js/dtOptions.json').get().$promise);
+
+            $scope.dtTOptions = DTOptionsBuilder.newOptions()
+                .withLanguage($resource('js/dtOptions.json').get().$promise);
+
+            $scope.listaAtividadesIniciando = [];
+            $scope.listaAtividadesTerminando = [];
+
             function loadTable() {
                 $scope.showLoading = true;
+                $scope.listaAtividadesIniciando = [];
+                $scope.listaAtividadesTerminando = [];
+                var dataIniciando = moment().businessAdd(10, 'days');
+                var dataTerminando = moment().subtract(5, 'days');
+                $scope.dataIniciando = dataIniciando.toDate();
+                $scope.dataTerminando = dataTerminando.toDate();
                 if($rootScope.usuarioLogado) {
                     var idusuario = $rootScope.usuarioLogado._id.$oid;
                     var qTime = {
@@ -193,9 +207,19 @@ angular.module('team-task')
                                 recursosTotais = recursosTotais.concat(times[a].recursos);
                             }
                             recursosTotais = $filter('unique')(recursosTotais);
+                            var promisses = [];
                             angular.forEach(recursosTotais, function (rec, idRec) {
-                                Pessoa.getById(rec).then(function (pessoa) {
+                                promisses.push(Pessoa.getById(rec).then(function (pessoa) {
                                     if (pessoa) {
+
+                                        var nomes = pessoa.nome.split(" ");
+                                        var iniciais = nomes[0].substring(0, 1);
+                                        var nomeSimples = nomes[0];
+                                        if (nomes.length > 1) {
+                                            iniciais += nomes[1].substring(0, 1);
+                                        }
+                                        pessoa.iniciais = iniciais.toUpperCase();
+                                        pessoa.nomeSimples = nomeSimples;
 
                                         var row = {
                                             "name": pessoa.nome
@@ -242,13 +266,83 @@ angular.module('team-task')
                                                 $scope.ganttData.push(row);
                                             });
                                         });
+                                        //tabelas iniciando e terminando.
+
+                                        var aIniciandoQuery = {
+                                            "time": {
+                                                "$in": listaTimes
+                                            },
+                                            "designado": pessoa._id.$oid,
+                                            "inicio" : {
+                                                "$gte" : {
+                                                    "$date": dataTerminando.toDate()
+
+                                                },
+                                                "$lte": {
+                                                    "$date": dataIniciando.toDate()
+                                                }
+                                            }
+                                        };
+                                        Atividade.query(aIniciandoQuery).then(function (atividades) {
+                                            if(atividades.length > 0) {
+                                                angular.forEach(atividades, function (atividade, idAtividade) {
+                                                    var time = $filter('filter')(times, {"_id" : {"$oid" : atividade.time}});
+                                                    var nomeTime = "";
+                                                    if(time && time.length > 0) {
+                                                        nomeTime = time[0].nome + " / ";
+                                                    }
+                                                    $scope.listaAtividadesIniciando.push({
+                                                        "nome": nomeTime + atividade.nome,
+                                                        "inicio": atividade.inicio,
+                                                        "pessoaRecurso": {
+                                                            "nome": pessoa.nome,
+                                                            "iniciais": pessoa.iniciais
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        });
+                                        var aTerminandoQuery = {
+                                            "time": {
+                                                "$in": listaTimes
+                                            },
+                                            "designado": pessoa._id.$oid,
+                                            "fim" : {
+                                                "$gte" : {
+                                                    "$date": dataTerminando.toDate()
+
+                                                },
+                                                "$lte": {
+                                                    "$date": dataIniciando.toDate()
+                                                }
+                                            }
+                                        };
+                                        Atividade.query(aTerminandoQuery).then(function (atividades) {
+                                            if(atividades.length > 0) {
+                                                angular.forEach(atividades, function (atividade, idAtividade) {
+                                                    var time = $filter('filter')(times, {"_id" : {"$oid" : atividade.time}});
+                                                    var nomeTime = "";
+                                                    if(time && time.length > 0) {
+                                                        nomeTime = time[0].nome + " / ";
+                                                    }
+                                                    $scope.listaAtividadesTerminando.push({
+                                                        "nome": nomeTime + atividade.nome,
+                                                        "fim": atividade.fim,
+                                                        "pessoaRecurso": {
+                                                            "nome": pessoa.nome,
+                                                            "iniciais": pessoa.iniciais
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        });
                                     }
-                                });
+                                }));
                             });
+                            $q.all(promisses).then(function () { $scope.showLoading = false; });
                         }
                     });
                 }
-                $scope.showLoading = false;
             }
 
             $scope.getColumnWidth = function(widthEnabled, scale, zoom) {
@@ -275,7 +369,6 @@ angular.module('team-task')
             };
 
             $scope.initWorkspaceWorkforce = function () {
-
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.ganttOptions = {
                     "zoom": 1,
