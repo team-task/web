@@ -18,6 +18,14 @@ angular.module('team-task')
                 loadProject();
             };
 
+            $scope.exportarTemplate = function () {
+                if($scope.projeto.atividades.length > 0) {
+                    for (var i = 0; i < $scope.projeto.atividades; i++) {
+
+                    }
+                }
+            };
+
             function loadProject() {
                 $scope.showLoading = true;
 
