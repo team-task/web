@@ -403,3 +403,19 @@ form.login label {
 .tt-dropdown:hover {
     cursor: pointer;
 }
+
+.upload-csv {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.upload-csv:hover {
+    color:#262626;
+    text-decoration:none;
+    background-color:#f5f5f5;
+}

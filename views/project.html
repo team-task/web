@@ -28,11 +28,16 @@
                                     <i class="fa fa-ellipsis-v"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
-                                    <li><a ng-click="exportarTemplate();">
+                                    <li><a class="pointer-action" ng-csv="csvAtividades" csv-header="getHeader();"
+                                           field-separator=";" filename="team-task-export.csv" lazy-load="true">
                                         <i class="fa fa-cloud-upload"></i>&nbsp;Exportar Template</a>
                                     </li>
-                                    <li><a ng-click="importarTemplate();">
-                                        <i class="fa fa-cloud-download"></i>&nbsp;Importar Template</a>
+                                    <li>
+                                        <label class="pointer-action upload-csv">
+                                            <i class="fa fa-cloud-download"></i>
+                                            &nbsp;Importar Template
+                                            <input type="file" file-reader="fileContent" style="display: none;">
+                                        </label>
                                     </li>
                                 </ul>
                             </div>

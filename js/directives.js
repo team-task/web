@@ -9,6 +9,30 @@ angular.module('team-task')
             }]
         };
     })
+    .directive('fileReader', function() {
+        return {
+            scope: {
+                fileReader:"="
+            },
+            link: function(scope, element) {
+                $(element).on('change', function(changeEvent) {
+                    var files = changeEvent.target.files;
+                    if (files.length) {
+                        var r = new FileReader();
+                        r.onload = function(e) {
+                            waitingDialog.show("Carregando Template. Aguarde.");
+                            var contents = e.target.result;
+                            scope.$apply(function () {
+                                scope.fileReader = contents;
+                                scope.$root.$emit("CallImportTemplate", {"contents": contents});
+                            });
+                        };
+                        r.readAsText(files[0]);
+                    }
+                });
+            }
+        };
+    })
     .directive('leftNavigation', function () {
         return {
             restrict: 'A',

@@ -1,38 +1,38 @@
 angular.module('team-task')
     .controller('ProjectController', ['$scope', '$rootScope', 'Projeto', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$resource', '$uibModal', '$stateParams', 'Pessoa', '$window',
-        function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal,
+        'DTOptionsBuilder', '$q', '$resource', '$uibModal', '$stateParams', 'Pessoa', '$window',
+        function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $q, $resource, $uibModal,
                   $stateParams, Pessoa, $window) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions();//.withLanguage($resource('js/dtOptions.json').get().$promise);
-            $scope.dtOptions.withOption('order', [[3,"asc"]]);
-            /*
-            timer futuro
-            $interval(function () {
-                loadProject();
-                $rootScope.$emit("CallLoadMenus", {});
-            }, 30000);
-            */
+            $scope.dtOptions.withOption('order', [[3, "asc"]]);
+
+            $scope.csvAtividades = [];
+
+            $rootScope.$on("CallImportTemplate", function(contents){
+                importTemplate(contents);
+            });
+
+            function importTemplate (contents) {
+                console.log(contents);
+                waitingDialog.hide();
+            }
 
             $scope.initWorkspaceProject = function () {
                 loadProject();
             };
 
-            $scope.exportarTemplate = function () {
-                if($scope.projeto.atividades.length > 0) {
-                    for (var i = 0; i < $scope.projeto.atividades; i++) {
-
-                    }
-                }
+            $scope.getHeader = function () {
+                return ['Time', 'Atvidade', 'Status', 'Inicio', 'Duracao'];
             };
 
             function loadProject() {
                 $scope.showLoading = true;
 
                 Projeto.getById($stateParams.id).then(function (projeto) {
-                    if(projeto) {
+                    if (projeto) {
                         angular.forEach(projeto.atividades, function (atividade, idAtividade) {
-                            if(atividade.designado) {
+                            if (atividade.designado) {
                                 Pessoa.getById(atividade.designado).then(function (pessoa) {
                                     if (pessoa) {
                                         var nomes = pessoa.nome.split(" ");
@@ -49,13 +49,20 @@ angular.module('team-task')
                                     }
                                 });
                             }
-                            if(atividade.time) {
+                            if (atividade.time) {
                                 Time.getById(atividade.time).then(function (time) {
-                                    if(time) {
+                                    if (time) {
                                         atividade.nomeTime = time.nome;
                                     }
                                 });
                             }
+                            $scope.csvAtividades.push({
+                                "Time": "",
+                                "Atividade": atividade.nome,
+                                "Status": atividade.status,
+                                "Inicio": "",
+                                "Duracao": ""
+                            });
                         });
                         $scope.projeto = projeto;
                         $scope.showLoading = false;
@@ -72,7 +79,7 @@ angular.module('team-task')
                             projetoSelecionado: function () {
                                 return $scope.projeto;
                             },
-                            indice : function () {
+                            indice: function () {
                                 return indice;
                             }
                         }
@@ -92,7 +99,7 @@ angular.module('team-task')
                             projetoSelecionado: function () {
                                 return $scope.projeto;
                             },
-                            indice : function () {
+                            indice: function () {
                                 return indice;
                             }
                         }
@@ -112,7 +119,7 @@ angular.module('team-task')
                             projetoSelecionado: function () {
                                 return $scope.projeto;
                             },
-                            indice : function () {
+                            indice: function () {
                                 return indice;
                             }
                         }
@@ -149,7 +156,7 @@ angular.module('team-task')
                             projetoSelecionado: function () {
                                 return $scope.projeto;
                             },
-                            indice : function () {
+                            indice: function () {
                                 return indice;
                             }
                         }
