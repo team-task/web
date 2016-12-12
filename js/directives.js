@@ -4,8 +4,16 @@ angular.module('team-task')
             restrict: 'A',
             replace: true,
             templateUrl: 'views/header.html',
-            controller: ['$scope', '$rootScope', function ($scope, $rootScope) {
-
+            controller: ['$scope', '$rootScope', '$uibModal', function ($scope, $rootScope, $uibModal) {
+                $scope.myProfile = function () {
+                    $uibModal
+                        .open({
+                            templateUrl: 'views/modal/my-profile.html',
+                            controller: 'ModalMyProfileController'
+                        }).result.then(function () {
+                        }, function () {
+                        });
+                };
             }]
         };
     })

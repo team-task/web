@@ -1,4 +1,61 @@
 angular.module('team-task')
+    .controller('ModalMyProfileController',
+    function ($scope, $rootScope, Pessoa) {
+        $scope.nameErro = "";
+        $scope.usuarioErro = "";
+        $scope.novasenhaErro = "";
+        $scope.senhaanteriorErro = "";
+        $scope.novasenha = "";
+        $scope.senhaanterior = "";
+        $scope.initModalMyProfile = function () {
+            if($rootScope.usuarioLogado) {
+                $scope.pessoa = {
+                    "nome": $rootScope.usuarioLogado.nome,
+                    "usuario": $rootScope.usuarioLogado.usuario
+                };
+            }
+        };
+
+        $scope.ok = function () {
+
+            $scope.nameErro = "";
+            $scope.usuarioErro = "";
+            $scope.novasenhaErro = "";
+            $scope.senhaanteriorErro = "";
+
+            if(!$scope.pessoa.nome) {
+                $scope.nameErro = "O Nome é obrigatório.";
+            }
+            if(!$scope.pessoa.usuario) {
+                $scope.usuarioErro = "O Login do Usuário é obrigatório.";
+            }
+
+            if($scope.novasenha) {
+                //quer mudar a senha
+                if($scope.novasenha.length < 4) {
+                    $scope.novasenhaErro = "A nova senha deve ter pelo menos 4 caracteres.";
+                }
+                if(!$scope.senhaanterior) {
+                    $scope.senhaanteriorErro = "Para alterar a senha, uma nova é obrigatória.";
+                } else {
+                    if($scope.senhaanterior === $scope.novasenha) {
+                        $scope.senhaanteriorErro = "As senhas tem que ser diferentes.";
+                    } else {
+
+                    }
+                    if($scope.senhaanterior !== $rootScope.usuarioLogado.senha) {
+                        $scope.senhaanteriorErro = "Senha anterior não confere.";
+                    }
+                }
+            }
+
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
+angular.module('team-task')
     .controller('ModalNewProjectController',
     function ($scope, $rootScope, Projeto, $state) {
         $scope.novoProjeto = new Projeto();

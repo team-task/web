@@ -17,7 +17,8 @@ function($scope, $rootScope, $state, Pessoa, $window) {
 		waitingDialog.show("Validando login na rede. Aguarde");
 		var query = {
 			"usuario": usuario,
-			"senha": senha
+			"senha": senha,
+			"ativo": true
 		};
 		Pessoa.query(query).then(function (pessoas) {
 			if(pessoas[0]) {

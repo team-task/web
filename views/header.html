@@ -31,20 +31,17 @@
 
                                     <div class="avatar-menu-name">
                                         {{usuarioLogado.nome}}
-                                        <a ui-sref="login" class="profile-link">Perfil</a>
+                                        <a ng-click="myProfile();" class="profile-link pointer-action">Perfil</a>
                                     </div>
                                 </div>
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a ui-sref="config-teams"><i class="fa fa-users fa-fw"></i>&nbsp;Times</a>
+                                <a ui-sref="config-teams"><i class="fa fa-object-group fa-fw"></i>&nbsp;Times</a>
                             </li>
-                            <!--
-                            <li class="divider"></li>
                             <li>
-                                <a ui-sref="workspace"><i class="fa fa-gear fa-fw"></i>&nbsp;Configurações</a>
+                                <a ui-sref="workspace"><i class="fa fa-users fa-fw"></i>&nbsp;Pessoas</a>
                             </li>
-                            -->
                             <li class="divider"></li>
                             <li>
                                 <a ui-sref="login"><i class="fa fa-sign-out fa-fw"></i>&nbsp;Sair</a>
