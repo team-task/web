@@ -170,11 +170,42 @@ angular.module('team-task')
     .controller('ModalImportProjectActivityController',
     function ($scope, $rootScope, projetoSelecionado, dataAtividades, Projeto) {
         $scope.initModalImportActivity = function () {
-            $scope.quantidade = dataAtividades.data.length;
-            $scope.dataAtividades = dataAtividades.data;
+            $scope.dataAtividades = [];
+            for (var i = 0; i < dataAtividades.data.length; i++) {
+                if(dataAtividades.data[i].Atividade) {
+                    var atividade = dataAtividades.data[i];
+                    atividade.selecionada = true;
+                    $scope.dataAtividades.push(atividade);
+                }
+            }
+            $scope.quantidade = $scope.dataAtividades.length;
         };
         $scope.ok = function () {
-
+            waitingDialog.show("Importando atividade(s). Aguarde.");
+            for(var i = 0; i < $scope.dataAtividades.length; i++) {
+                if($scope.dataAtividades[i].selecionada) {
+                    var atividadeNova = {
+                        "nome": $scope.dataAtividades[i].Atividade,
+                        "status": "Aguardando",
+                        "inicio": {"$date": new Date()},
+                        "duracao": 1,
+                        "fim": {"$date": new Date()},
+                        "designado": "",
+                        "notas": "",
+                        "time": ""
+                    };
+                    if (projetoSelecionado.atividades) {
+                        projetoSelecionado.atividades.push(atividadeNova);
+                    } else {
+                        projetoSelecionado.atividades = [];
+                        projetoSelecionado.atividades.push(atividadeNova);
+                    }
+                }
+            }
+            projetoSelecionado.$saveOrUpdate().then(function () {
+                waitingDialog.hide();
+                $scope.$close(true);
+            });
         };
         $scope.cancel = function () {
             $scope.$dismiss();

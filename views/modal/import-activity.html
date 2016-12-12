@@ -9,9 +9,12 @@
         <div class="panel-body tt-list-add-people">
             <ul class="list-group">
                 <li class="list-group-item" ng-repeat="atividade in dataAtividades">
-                    {{atividade.Atividade}}
+                    <label><input type="checkbox" ng-model="atividade.selecionada">&nbsp;{{atividade.Atividade}}</label>
                 </li>
             </ul>
+        </div>
+        <div class="panel-footer">
+            Atividades selecionadas serão importadas automaticamente ao projeto após confirmação.
         </div>
     </div>
 </div>
