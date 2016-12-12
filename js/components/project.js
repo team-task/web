@@ -9,13 +9,35 @@ angular.module('team-task')
 
             $scope.csvAtividades = [];
 
-            $rootScope.$on("CallImportTemplate", function(contents){
+            var customeEventListener = $scope.$on("CallImportTemplate", function(event, contents){
                 importTemplate(contents);
+                event.stopPropagation();
             });
 
             function importTemplate (contents) {
-                console.log(contents);
+                var data = Papa.parse(contents.contents, {header: true});
                 waitingDialog.hide();
+                importTemplateModal(data);
+            }
+
+            function importTemplateModal (data) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/import-activity.html',
+                        controller: 'ModalImportProjectActivityController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            },
+                            dataAtividades: function () {
+                                return data;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadProject();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
             }
 
             $scope.initWorkspaceProject = function () {
@@ -23,7 +45,7 @@ angular.module('team-task')
             };
 
             $scope.getHeader = function () {
-                return ['Time', 'Atvidade', 'Status', 'Inicio', 'Duracao'];
+                return ['Time', 'Atividade', 'Status', 'Inicio', 'Duracao'];
             };
 
             function loadProject() {
@@ -59,7 +81,7 @@ angular.module('team-task')
                             $scope.csvAtividades.push({
                                 "Time": "",
                                 "Atividade": atividade.nome,
-                                "Status": atividade.status,
+                                "Status": "Aguardando",
                                 "Inicio": "",
                                 "Duracao": ""
                             });

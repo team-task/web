@@ -165,3 +165,18 @@ angular.module('team-task')
             $scope.$dismiss();
         };
     });
+
+angular.module('team-task')
+    .controller('ModalImportProjectActivityController',
+    function ($scope, $rootScope, projetoSelecionado, dataAtividades, Projeto) {
+        $scope.initModalImportActivity = function () {
+            $scope.quantidade = dataAtividades.data.length;
+            $scope.dataAtividades = dataAtividades.data;
+        };
+        $scope.ok = function () {
+
+        };
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });

@@ -182,7 +182,7 @@ angular.module('team-task')
                 $scope.listaAtividadesIniciando = [];
                 $scope.listaAtividadesTerminando = [];
 
-                var dataIniciando = moment().businessAdd(10, 'days');
+                var dataIniciando = moment().add(10, 'days');
                 var dataTerminando = moment().subtract(5, 'days');
                 $scope.dataIniciando = dataIniciando.toDate();
                 $scope.dataTerminando = dataTerminando.toDate();

@@ -23,8 +23,8 @@ angular.module('team-task')
                             waitingDialog.show("Carregando Template. Aguarde.");
                             var contents = e.target.result;
                             scope.$apply(function () {
-                                scope.fileReader = contents;
-                                scope.$root.$emit("CallImportTemplate", {"contents": contents});
+                                angular.element(element).val(null);
+                                scope.$emit("CallImportTemplate", sendFileContent(contents));
                             });
                         };
                         r.readAsText(files[0]);
@@ -148,3 +148,6 @@ angular.module('team-task')
                 }]
         };
     });
+function sendFileContent (contents) {
+    return {"contents" : contents};
+}
