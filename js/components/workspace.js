@@ -73,13 +73,48 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('WorkspaceActivitiesController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$resource', '$filter', 'Pessoa',
-        function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa) {
+        'DTOptionsBuilder', '$resource', '$filter', 'Pessoa', '$uibModal',
+        function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa, $uibModal) {
             $scope.showLoading = false;
             //$scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtAOptions = DTOptionsBuilder.newOptions();
             $scope.dtAOptions.withOption('responsive', true);
             $scope.dtAOptions.withOption('order', [[2,"asc"]]);
+
+            $scope.mostrarDetalheAtividadeTime = function (atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-team-activity.html',
+                        controller: 'ModalViewTeamActivityController',
+                        resolve: {
+                            atividadeSelecionada: function () {
+                                return atividade;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
+            };
+
+            $scope.editarAtividadeTime = function (atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/edit-team-activity.html',
+                        controller: 'ModalEditTeamActivityController',
+                        resolve: {
+                            timeSelecionado: function () {
+                                return atividade.timeObj;
+                            },
+                            atividadeSelecionada: function () {
+                                return atividade;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadTable();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            };
 
             function loadTable() {
                 $scope.listaAtividades = [];
@@ -163,8 +198,9 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('WorkspaceWorkforceController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        '$resource', '$filter', 'Pessoa', 'Projeto', '$q', 'DTOptionsBuilder',
-        function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q, DTOptionsBuilder) {
+        '$resource', '$filter', 'Pessoa', 'Projeto', '$q', 'DTOptionsBuilder', '$uibModal',
+        function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q, DTOptionsBuilder,
+                  $uibModal) {
             $scope.showLoading = false;
             $scope.ganttData = [];
             $scope.listaAtividadesIniciando = [];
@@ -295,16 +331,20 @@ angular.module('team-task')
                                                     if(time && time.length > 0) {
                                                         nomeTime = time[0].nome + " / ";
                                                     }
-
+                                                    atividade.timeObj = time[0];
                                                     listaAtividadesI.push({
                                                         "nome": nomeTime + atividade.nome,
                                                         "inicio": atividade.inicio,
+                                                        "duracao": atividade.duracao,
+                                                        "notas": atividade.notas,
                                                         "fim": atividade.fim,
                                                         "pessoaRecurso": {
                                                             "nome": pessoa.nome,
                                                             "iniciais": pessoa.iniciais
                                                         },
-                                                        "status": "Iniciando"
+                                                        "status": "Iniciando",
+                                                        "atividadeObj": atividade,
+                                                        "timeObj": time[0]
                                                     });
 
                                                 });
@@ -333,16 +373,20 @@ angular.module('team-task')
                                                     if(time && time.length > 0) {
                                                         nomeTime = time[0].nome + " / ";
                                                     }
-
+                                                    atividade.timeObj = time[0];
                                                     listaAtividadesT.push({
                                                         "nome": nomeTime + atividade.nome,
                                                         "fim": atividade.fim,
+                                                        "duracao": atividade.duracao,
                                                         "inicio": atividade.inicio,
+                                                        "notas": atividade.notas,
                                                         "pessoaRecurso": {
                                                             "nome": pessoa.nome,
                                                             "iniciais": pessoa.iniciais
                                                         },
-                                                        "status": "Terminando"
+                                                        "status": "Terminando",
+                                                        "atividadeObj": atividade,
+                                                        "timeObj": time[0]
                                                     });
 
                                                 });
@@ -386,6 +430,40 @@ angular.module('team-task')
                     return 800 * zoom;
                 }
                 return 40 * zoom;
+            };
+            $scope.editarAtividadeTime = function (atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/edit-team-activity.html',
+                        controller: 'ModalEditTeamActivityController',
+                        resolve: {
+                            timeSelecionado: function () {
+                                return atividade.timeObj;
+                            },
+                            atividadeSelecionada: function () {
+                                return atividade;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadTable();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            };
+
+            $scope.mostrarDetalheAtividadeTime = function (atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-team-activity.html',
+                        controller: 'ModalViewTeamActivityController',
+                        resolve: {
+                            atividadeSelecionada: function () {
+                                return atividade;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
             };
 
             $scope.initWorkspaceWorkforce = function () {

@@ -7,7 +7,7 @@
             <div class="form-group">
                 <label>Nome</label>
                 <input type="text" class="form-control" ng-model="atividadeNova.nome"
-                       placeholder="Nome da nova atividade" ng-focus="activityNameErro = ''">
+                       placeholder="Nome da nova atividade" ng-focus="activityNameErro = ''" autofocus>
                 <span ng-show="activityNameErro !==''" class="help-block alert-danger">
                     {{activityNameErro}}
                 </span>

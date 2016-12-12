@@ -7,7 +7,7 @@
             <div class="form-group">
                 <label>Nome do Projeto</label>
                 <input type="text" class="form-control" ng-focus="errorProjectName = ''"
-                       ng-model="novoProjeto.nome" placeholder="Nome do novo projeto">
+                       ng-model="novoProjeto.nome" placeholder="Nome do novo projeto" autofocus>
                 <span ng-show="errorProjectName !==''" class="help-block alert-danger">
                     {{errorProjectName}}
                 </span>

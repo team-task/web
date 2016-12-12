@@ -38,7 +38,16 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="atividade in listaAtividades">
-                            <td>{{atividade.nome}}</td>
+                            <td class="tb-project-name">
+                                <a ng-click="mostrarDetalheAtividadeTime(atividade);" class="pointer-action">
+                                    {{atividade.nome}}
+                                </a>&nbsp;
+                                    <span ng-show="usuarioLogado._id.$oid === atividade.timeObj.lider" class="btn-edit-project"
+                                          ng-click="editarAtividadeTime(atividade);">
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </span>
+
+                            </td>
                             <td>{{atividade.status}}</td>
                             <td data-order="{{atividade.inicio.$date | timeMils}}">{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                             <td>{{atividade.duracao}}</td>

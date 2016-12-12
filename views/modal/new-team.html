@@ -7,7 +7,7 @@
             <div class="form-group">
                 <label>Nome</label>
                 <input type="text" class="form-control" ng-model="timeNovo.nome"
-                       placeholder="Nome do time" ng-focus="teamNameErro = ''">
+                       placeholder="Nome do time" ng-focus="teamNameErro = ''" autofocus>
                 <span ng-show="teamNameErro !==''" class="help-block alert-danger">
                     {{teamNameErro}}
                 </span>
