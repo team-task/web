@@ -51,6 +51,15 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 requiredlogin: true
             }
         })
+        .state('config-people', {
+            url: '/people',
+            templateUrl: 'views/config-people.html',
+            reloadOnSearch: false,
+            controller: 'ConfigPeopleController',
+            data: {
+                requiredlogin: true
+            }
+        })
         .state('team-activities', {
             url: '/activities/team/:id',
             templateUrl: 'views/team-activities.html',
