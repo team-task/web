@@ -1,7 +1,7 @@
 angular.module('team-task')
     .controller('WorkforceController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        'Pessoa', '$stateParams', 'Projeto', '$filter',
-        function ($scope, $rootScope, $state, Atividade, Time, Pessoa, $stateParams, Projeto, $filter) {
+        'Pessoa', '$stateParams', 'Projeto', '$filter', '$uibModal',
+        function ($scope, $rootScope, $state, Atividade, Time, Pessoa, $stateParams, Projeto, $filter, $uibModal) {
             $scope.showLoading = false;
 
             function loadTable() {
@@ -39,7 +39,9 @@ angular.module('team-task')
                                             nomeTime = time[0].nome + " / ";
                                         }
                                         var rowAt = {
-                                            "name": nomeTime + atividades[indexTimeAtividade].nome
+                                            "name": nomeTime + atividades[indexTimeAtividade].nome,
+                                            "time": time,
+                                            "atividade": atividades[indexTimeAtividade]
                                         };
                                         rowAt.tasks = [];
                                         rowAt.tasks.push({
@@ -60,7 +62,10 @@ angular.module('team-task')
                                             for (var at = 0; at < projetos[p].atividades.length; at++) {
                                                 if (projetos[p].atividades[at].designado === pessoa._id.$oid) {
                                                     var rowPr = {
-                                                        "name": projetos[p].nome + " / " + projetos[p].atividades[at].nome
+                                                        "name": projetos[p].nome + " / " + projetos[p].atividades[at].nome,
+                                                        "atividade": projetos[p].atividades[at],
+                                                        "projeto": projetos[p],
+                                                        "indiceAt": at
                                                     };
                                                     rowPr.tasks = [];
                                                     rowPr.tasks.push({
@@ -106,6 +111,44 @@ angular.module('team-task')
                 return 40 * zoom;
             };
 
+            $scope.editarAtividade = function (model) {
+                console.log(model);
+            };
+
+            $scope.mostrarDetalheAtividade = function (model) {
+
+                if(model.projeto) {
+                    $uibModal
+                        .open({
+                            templateUrl: 'views/modal/view-activity.html',
+                            controller: 'ModalViewActivityController',
+                            resolve: {
+                                projetoSelecionado: function () {
+                                    return model.projeto;
+                                },
+                                indice: function () {
+                                    return model.indiceAt;
+                                }
+                            }
+                        }).result.then(function () {
+                        }, function () {
+                        });
+                } else {
+                    $uibModal
+                        .open({
+                            templateUrl: 'views/modal/view-team-activity.html',
+                            controller: 'ModalViewTeamActivityController',
+                            resolve: {
+                                atividadeSelecionada: function () {
+                                    return model.atividade;
+                                }
+                            }
+                        }).result.then(function () {
+                        }, function () {
+                        });
+                }
+            };
+
             $scope.initWorkforce = function () {
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.ganttOptions = {
@@ -117,7 +160,10 @@ angular.module('team-task')
                     "daily": true,
                     "sortMode": "from",
                     "contents": {
-                        'model.name': '{{getValue()}} <span class="fa fa-pencil-square-o"></span>'
+                        'model.name': '<a ng-click="scope.mostrarDetalheAtividade(row.model)" class="pointer-action">{{getValue()}}</a>' +
+                        '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +
+                            'ng-click="scope.editarAtividade(row.model)">'+
+                        '</span>'
                     }
                 };
                 loadTable();
