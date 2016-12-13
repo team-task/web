@@ -115,7 +115,10 @@ angular.module('team-task')
                     "currentDate": 'line',
                     "tableHeaders": {'model.name': 'Atividade'},
                     "daily": true,
-                    "sortMode": "from"
+                    "sortMode": "from",
+                    "contents": {
+                        'model.name': '{{getValue()}} <span class="fa fa-pencil-square-o"></span>'
+                    }
                 };
                 loadTable();
             };
