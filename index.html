@@ -23,6 +23,78 @@
     <link href="css/tt.css" rel="stylesheet">
 </head>
 <body ng-class="loginBody">
+<div class="m-app-loading" ng-animate-children>
+    <style type="text/css">
+        div.m-app-loading {
+            position: fixed;
+        }
+
+        div.m-app-loading div.animated-container {
+            background-color: #101010;
+            bottom: 0;
+            left: 0;
+            opacity: 1.0;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 999999;
+        }
+
+        /* Used to initialize the ng-leave animation state. */
+        div.m-app-loading div.animated-container.ng-leave {
+            opacity: 1.0;
+            transition: all linear 200ms;
+            -webkit-transition: all linear 200ms;
+        }
+
+        /* Used to set the end properties of the ng-leave animation state. */
+        div.m-app-loading div.animated-container.ng-leave-active {
+            opacity: 0;
+        }
+
+        div.m-app-loading div.messaging {
+            color: #FFFFFF;
+            font-family: monospace;
+            left: 0;
+            margin-top: -37px;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            top: 50%;
+        }
+
+        div.m-app-loading div.messaging .team {
+            color: #17BEFF;
+        }
+        div.m-app-loading div.messaging .task {
+            color: #29D311;
+        }
+
+        div.m-app-loading h1 {
+            font-size: 26px;
+            line-height: 35px;
+            margin: 0 0 20px 0;
+        }
+
+        div.m-app-loading p {
+            font-size: 18px;
+            line-height: 14px;
+            margin: 0;
+        }
+    </style>
+
+    <div class="animated-container">
+        <div class="messaging">
+            <h1>
+                <span class="team">Team</span><span class="task">Task</span>
+            </h1>
+            <p>
+                Carregando componentes. Aguarde.
+            </p>
+        </div>
+    </div>
+</div>
+
 <div ui-view class="mainsec"></div>
 
 <script type="text/javascript" src="js/lib/jquery.min.js"></script>
