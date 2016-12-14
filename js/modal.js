@@ -364,9 +364,9 @@ angular.module('team-task')
             Time.query(qTime).then(function (times) {
                 if (times[0]) {
                     $scope.listaTimes = times;
-                    if (projetoSelecionado.atividades[indice].designado) {
+                    //if (projetoSelecionado.atividades[indice].designado) {
                         $scope.carregaPessoas();
-                    }
+                    //}
                 }
             });
 

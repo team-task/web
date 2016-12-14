@@ -214,7 +214,7 @@ angular.module('team-task')
 
             function loadTable() {
                 $scope.showLoading = true;
-
+                $scope.ganttData = [];
                 $scope.listaAtividadesIniciando = [];
                 $scope.listaAtividadesTerminando = [];
 

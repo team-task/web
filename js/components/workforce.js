@@ -112,7 +112,43 @@ angular.module('team-task')
             };
 
             $scope.editarAtividade = function (model) {
-                console.log(model);
+                if(model.projeto) {
+                    $uibModal
+                        .open({
+                            templateUrl: 'views/modal/edit-activity.html',
+                            controller: 'ModalEditActivityController',
+                            resolve: {
+                                projetoSelecionado: function () {
+                                    return model.projeto;
+                                },
+                                indice: function () {
+                                    return model.indiceAt;
+                                }
+                            }
+                        }).result.then(function () {
+                            loadTable();
+                            $rootScope.$emit("CallLoadMenus", {});
+                        }, function () {
+                        });
+                } else {
+                    $uibModal
+                        .open({
+                            templateUrl: 'views/modal/edit-team-activity.html',
+                            controller: 'ModalEditTeamActivityController',
+                            resolve: {
+                                timeSelecionado: function () {
+                                    return model.time[0];
+                                },
+                                atividadeSelecionada: function () {
+                                    return model.atividade;
+                                }
+                            }
+                        }).result.then(function () {
+                            loadTable();
+                            $rootScope.$emit("CallLoadMenus", {});
+                        }, function () {
+                        });
+                }
             };
 
             $scope.mostrarDetalheAtividade = function (model) {
@@ -130,9 +166,7 @@ angular.module('team-task')
                                     return model.indiceAt;
                                 }
                             }
-                        }).result.then(function () {
-                        }, function () {
-                        });
+                        }).result.then(function () {}, function () {});
                 } else {
                     $uibModal
                         .open({
@@ -143,9 +177,7 @@ angular.module('team-task')
                                     return model.atividade;
                                 }
                             }
-                        }).result.then(function () {
-                        }, function () {
-                        });
+                        }).result.then(function () {}, function () {});
                 }
             };
 

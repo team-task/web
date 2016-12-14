@@ -60,6 +60,7 @@
                 <label for="time">Time</label>
                 <select id="time" class="form-control" ng-model="projeto.atividades[indice].time" ng-options="time._id.$oid as time.nome for time in listaTimes"
                         ng-change="carregaPessoas();" aria-describedby="helpBlock" ng-focus="activityTimeErro = ''">
+                    <option value="">Sem time</option>
                 </select>
                 <span ng-show="activityTimeErro !==''" class="help-block alert-danger">
                     {{activityTimeErro}}
@@ -78,6 +79,7 @@
                 <label for="designado">Desigando para</label>
                 <select id="designado" class="form-control" ng-model="projeto.atividades[indice].designado"
                         ng-options="recurso._id.$oid as recurso.nome for recurso in listaRecursos">
+                    <option value="">Sem designação</option>
                 </select>
             </div>
 
