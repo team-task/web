@@ -28,16 +28,33 @@
 
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div gantt data=ganttData
+                            <div gantt
+                                 api="ganttOptions.api"
+                                 data=ganttData
                                  view-scale="ganttOptions.scale"
                                  current-date="ganttOptions.currentDate"
                                  sort-mode="ganttOptions.sortMode"
-                                 daily="ganttOptions.daily">
+                                 daily="ganttOptions.daily"
+                                 filter-task="filterFunction">
                                 <gantt-table headers="ganttOptions.tableHeaders"
                                              contents="ganttOptions.contents"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
                                 <gantt-overlap></gantt-overlap>
                             </div>
+                        </div>
+                        <div class="panel-footer">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="filtro[0]" value="aguardando"
+                                       ng-click="filterChange();">Aguardando
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="filtro[1]" value="iniciada"
+                                       ng-click="filterChange();">Iniciada
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="filtro[2]" value="concluida"
+                                       ng-click="filterChange();">Concluida
+                            </label>
                         </div>
                     </div>
 

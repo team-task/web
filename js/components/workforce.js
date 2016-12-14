@@ -48,7 +48,8 @@ angular.module('team-task')
                                             "name": atividades[indexTimeAtividade].nome,
                                             "from": moment(atividades[indexTimeAtividade].inicio.$date),
                                             "to": moment(atividades[indexTimeAtividade].fim.$date),
-                                            "color": "#F1C232"
+                                            "color": "#F1C232",
+                                            "status": atividades[indexTimeAtividade].status
                                         });
                                         $scope.ganttData.push(rowAt);
                                     }
@@ -72,7 +73,8 @@ angular.module('team-task')
                                                         "name": projetos[p].atividades[at].nome,
                                                         "from": moment(projetos[p].atividades[at].inicio.$date),
                                                         "to": moment(projetos[p].atividades[at].fim.$date),
-                                                        "color": "#9FC5F8"
+                                                        "color": "#9FC5F8",
+                                                        "status": projetos[p].atividades[at].status
                                                     });
                                                     $scope.ganttData.push(rowPr);
                                                 }
@@ -181,7 +183,42 @@ angular.module('team-task')
                 }
             };
 
+            $scope.filtro = [];
+            $scope.filterChange = function () {
+                if($scope.filtro) {
+                    var listaFiltro = [];
+                    if ($scope.filtro[0]) {
+                        listaFiltro.push("aguardando");
+                    }
+                    if ($scope.filtro[1]) {
+                        listaFiltro.push("iniciada");
+                    }
+                    if ($scope.filtro[2]) {
+                        listaFiltro.push("concluída");
+                    }
+                    if(listaFiltro.length > 0) {
+                        $scope.ganttOptions.filtertask = listaFiltro;
+                    } else {
+                        $scope.ganttOptions.filtertask = "";
+                    }
+                } else {
+                    $scope.ganttOptions.filtertask = "";
+                }
+                $scope.api.rows.refresh();
+            };
+
+            $scope.filterFunction = function (item) {
+                if(item && item.model) {
+                    if($scope.ganttOptions.filtertask) {
+                        return $scope.ganttOptions.filtertask.indexOf(item.model.status.toLowerCase()) > -1;
+                    } else {
+                        return false;
+                    }
+                }
+            };
+
             $scope.initWorkforce = function () {
+                $scope.filtro = [true, true, true];
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.ganttOptions = {
                     "zoom": 1,
@@ -196,6 +233,10 @@ angular.module('team-task')
                         '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +
                             'ng-click="scope.editarAtividade(row.model)">'+
                         '</span>'
+                    },
+                    "filtertask": ["aguardando", "iniciada", "concluída"],
+                    api: function(api) {
+                        $scope.api = api;
                     }
                 };
                 loadTable();

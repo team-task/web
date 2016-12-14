@@ -54,14 +54,16 @@
                     -->
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div gantt data=ganttData
+                            <div gantt
+                                 api="ganttOptions.api"
+                                 data=ganttData
                                  view-scale="ganttOptions.scale"
                                  current-date="ganttOptions.currentDate"
                                  sort-mode="ganttOptions.sortMode"
                                  daily="ganttOptions.daily"
                                  task-content="ganttOptions.taskContent"
                                  headers="ganttOptions.headers"
-                                 filter-task="ganttOptions.filtertask">
+                                 filter-task="filterFunction">
                                 <gantt-table headers="ganttOptions.tableHeaders"
                                              contents="ganttOptions.contents"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
@@ -69,13 +71,18 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <label for="filtro">Filtrar Status</label>
-                            <select ng-model="filtro" id="filtro" ng-change="filterChange()">
-                                <option value="" selected>Nenhum</option>
-                                <option value="aguardando">Aguardando</option>
-                                <option value="iniciada">Iniciada</option>
-                                <option value="concluida">Concluida</option>
-                            </select>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="filtro[0]" value="aguardando"
+                                       ng-click="filterChange();">Aguardando
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="filtro[1]" value="iniciada"
+                                       ng-click="filterChange();">Iniciada
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="filtro[2]" value="concluida"
+                                       ng-click="filterChange();">Concluida
+                            </label>
                         </div>
                     </div>
 

@@ -471,21 +471,42 @@ angular.module('team-task')
                     });
             };
 
-            $scope.taskComparator = function (actual, expected) {
-                console.log(actual);
-                console.log(expected);
-                return true;
-            };
-            $scope.filtro = "";
+            $scope.filtro = [];
             $scope.filterChange = function () {
                 if($scope.filtro) {
-                    $scope.ganttOptions.filtertask = {"status": $scope.filtro};
+                    var listaFiltro = [];
+                    if ($scope.filtro[0]) {
+                        listaFiltro.push("aguardando");
+                    }
+                    if ($scope.filtro[1]) {
+                        listaFiltro.push("iniciada");
+                    }
+                    if ($scope.filtro[2]) {
+                        listaFiltro.push("concluída");
+                    }
+                    if(listaFiltro.length > 0) {
+                        $scope.ganttOptions.filtertask = listaFiltro;
+                    } else {
+                        $scope.ganttOptions.filtertask = "";
+                    }
                 } else {
                     $scope.ganttOptions.filtertask = "";
+                }
+                $scope.api.rows.refresh();
+            };
+
+            $scope.filterFunction = function (item) {
+                if(item && item.model) {
+                    if($scope.ganttOptions.filtertask) {
+                        return $scope.ganttOptions.filtertask.indexOf(item.model.status.toLowerCase()) > -1;
+                    } else {
+                        return false;
+                    }
                 }
             };
 
             $scope.initWorkspaceWorkforce = function () {
+                $scope.filtro = [true, true, true];
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.ganttOptions = {
                     "zoom": 1,
@@ -499,7 +520,10 @@ angular.module('team-task')
                     "contents": {
                         'model.name': '<a ui-sref="workforce({\'id\': row.model.idpessoa})">{{getValue()}}</a>'
                     },
-                    "filtertask": ''
+                    "filtertask": ["aguardando", "iniciada", "concluída"],
+                    api: function(api) {
+                        $scope.api = api;
+                    }
                 };
                 loadTable();
             };
