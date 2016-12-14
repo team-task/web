@@ -60,11 +60,22 @@
                                  sort-mode="ganttOptions.sortMode"
                                  daily="ganttOptions.daily"
                                  task-content="ganttOptions.taskContent"
-                                 headers="ganttOptions.headers">
-                                <gantt-table headers="ganttOptions.tableHeaders"></gantt-table>
+                                 headers="ganttOptions.headers"
+                                 filter-task="ganttOptions.filtertask">
+                                <gantt-table headers="ganttOptions.tableHeaders"
+                                             contents="ganttOptions.contents"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
                                 <gantt-overlap></gantt-overlap>
                             </div>
+                        </div>
+                        <div class="panel-footer">
+                            <label for="filtro">Filtrar Status</label>
+                            <select ng-model="filtro" id="filtro" ng-change="filterChange()">
+                                <option value="" selected>Nenhum</option>
+                                <option value="aguardando">Aguardando</option>
+                                <option value="iniciada">Iniciada</option>
+                                <option value="concluida">Concluida</option>
+                            </select>
                         </div>
                     </div>
 

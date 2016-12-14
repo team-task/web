@@ -261,7 +261,8 @@ angular.module('team-task')
                                         pessoa.nomeSimples = nomeSimples;
 
                                         var row = {
-                                            "name": pessoa.nome
+                                            "name": pessoa.nome,
+                                            "idpessoa": pessoa._id.$oid
                                         };
 
                                         var aQtdQuery = {
@@ -279,7 +280,8 @@ angular.module('team-task')
                                                     "name": atividades[indexTimeAtividade].nome,
                                                     "from": moment(atividades[indexTimeAtividade].inicio.$date),
                                                     "to": moment(atividades[indexTimeAtividade].fim.$date),
-                                                    "color": "#F1C232"
+                                                    "color": "#F1C232",
+                                                    "status": atividades[indexTimeAtividade].status
                                                 });
                                             }
 
@@ -297,7 +299,8 @@ angular.module('team-task')
                                                                 "name": projetos[p].atividades[at].nome,
                                                                 "from": moment(projetos[p].atividades[at].inicio.$date),
                                                                 "to": moment(projetos[p].atividades[at].fim.$date),
-                                                                "color": "#F1C232"
+                                                                "color": "#F1C232",
+                                                                "status": projetos[p].atividades[at].status
                                                             });
                                                         }
                                                     }
@@ -332,21 +335,22 @@ angular.module('team-task')
                                                         nomeTime = time[0].nome + " / ";
                                                     }
                                                     atividade.timeObj = time[0];
-                                                    listaAtividadesI.push({
-                                                        "nome": nomeTime + atividade.nome,
-                                                        "inicio": atividade.inicio,
-                                                        "duracao": atividade.duracao,
-                                                        "notas": atividade.notas,
-                                                        "fim": atividade.fim,
-                                                        "pessoaRecurso": {
-                                                            "nome": pessoa.nome,
-                                                            "iniciais": pessoa.iniciais
-                                                        },
-                                                        "status": "Iniciando",
-                                                        "atividadeObj": atividade,
-                                                        "timeObj": time[0]
-                                                    });
+                                                    if(atividade.status === "aguardando" || atividade.status === "iniciada") {
+                                                        listaAtividadesI.push({
+                                                            "nome": nomeTime + atividade.nome,
+                                                            "inicio": atividade.inicio,
+                                                            "duracao": atividade.duracao,
+                                                            "notas": atividade.notas,
+                                                            "fim": atividade.fim,
+                                                            "pessoaRecurso": {
+                                                                "nome": pessoa.nome,
+                                                                "iniciais": pessoa.iniciais
+                                                            },
 
+                                                            "atividadeObj": atividade,
+                                                            "timeObj": time[0]
+                                                        });
+                                                    }
                                                 });
                                             }
                                         }));
@@ -374,21 +378,22 @@ angular.module('team-task')
                                                         nomeTime = time[0].nome + " / ";
                                                     }
                                                     atividade.timeObj = time[0];
-                                                    listaAtividadesT.push({
-                                                        "nome": nomeTime + atividade.nome,
-                                                        "fim": atividade.fim,
-                                                        "duracao": atividade.duracao,
-                                                        "inicio": atividade.inicio,
-                                                        "notas": atividade.notas,
-                                                        "pessoaRecurso": {
-                                                            "nome": pessoa.nome,
-                                                            "iniciais": pessoa.iniciais
-                                                        },
-                                                        "status": "Terminando",
-                                                        "atividadeObj": atividade,
-                                                        "timeObj": time[0]
-                                                    });
+                                                    if(atividade.status === "aguardando" || atividade.status === "iniciada") {
+                                                        listaAtividadesT.push({
+                                                            "nome": nomeTime + atividade.nome,
+                                                            "fim": atividade.fim,
+                                                            "duracao": atividade.duracao,
+                                                            "inicio": atividade.inicio,
+                                                            "notas": atividade.notas,
+                                                            "pessoaRecurso": {
+                                                                "nome": pessoa.nome,
+                                                                "iniciais": pessoa.iniciais
+                                                            },
 
+                                                            "atividadeObj": atividade,
+                                                            "timeObj": time[0]
+                                                        });
+                                                    }
                                                 });
                                             }
                                         }));
@@ -466,6 +471,20 @@ angular.module('team-task')
                     });
             };
 
+            $scope.taskComparator = function (actual, expected) {
+                console.log(actual);
+                console.log(expected);
+                return true;
+            };
+            $scope.filtro = "";
+            $scope.filterChange = function () {
+                if($scope.filtro) {
+                    $scope.ganttOptions.filtertask = {"status": $scope.filtro};
+                } else {
+                    $scope.ganttOptions.filtertask = "";
+                }
+            };
+
             $scope.initWorkspaceWorkforce = function () {
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.ganttOptions = {
@@ -476,7 +495,11 @@ angular.module('team-task')
                     "tableHeaders": {'model.name': 'Recurso'},
                     "sortMode": "model.name",
                     "daily": true,
-                    "taskContent": '<span></span>'
+                    "taskContent": '<span></span>',
+                    "contents": {
+                        'model.name': '<a ui-sref="workforce({\'id\': row.model.idpessoa})">{{getValue()}}</a>'
+                    },
+                    "filtertask": ''
                 };
                 loadTable();
             };
