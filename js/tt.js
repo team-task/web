@@ -1,7 +1,7 @@
 angular.module('team-task', [
     'ui.router', 'ngResource', 'mongolabResourceHttp', 'ui.bootstrap', 'angular.filter', 'ngLetterAvatar', 'angularMoment',
-    'datatables', 'ngAnimate', 'gantt', 'gantt.table', 'gantt.tooltips', 'gantt.overlap', 'checklist-model', 'ngSanitize',
-    'ngCsv'
+    'datatables', 'ngAnimate', 'gantt', 'gantt.table', 'gantt.tooltips', 'gantt.overlap', 'gantt.dependencies', 'checklist-model',
+    'ngSanitize', 'ngCsv'
 ])
     .constant('MONGOLAB_CONFIG', {API_KEY: 'YXgR-q92vuVCKlSm-ji3nplDTE7rHIQh', DB_NAME: 'tt'})
     .run(function (amMoment) {
