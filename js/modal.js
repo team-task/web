@@ -351,6 +351,9 @@ angular.module('team-task')
         $scope.initModalEditActivity = function () {
             $scope.indice = indice;
             $scope.listaTimes = [];
+            if(!projetoSelecionado.atividades[indice].predecessora) {
+                projetoSelecionado.atividades[indice].predecessora = null;
+            }
             if (projetoSelecionado.atividades[indice].inicio.$date) {
                 projetoSelecionado.atividades[indice].inicio.$date =
                     moment(projetoSelecionado.atividades[indice].inicio.$date).toDate();
@@ -370,6 +373,27 @@ angular.module('team-task')
                 }
             });
 
+            if(projetoSelecionado.atividades[indice].designado) {
+                var atividadesPossiveis = $filter('filter')(projetoSelecionado.atividades,
+                    {"designado": projetoSelecionado.atividades[indice].designado});
+                if(atividadesPossiveis && atividadesPossiveis.length > 0) {
+                    atividadesPossiveis = $filter('removeWith')(atividadesPossiveis,
+                        {"nome": projetoSelecionado.atividades[indice].nome});
+                    if(atividadesPossiveis && atividadesPossiveis.length > 0) {
+                        $scope.atividadesPossiveis = atividadesPossiveis;
+                    }
+                }
+            }
+
+        };
+
+        $scope.recalcularInicio = function () {
+            if($scope.projeto.atividades[$scope.indice].predecessora) {
+               if($scope.projeto.atividades[$scope.indice].predecessora.fim.$date) {
+                   $scope.projeto.atividades[$scope.indice].inicio.$date =
+                       moment($scope.projeto.atividades[$scope.indice].predecessora.fim.$date).toDate();
+               }
+            }
         };
 
         $scope.calculaFim = function () {
@@ -820,6 +844,7 @@ angular.module('team-task')
         $scope.initModalEditActivity = function () {
             $scope.indice = indice;
             $scope.listaTimes = [];
+
             if (projetoSelecionado.atividades[indice].inicio.$date) {
                 projetoSelecionado.atividades[indice].inicio.$date =
                     moment(projetoSelecionado.atividades[indice].inicio.$date).toDate();

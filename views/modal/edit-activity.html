@@ -13,14 +13,6 @@
                 </span>
             </div>
 
-            <!--
-            <div class="form-group">
-                <label>Status</label>
-                <input type="text" readonly class="form-control" ng-model="atividadeNova.status"
-                       placeholder="Status da atividade">
-            </div>
-            -->
-
             <div class="form-group">
                 <label for="status">Status</label>
                 <select id="status" class="form-control" ng-model="projeto.atividades[indice].status">
@@ -28,6 +20,15 @@
                     <option value="Iniciada">Iniciada</option>
                     <option value="Cancelada">Cancelada</option>
                     <option value="Concluída">Concluída</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="predecessora">Atividade Predecessora</label>
+                <select id="predecessora" class="form-control" ng-model="projeto.atividades[indice].predecessora"
+                        ng-options="predecessora as predecessora.nome for predecessora in atividadesPossiveis"
+                        ng-change="recalcularInicio();">
+                    <option value="">Sem predecessora</option>
                 </select>
             </div>
 
