@@ -1,0 +1,77 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">
+        Editando Pessoa&nbsp;
+        <span class="pointer-action" ng-click="deletePeople()"><i class="fa fa-trash-o"></i></span>
+    </h4>
+</div>
+<div class="modal-body" ng-init="initModalEditPeople()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input id="nome" type="text" class="form-control" ng-model="pessoaEdit.nome"
+                       ng-focus="nomeErro = ''">
+                <span ng-show="nomeErro !==''" class="help-block alert-danger">
+                    {{nomeErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input id="login" type="text" class="form-control" ng-model="pessoaEdit.usuario"
+                       ng-focus="usuarioErro = ''">
+                <span ng-show="usuarioErro !==''" class="help-block alert-danger">
+                    {{usuarioErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default" ng-model="pessoaEdit.ativo" uib-btn-radio="true">
+                        Ativo
+                    </label>
+                    <label class="btn btn-default" uib-btn-radio="false" ng-model="pessoaEdit.ativo">
+                        Inativo
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Times</label>
+
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="time in listaTimesPessoa">
+                        {{time.nome}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tecnologias</label>
+
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="tecnologia" placeholder="Nome da tecnologia">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" uib-tooltip="Adicionar tecnologia"
+                                ng-click="adicionarTecnologia();">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </span>
+                </div>
+                
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="tec in pessoaEdit.tecnologias">
+                        {{tec}}&nbsp;<a ng-click="removeTecnologia(tec);" class="close">x</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

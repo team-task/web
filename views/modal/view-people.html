@@ -1,0 +1,47 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">
+        Detalhes da Pessoa&nbsp;
+        <span ng-show="pessoaView.ativo" class="label label-primary">ATIVO</span>
+        <span ng-show="!pessoaView.ativo" class="label label-danger">INATIVO</span>
+    </h4>
+</div>
+<div class="modal-body" ng-init="initModalViewPeople()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label for="status">Nome</label>
+                <input id="status" type="text" class="form-control" ng-model="pessoaView.nome" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input id="login" type="text" class="form-control" ng-model="pessoaView.usuario" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Times</label>
+
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="time in listaTimesPessoa">
+                        {{time.nome}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tecnologias</label>
+
+                <div class="tags">
+                    <div class="tag label label-success" ng-repeat="tec in pessoaView.tecnologias">
+                        {{tec}}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-success" ng-click="fechar()">Fechar</button>
+</div>

@@ -35,6 +35,7 @@
                         <tr>
                             <td>Sigla</td>
                             <td>Nome</td>
+                            <td>Tecnologia</td>
                             <td>Ativo</td>
                         </tr>
                         </thead>
@@ -46,11 +47,14 @@
                                                   uib-tooltip="{{pessoa.nome}}"></ng-letter-avatar>
                             </td>
                             <td class="tb-project-name">
-                                <a ng-click="mostrarDetalhePessoa(time)" class="pointer-action">{{pessoa.nome}}</a>
+                                <a ng-click="mostrarDetalhePessoa(pessoa)" class="pointer-action">{{pessoa.nome}}</a>
                                 &nbsp;
                                 <span class="btn-edit-project" ng-click="editarPessoa(pessoa);">
                                     <i class="fa fa-pencil-square-o"></i>
                                 </span>
+                            </td>
+                            <td>
+                                <span ng-repeat="tec in pessoa.tecnologias">{{tec}}&nbsp;</span>
                             </td>
                             <td>
                                 <span class="label text-uppercase" ng-class="pessoa.ativo ? 'label-primary' : 'label-danger'">{{pessoa.ativo}}</span>
