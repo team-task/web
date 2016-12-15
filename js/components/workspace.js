@@ -81,6 +81,18 @@ angular.module('team-task')
             $scope.dtAOptions.withOption('responsive', true);
             $scope.dtAOptions.withOption('order', [[2,"asc"]]);
 
+            $scope.novaAtividade = function () {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/new-teams-activity.html',
+                        controller: 'ModalNewTeamsActivityController'
+                    }).result.then(function () {
+                        loadTable();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            };
+
             $scope.mostrarDetalheAtividadeTime = function (atividade) {
                 $uibModal
                     .open({

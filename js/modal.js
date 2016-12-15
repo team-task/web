@@ -441,11 +441,6 @@ angular.module('team-task')
         $scope.ok = function () {
 
             if (editacaoAtividadeValida()) {
-                /*
-                 var inicioAtividade = $scope.projeto.atividades[$scope.indice].inicio.$date;
-                 var fimAtividade = $scope.projeto.atividades[$scope.indice].fim.$date;
-                 */
-
                 if (projetoSelecionado.atividades.length > 0) {
                     var menorDataInicio = null;
                     var maiorDataFim = null;
@@ -474,43 +469,6 @@ angular.module('team-task')
                     projetoSelecionado.fim = null;
                     projetoSelecionado.duracao = null;
                 }
-
-
-                /*
-
-                 //possui a data inicio
-                 if (projetoSelecionado.inicio && projetoSelecionado.inicio.$date) {
-                 //verficar se data da atividade é menor que a do projeto para poder atualizar
-                 if (moment(projetoSelecionado.inicio.$date).isAfter(moment(inicioAtividade))) {
-                 projetoSelecionado.inicio.$date = inicioAtividade;
-                 }
-                 } else {
-                 if (projetoSelecionado.inicio) {
-                 projetoSelecionado.inicio.$date = inicioAtividade;
-                 } else {
-
-                 projetoSelecionado.inicio = {
-                 "$date": inicioAtividade
-                 }
-                 }
-                 }
-
-                 if (projetoSelecionado.fim && projetoSelecionado.fim.$date) {
-                 if (moment(projetoSelecionado.fim.$date).isBefore(moment(fimAtividade))) {
-                 projetoSelecionado.fim.$date = fimAtividade;
-                 }
-                 } else {
-                 if (projetoSelecionado.fim) {
-                 projetoSelecionado.fim.$date = fimAtividade;
-                 } else {
-                 projetoSelecionado.fim = {
-                 "$date": fimAtividade
-                 }
-                 }
-                 }
-
-                 projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
-                 */
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);
@@ -885,6 +843,111 @@ angular.module('team-task')
                 })
             }
             $scope.projeto = projetoSelecionado;
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
+
+angular.module('team-task')
+    .controller('ModalNewTeamsActivityController',
+    function ($scope, $rootScope, $state, Pessoa, Atividade, Time) {
+
+        $scope.showSelectLoading = false;
+        $scope.listaRecursos = [];
+        $scope.listaTimes = [];
+
+        $scope.initModalNewTeamsActivity = function () {
+            $scope.atividadeNova = new Atividade();
+            $scope.atividadeNova.nome = "";
+            $scope.atividadeNova.status = "aguardando";
+            $scope.atividadeNova.inicio = {"$date": new Date()};
+            $scope.atividadeNova.duracao = 1;
+            $scope.atividadeNova.fim = {"$date": new Date()};
+            $scope.atividadeNova.designado = null;
+            $scope.atividadeNova.notas = "";
+            $scope.atividadeNova.time = null;
+
+
+            var idusuario = $rootScope.usuarioLogado._id.$oid;
+            var qTime = {"lider": idusuario};
+            Time.query(qTime).then(function (times) {
+                if (times[0]) {
+                    $scope.listaTimes = times;
+                }
+            });
+
+        };
+
+        $scope.carregaPessoas = function () {
+            $scope.listaRecursos = [];
+            $scope.showSelectLoading = true;
+            if ($scope.atividadeNova.time) {
+                Time.getById($scope.atividadeNova.time).then(function (time) {
+                    if (time) {
+                        var arrayOids = [];
+                        for (var i = 0; i < time.recursos.length; i++) {
+                            arrayOids.push({"$oid": time.recursos[i]});
+                        }
+                        var pQuery = {
+                            "_id": {
+                                "$in": arrayOids
+                            }
+                        };
+                        Pessoa.query(pQuery).then(function (pessoas) {
+                            if (pessoas[0]) {
+                                $scope.listaRecursos = pessoas;
+                                $scope.showSelectLoading = false;
+                            }
+                        })
+                    }
+                });
+            }
+        };
+
+        $scope.calculaFim = function () {
+            if ($scope.atividadeNova.duracao !== 0 && $scope.atividadeNova.inicio.$date) {
+                $scope.atividadeNova.fim.$date = moment($scope.atividadeNova.inicio.$date).businessAdd(($scope.atividadeNova.duracao - 1)).toDate();
+            } else {
+                $scope.atividadeNova.fim.$date = null;
+            }
+        };
+
+        function novaAtividadeValida() {
+            var valido = true;
+            $scope.activityNameErro = "";
+            $scope.activityInicioErro = "";
+            $scope.activityDuracaoErro = "";
+
+            if (!$scope.atividadeNova.nome) {
+                $scope.activityNameErro = "O Nome é obrigatório na criação da atividade.";
+                valido = false;
+            }
+
+            if (!$scope.atividadeNova.inicio.$date) {
+                $scope.activityInicioErro = "O Inicio é obrigatório na criação da atividade.";
+                valido = false;
+            }
+
+            if (!$scope.atividadeNova.duracao || $scope.atividadeNova.duracao === 0) {
+                $scope.activityDuracaoErro = "A Duração é obrigatório  e deve ser maior que zero na criação da atividade.";
+                valido = false;
+            }
+
+            return valido;
+        }
+
+        $scope.ok = function () {
+
+            if (novaAtividadeValida()) {
+                waitingDialog.show('Salvando atividade. Aguarde');
+
+                $scope.atividadeNova.$saveOrUpdate().then(function () {
+                    waitingDialog.hide();
+                    $scope.$close(true);
+                });
+            }
         };
 
         $scope.cancel = function () {

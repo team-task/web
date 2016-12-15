@@ -1,0 +1,86 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Nova Atividade</h4>
+</div>
+<div class="modal-body" ng-init="initModalNewTeamsActivity()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" class="form-control" ng-model="atividadeNova.nome"
+                       placeholder="Nome da nova atividade" ng-focus="activityNameErro = ''" autofocus>
+                <span ng-show="activityNameErro !==''" class="help-block alert-danger">
+                    {{activityNameErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <input type="text" readonly class="form-control" ng-model="atividadeNova.status"
+                       placeholder="Status da atividade">
+            </div>
+
+            <div class="form-group">
+                <label>Inicio</label>
+                <input type="date" class="form-control" ng-model="atividadeNova.inicio.$date"
+                       placeholder="Data de Inicio" ng-change="calculaFim();"
+                       ng-focus="activityInicioErro = ''">
+                <span ng-show="activityInicioErro !==''" class="help-block alert-danger">
+                    {{activityInicioErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>Duração</label>
+                <input type="number" min="1" max="999" step="1" class="form-control" ng-model="atividadeNova.duracao"
+                       placeholder="Duração" ng-change="calculaFim();" ng-focus="activityDuracaoErro = ''">
+                <span ng-show="activityDuracaoErro !==''" class="help-block alert-danger">
+                    {{activityDuracaoErro}}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>Até</label>
+                <input type="date" readonly class="form-control" ng-model="atividadeNova.fim.$date"
+                       placeholder="Data de Fim">
+            </div>
+
+            <div class="form-group">
+                <label for="time">Time</label>
+                <select id="time" class="form-control" ng-model="atividadeNova.time"
+                        ng-options="time._id.$oid as time.nome for time in listaTimes"
+                        ng-change="carregaPessoas();" aria-describedby="helpBlock" ng-focus="activityTimeErro = ''">
+                    <option value="">Selecione um Time</option>
+                </select>
+                <span ng-show="activityTimeErro !==''" class="help-block alert-danger">
+                    {{activityTimeErro}}
+                </span>
+                <span id="helpBlock" class="help-block" ng-show="showSelectLoading">
+                    <div class="progress mini-progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar"
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                        </div>
+                    </div>
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="designado">Desigando para</label>
+                <select id="designado" class="form-control" ng-model="atividadeNova.designado"
+                        ng-options="recurso._id.$oid as recurso.nome for recurso in listaRecursos">
+                    <option value="">Sem designação</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="notas">Notas</label>
+                <textarea id="notas" class="form-control" ng-model="atividadeNova.notas"></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>
