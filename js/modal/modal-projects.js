@@ -1,4 +1,96 @@
 angular.module('team-task')
+    .controller('ModalNewProjectController',
+    function ($scope, $rootScope, Projeto, $state) {
+        $scope.novoProjeto = new Projeto();
+        $scope.novoProjeto.nome = "";
+        $scope.novoProjeto.status = "Ativo";
+        $scope.novoProjeto.alerta = "verde";
+        $scope.novoProjeto.inicio = null;
+        $scope.novoProjeto.fim = null;
+        $scope.novoProjeto.notas = "";
+
+        $scope.initModalNewProject = function () {
+            $scope.errorProjectName = "";
+        };
+
+        $scope.ok = function () {
+            if ($scope.novoProjeto.nome) {
+                $scope.novoProjeto.administrador = $rootScope.usuarioLogado._id.$oid;
+                $scope.novoProjeto.$save().then(function () {
+                    $scope.$close(true);
+                });
+            } else {
+                $scope.errorProjectName = "O Nome é obrigatório na criação do projeto.";
+            }
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
+
+angular.module('team-task')
+    .controller('ModalEditProjectController',
+    function ($scope, $rootScope, Projeto, $state, projetoEdicao, $uibModal) {
+
+        $scope.projeto = {};
+        $scope.errorProjectName = "";
+
+        $scope.initModalNewProject = function () {
+            $scope.projeto = projetoEdicao;
+        };
+
+        $scope.deleteProject = function () {
+            if ($scope.projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/delete-project.html',
+                        controller: function ($scope, projetoExclusao) {
+                            $scope.projeto = projetoExclusao;
+                            $scope.ok = function () {
+                                $scope.$close(true);
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            projetoExclusao: function () {
+                                return $scope.projeto;
+                            }
+                        }
+                    }).result.then(function () {
+
+                        deleteProject();
+                    }, function () {
+
+                    });
+            }
+        };
+
+        function deleteProject() {
+            $scope.projeto.$remove().then(function () {
+                $scope.$close(true);
+            });
+        }
+
+        $scope.ok = function () {
+            $scope.errorProjectName = "";
+            if ($scope.projeto.nome) {
+                $scope.projeto.$saveOrUpdate().then(function () {
+                    $scope.$close(true);
+                });
+            } else {
+                $scope.errorProjectName = "O Nome é obrigatório na criação do projeto.";
+            }
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
+
+angular.module('team-task')
     .controller('ModalCopyProjectActivityController',
     function ($scope, $rootScope, projetoSelecionado, indice, $uibModal, Projeto) {
         $scope.activityProjetoErro = "";

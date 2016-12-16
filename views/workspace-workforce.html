@@ -17,46 +17,14 @@
                     <div>
                         <h3 class="page-header">
                             Carga de Trabalho
-                            <!--
-                            <button ng-click="novoProjeto();" class="btn btn-danger btn-sm tt-btn-round"
-                                    uib-tooltip="Novo Projeto">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                            -->
                         </h3>
                     </div>
-                    <!--
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <span>Opções</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="form-inline">
-                                        <div class="form-group text-center">
-                                            <label for="scale" class="control-label"><i class="fa fa-search"></i> Escala</label>
-                                            <br>
-                                            <select class="form-control" id="scale" ng-model="ganttOptions.scale">
-                                                <option value="day">Dia</option>
-                                                <option value="week">Semana</option>
-                                                <option value="2 weeks">2 Semanas</option>
-                                                <option value="month">Mês</option>
-                                                <option value="6 months">6 Meses</option>
-                                                <option value="year">Ano</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
+
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div gantt
                                  api="ganttOptions.api"
-                                 data=ganttData
+                                 data="ganttData"
                                  view-scale="ganttOptions.scale"
                                  current-date="ganttOptions.currentDate"
                                  sort-mode="ganttOptions.sortMode"
