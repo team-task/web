@@ -392,7 +392,8 @@ angular.module('team-task')
                     var predecessora = {
                         "nome": atividades[i].nome,
                         "inicio": atividades[i].inicio.$date,
-                        "fim": atividades[i].fim.$date
+                        "fim": atividades[i].fim.$date,
+                        "atividadeId": atividades[i]._id.$oid
                     };
                     var timeTemp;
                     var timeProm = [
@@ -420,7 +421,9 @@ angular.module('team-task')
                                 "nome": projetos[j].atividades[a].nome,
                                 "nomeComposto": projetos[j].nome + " / " + projetos[j].atividades[a].nome,
                                 "inicio": projetos[j].atividades[a].inicio.$date,
-                                "fim": projetos[j].atividades[a].fim.$date
+                                "fim": projetos[j].atividades[a].fim.$date,
+                                "projetoId": projetos[j]._id.$oid,
+                                "atividadeIndice": a
                             };
                             $scope.atividadesPossiveis.push(predecessora);
                         }

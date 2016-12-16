@@ -26,7 +26,7 @@
             <div class="form-group">
                 <label for="predecessora">Atividade Predecessora</label>
                 <select id="predecessora" class="form-control" ng-model="projeto.atividades[indice].predecessora"
-                        ng-options="predecessora as predecessora.nomeComposto for predecessora in atividadesPossiveis"
+                        ng-options="predecessora.nomeComposto for predecessora in atividadesPossiveis"
                         ng-change="recalcularInicio();"
                         aria-describedby="predBlock">
                     <option value="">Sem predecessora</option>

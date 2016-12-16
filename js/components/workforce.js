@@ -44,12 +44,15 @@ angular.module('team-task')
                                             "atividade": atividades[indexTimeAtividade]
                                         };
                                         rowAt.tasks = [];
+                                        var listDep = [];
                                         rowAt.tasks.push({
+                                            "id": nomeTime + atividades[indexTimeAtividade].nome,
                                             "name": atividades[indexTimeAtividade].nome,
                                             "from": moment(atividades[indexTimeAtividade].inicio.$date),
                                             "to": moment(atividades[indexTimeAtividade].fim.$date),
                                             "color": "#F1C232",
-                                            "status": atividades[indexTimeAtividade].status
+                                            "status": atividades[indexTimeAtividade].status,
+                                            "dependencies": listDep
                                         });
                                         $scope.ganttData.push(rowAt);
                                     }
@@ -69,12 +72,18 @@ angular.module('team-task')
                                                         "indiceAt": at
                                                     };
                                                     rowPr.tasks = [];
+                                                    var listDep = [];
+                                                    if(projetos[p].atividades[at].predecessora) {
+                                                        listDep.push({"from": projetos[p].atividades[at].predecessora.nomeComposto});
+                                                    }
                                                     rowPr.tasks.push({
+                                                        "id": projetos[p].nome + " / " + projetos[p].atividades[at].nome,
                                                         "name": projetos[p].atividades[at].nome,
                                                         "from": moment(projetos[p].atividades[at].inicio.$date),
                                                         "to": moment(projetos[p].atividades[at].fim.$date),
                                                         "color": "#9FC5F8",
-                                                        "status": projetos[p].atividades[at].status
+                                                        "status": projetos[p].atividades[at].status,
+                                                        "dependencies": listDep
                                                     });
                                                     $scope.ganttData.push(rowPr);
                                                 }
