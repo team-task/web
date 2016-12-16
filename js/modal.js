@@ -342,11 +342,13 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditActivityController',
-    function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa, $uibModal, $filter) {
+    function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa, Atividade, Projeto,
+              $uibModal, $filter, $q) {
         $scope.projeto = {};
         $scope.indice = 0;
         $scope.listaRecursos = [];
         $scope.showSelectLoading = false;
+        $scope.showPredecessorLoading = false;
 
         $scope.initModalEditActivity = function () {
             $scope.indice = indice;
@@ -374,24 +376,69 @@ angular.module('team-task')
             });
 
             if(projetoSelecionado.atividades[indice].designado) {
-                var atividadesPossiveis = $filter('filter')(projetoSelecionado.atividades,
-                    {"designado": projetoSelecionado.atividades[indice].designado});
-                if(atividadesPossiveis && atividadesPossiveis.length > 0) {
-                    atividadesPossiveis = $filter('removeWith')(atividadesPossiveis,
-                        {"nome": projetoSelecionado.atividades[indice].nome});
-                    if(atividadesPossiveis && atividadesPossiveis.length > 0) {
-                        $scope.atividadesPossiveis = atividadesPossiveis;
-                    }
-                }
+                carregaListaPredecessoras (projetoSelecionado.atividades[indice].designado);
             }
 
         };
 
+        function carregaListaPredecessoras (idPessoa) {
+            $scope.showPredecessorLoading = true;
+            $scope.atividadesPossiveis = [];
+            var promisses = [];
+            var aQuery = { "designado": idPessoa };
+            var pQuery = { "atividades.designado": idPessoa };
+            promisses.push(Atividade.query(aQuery).then(function (atividades) {
+                for (var i = 0; i < atividades.length; i++) {
+                    var predecessora = {
+                        "nome": atividades[i].nome,
+                        "inicio": atividades[i].inicio.$date,
+                        "fim": atividades[i].fim.$date
+                    };
+                    var timeTemp;
+                    var timeProm = [
+                        Time.getById(atividades[i].time).then(function (time) {
+                            timeTemp = time;
+                        })
+                    ];
+                    $q.all(timeProm).then(function () {
+                        predecessora.nomeComposto = timeTemp.nome + " / " + predecessora.nome;
+                        $scope.atividadesPossiveis.push(predecessora);
+                    });
+                }
+            }));
+
+            promisses.push(Projeto.query(pQuery).then(function (projetos) {
+                for (var j = 0; j < projetos.length; j++) {
+                    //verificar se nao estou no mesmo e se a atividade nao é a mesma.
+                    lAtividades: for (var a = 0; a < projetos[j].atividades.length; a++) {
+                        if(projetos[j]._id.$oid === projetoSelecionado._id.$oid && a === indice) {
+                            continue lAtividades;
+                        }
+                        //é da pessoa mesmo
+                        if(projetos[j].atividades[a].designado === idPessoa) {
+                            var predecessora = {
+                                "nome": projetos[j].atividades[a].nome,
+                                "nomeComposto": projetos[j].nome + " / " + projetos[j].atividades[a].nome,
+                                "inicio": projetos[j].atividades[a].inicio.$date,
+                                "fim": projetos[j].atividades[a].fim.$date
+                            };
+                            $scope.atividadesPossiveis.push(predecessora);
+                        }
+                    }
+                }
+            }));
+
+            $q.all(promisses).then(function () {
+                $scope.showPredecessorLoading = false;
+            });
+        }
+
         $scope.recalcularInicio = function () {
             if($scope.projeto.atividades[$scope.indice].predecessora) {
-               if($scope.projeto.atividades[$scope.indice].predecessora.fim.$date) {
+               if($scope.projeto.atividades[$scope.indice].predecessora.fim) {
                    $scope.projeto.atividades[$scope.indice].inicio.$date =
-                       moment($scope.projeto.atividades[$scope.indice].predecessora.fim.$date).toDate();
+                       moment($scope.projeto.atividades[$scope.indice].predecessora.fim).businessAdd(1).toDate();
+                   $scope.calculaFim();
                }
             }
         };
