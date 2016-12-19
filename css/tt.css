@@ -419,3 +419,8 @@ form.login label {
     text-decoration:none;
     background-color:#f5f5f5;
 }
+
+.tt-filter-label {
+    font-size: 100%;
+    margin-right: 10px;
+}

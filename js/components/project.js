@@ -9,40 +9,15 @@ angular.module('team-task')
 
             $scope.csvAtividades = [];
 
-            var customeEventListener = $scope.$on("CallImportTemplate", function(event, contents){
-                importTemplate(contents);
-                event.stopPropagation();
-            });
-
-            function importTemplate (contents) {
-                var data = Papa.parse(contents.contents, {header: true});
-                waitingDialog.hide();
-                importTemplateModal(data);
-            }
-
-            function importTemplateModal (data) {
-                $uibModal
-                    .open({
-                        templateUrl: 'views/modal/import-activity.html',
-                        controller: 'ModalImportProjectActivityController',
-                        resolve: {
-                            projetoSelecionado: function () {
-                                return $scope.projeto;
-                            },
-                            dataAtividades: function () {
-                                return data;
-                            }
-                        }
-                    }).result.then(function () {
-                        loadProject();
-                        $rootScope.$emit("CallLoadMenus", {});
-                    }, function () {
-                    });
-            }
+            $scope.ganntClick = function () {
+                setTimeout(function () {
+                    $scope.api.rows.refresh();
+                }, 100);
+            };
 
             $scope.initWorkspaceProject = function () {
-                $scope.filtro = [true, true, false, false];
-                $scope.listaFiltro= ["aguardando", "iniciada", "concluída", "cancelada"];
+                $scope.filtro = [true, true, true];
+                $scope.listaFiltro= ["aguardando", "iniciada", "concluída"];
                 $scope.ganttData = [];
                 $scope.ganttOptions= {
                     "zoom": 1,
@@ -51,7 +26,7 @@ angular.module('team-task')
                     "currentDate": 'line',
                     "tableHeaders": {'model.name': 'Time / Atividade'},
                     "daily": true,
-                    "sortMode": ["model.time.nome", "model.atividade.nome", "from"],
+                    "sortMode": ["model.atividade.time.nome"],
                     "contents": {
                         'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
                         '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +
@@ -68,6 +43,40 @@ angular.module('team-task')
 
             $scope.getHeader = function () {
                 return ['Time', 'Atividade', 'Status', 'Inicio', 'Duracao'];
+            };
+
+            $scope.filtro = [];
+            $scope.filterChange = function () {
+                if($scope.filtro) {
+                    var listaFiltro = [];
+                    if ($scope.filtro[0]) {
+                        listaFiltro.push("aguardando");
+                    }
+                    if ($scope.filtro[1]) {
+                        listaFiltro.push("iniciada");
+                    }
+                    if ($scope.filtro[2]) {
+                        listaFiltro.push("concluída");
+                    }
+                    if(listaFiltro.length > 0) {
+                        $scope.ganttOptions.filtertask = listaFiltro;
+                    } else {
+                        $scope.ganttOptions.filtertask = "";
+                    }
+                } else {
+                    $scope.ganttOptions.filtertask = "";
+                }
+                $scope.api.rows.refresh();
+            };
+
+            $scope.filterFunctionGantt = function (item) {
+                if(item && item.model) {
+                    if($scope.ganttOptions.filtertask) {
+                        return $scope.ganttOptions.filtertask.indexOf(item.model.status.toLowerCase()) > -1;
+                    } else {
+                        return false;
+                    }
+                }
             };
 
             function loadProject() {
@@ -124,12 +133,16 @@ angular.module('team-task')
                                 if(atividade.predecessora) {
                                     listDep.push({"from": atividade.predecessora.nomeComposto});
                                 }
+
+                                var statusColor = atividade.status.toLowerCase() === 'aguardando' ? '#5bc0de' :
+                                atividade.status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
+
                                 rowPr.tasks.push({
                                     "id": projeto.nome + " / " + atividade.nome,
                                     "name": atividade.nome,
                                     "from": moment(atividade.inicio.$date),
                                     "to": moment(atividade.fim.$date),
-                                    "color": "#9FC5F8",
+                                    "color": statusColor,
                                     "status": atividade.status,
                                     "dependencies": listDep
                                 });
@@ -276,4 +289,34 @@ angular.module('team-task')
                     }).result.then(function () {}, function () {});
             };
 
+            var customeEventListener = $scope.$on("CallImportTemplate", function(event, contents){
+                importTemplate(contents);
+                event.stopPropagation();
+            });
+
+            function importTemplate (contents) {
+                var data = Papa.parse(contents.contents, {header: true});
+                waitingDialog.hide();
+                importTemplateModal(data);
+            }
+
+            function importTemplateModal (data) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/import-activity.html',
+                        controller: 'ModalImportProjectActivityController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            },
+                            dataAtividades: function () {
+                                return data;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadProject();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            }
         }]);
