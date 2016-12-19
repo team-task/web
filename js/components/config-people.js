@@ -95,7 +95,7 @@ angular.module('team-task')
 
 angular.module('team-task')
     .controller('ModalEditPeopleController',
-    function ($scope, pessoaEdicao, Time, Pessoa, $filter, $uibModal) {
+    function ($scope, pessoaEdicao, Time, Pessoa, $filter, $uibModal, $q, Atividade, Projeto) {
         $scope.listaTimesPessoa = [];
         $scope.initModalEditPeople = function () {
             $scope.pessoaEdit = pessoaEdicao;
@@ -191,14 +191,97 @@ angular.module('team-task')
 
         $scope.ok = function () {
             if(validaPessoa()) {
+
                 Pessoa.getById(pessoaEdicao._id.$oid).then(function (pessoaDB) {
                     pessoaEdicao.senha = pessoaDB.senha;
-                    pessoaEdicao.$saveOrUpdate().then(function () {
-                        $scope.$close(true);
-                    });
+                    //verificar se mudou se o usuario estava ativo e foi inativado.
+                    if(!pessoaEdicao.ativo && pessoaEdicao.ativo !== pessoaDB.ativo) {
+                        var promisses = [];
+                        //verificar se o time tem atividades ou projetos associados.
+                        var aQuery = {"designado": pessoaEdicao._id.$oid};
+                        var pQuery = {"atividades.designado": pessoaEdicao._id.$oid};
+                        var atividadesUsuario = [];
+                        var projetosUsuario = [];
+                        var totais = 0;
+                        promisses.push(Atividade.query(aQuery).then(function (atividade) {
+                            if (atividade.length > 0) {
+                                atividadesUsuario.push(atividade)
+                            }
+                        }));
+                        promisses.push(Projeto.query(pQuery).then(function (projeto) {
+                            if (projeto.length > 0) {
+                                projetosUsuario.push(projeto);
+                            }
+                        }));
+                        $q.all(promisses).then(function () {
+                            totais = atividadesUsuario.length + projetosUsuario.length;
+                            //verifica se tem esse usuario em atividades.
+                            if(totais > 0) {
+                                $uibModal
+                                    .open({
+                                        templateUrl: 'views/modal/inactive-people.html',
+                                        controller: function ($scope, pessoaDesativacao, qtdAtividades) {
+                                            $scope.pessoaInactive = {};
+                                            $scope.initModalDeletePeople = function () {
+                                                $scope.pessoaInactive = pessoaDesativacao;
+                                                $scope.qtdAtividades = qtdAtividades;
+                                            };
+
+                                            $scope.ok = function () {
+                                                $scope.$close(true);
+                                            };
+                                            $scope.cancel = function () {
+                                                $scope.$dismiss();
+                                            };
+                                        },
+                                        resolve: {
+                                            pessoaDesativacao: function () {
+                                                return pessoaEdicao;
+                                            },
+                                            qtdAtividades: function () {
+                                                return totais;
+                                            }
+                                        }
+                                    }).result.then(function () {
+                                        //desativar e retirar ele de tudo.
+                                        var desativarProm = [];
+                                        if (atividadesUsuario.length > 0) {
+                                            for(var at = 0; at < atividadesUsuario.length; at++) {
+                                                atividadesUsuario[at].designado = null;
+                                                desativarProm.push(atividadesUsuario[at].$saveOrUpdate().then(function () {}));
+                                            }
+                                        }
+                                        if (projetosUsuario.length > 0) {
+                                            for(var pu = 0; pu < projetosUsuario.length; pu++) {
+                                                for(var ap = 0; ap < projetosUsuario[pu].atividades.length; ap++) {
+                                                    if(projetosUsuario[pu].atividades[ap].designado === pessoaEdicao._id.$oid) {
+                                                        projetosUsuario[pu].atividades[ap].designado = null;
+                                                        desativarProm.push(projetosUsuario[pu].$saveOrUpdate().then(function () {}));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        $q.all(desativarProm).then(function () {
+                                            salvarUsuario(pessoaEdicao);
+                                        });
+                                    }, function () {
+
+                                    });
+                            }
+                        });
+                    } else {
+                        //esta tudo bem.
+                        salvarUsuario(pessoaEdicao);
+                    }
                 });
             }
         };
+
+        function salvarUsuario (pessoaEdicao) {
+            pessoaEdicao.$saveOrUpdate().then(function () {
+                $scope.$close(true);
+            });
+        }
 
         $scope.cancel = function () {
             $scope.$dismiss();

@@ -1,0 +1,15 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Desativando {{pessoaInactive.nome}}</h4>
+</div>
+<div class="modal-body" ng-init="initModalDeletePeople()">
+
+    <div class="alert alert-danger text-center" role="alert">
+        <p>Há {{qtdAtividades}} atividades de time e/ou projeto para o usuário:&nbsp;<strong>{{pessoaInactive.nome}}</strong>&nbsp;?</p>
+        <p>Desativar o usuário irá retirar a designação de todas as atividades.</p>
+        <p>Confirma a desativação?</p>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>
