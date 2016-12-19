@@ -26,7 +26,7 @@ angular.module('team-task')
                     "currentDate": 'line',
                     "tableHeaders": {'model.name': 'Time / Atividade'},
                     "daily": true,
-                    "sortMode": ["model.atividade.time.nome"],
+                    "sortMode": ["model.atividade.nomeTime"],
                     "contents": {
                         'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
                         '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +

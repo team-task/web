@@ -288,6 +288,7 @@ angular.module('team-task')
             }));
 
             $q.all(promisses).then(function () {
+                console.log($scope.projeto.atividades[$scope.indice].predecessora);
                 $scope.showPredecessorLoading = false;
             });
         }
