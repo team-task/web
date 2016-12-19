@@ -12,7 +12,7 @@ angular.module('team-task')
             $scope.ganntClick = function () {
                 setTimeout(function () {
                     $scope.api.rows.refresh();
-                }, 100);
+                }, 200);
             };
 
             $scope.initWorkspaceProject = function () {
