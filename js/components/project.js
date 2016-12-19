@@ -41,6 +41,8 @@ angular.module('team-task')
             }
 
             $scope.initWorkspaceProject = function () {
+                $scope.filtro = [true, true, false, false];
+                $scope.listaFiltro= ["aguardando", "iniciada", "concluída", "cancelada"];
                 loadProject();
             };
 

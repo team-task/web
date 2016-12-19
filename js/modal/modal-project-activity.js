@@ -1,6 +1,6 @@
 angular.module('team-task')
     .controller('ModalNewActivityController',
-    function ($scope, $rootScope, projetoSelecionado, $state, Time, Pessoa) {
+    function ($scope, $rootScope, projetoSelecionado, $state, Time, Pessoa, md5) {
 
         $scope.projeto = projetoSelecionado;
         $scope.atividadeNova = {};
@@ -134,6 +134,8 @@ angular.module('team-task')
                     }
                 }
 
+                $scope.atividadeNova.atividadeId =
+                    md5.createHash(projetoSelecionado.nome + $scope.atividadeNova.nome + $scope.atividadeNova.time);
                 if (projetoSelecionado.atividades) {
                     projetoSelecionado.atividades.push($scope.atividadeNova);
                 } else {

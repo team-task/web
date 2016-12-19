@@ -148,9 +148,6 @@ angular.module('team-task')
                             var aQuery = {
                                 "time": {
                                     "$in": listaTimes
-                                },
-                                "status": {
-                                    "$in": ["aguardando", "iniciada"]
                                 }
                             };
                             Atividade.query(aQuery).then(function (atividades) {
@@ -196,6 +193,8 @@ angular.module('team-task')
                                     }
                                 });
                                 $scope.listaAtividades = atividades;
+                                $scope.listaAtividadesRoot = atividades;
+                                $scope.filterChange();
                                 $scope.showLoading = false;
                             });
                         }
@@ -203,7 +202,44 @@ angular.module('team-task')
                 }
             }
 
+            $scope.filtro = [];
+            $scope.filterChange = function () {
+                if($scope.filtro) {
+                    var listaFiltro = [];
+                    if ($scope.filtro[0]) {
+                        listaFiltro.push("aguardando");
+                    }
+                    if ($scope.filtro[1]) {
+                        listaFiltro.push("iniciada");
+                    }
+                    if ($scope.filtro[2]) {
+                        listaFiltro.push("concluída");
+                    }
+                    if ($scope.filtro[3]) {
+                        listaFiltro.push("cancelada");
+                    }
+                    if(listaFiltro.length > 0) {
+                        $scope.listaFiltro = listaFiltro;
+                        $scope.listaAtividades = $filter('filter')($scope.listaAtividadesRoot, filterFunction);
+                    } else {
+                        $scope.listaAtividades = [];
+                    }
+                }
+            };
+
+            function filterFunction (item) {
+                if(item) {
+                    if($scope.listaFiltro) {
+                        return $scope.listaFiltro.indexOf(item.status.toLowerCase()) > -1;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
             $scope.initWorkspaceActivities = function () {
+                $scope.filtro = [true, true, false, false];
+                $scope.listaFiltro= ["aguardando", "iniciada", "concluída", "cancelada"];
                 loadTable();
             };
         }]);

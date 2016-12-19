@@ -44,10 +44,7 @@ angular.module('team-task')
                         }
 
                         var aQuery = {
-                            "time": time._id.$oid,
-                            "status": {
-                                "$in": ["aguardando", "iniciada"]
-                            }
+                            "time": time._id.$oid
                         };
                         Atividade.query(aQuery).then(function (atividades) {
                             angular.forEach(atividades, function (atividade, idAtividade) {
@@ -67,13 +64,54 @@ angular.module('team-task')
                             });
                             $scope.time = time;
                             $scope.time.atividades = atividades;
+                            $scope.atividadesRoot = atividades;
+
+                            $scope.filterChange();
+
                             $scope.showLoading = false;
                         });
                     }
                 });
             }
 
+            $scope.filtro = [];
+            $scope.filterChange = function () {
+                if($scope.filtro) {
+                    var listaFiltro = [];
+                    if ($scope.filtro[0]) {
+                        listaFiltro.push("aguardando");
+                    }
+                    if ($scope.filtro[1]) {
+                        listaFiltro.push("iniciada");
+                    }
+                    if ($scope.filtro[2]) {
+                        listaFiltro.push("concluída");
+                    }
+                    if ($scope.filtro[3]) {
+                        listaFiltro.push("cancelada");
+                    }
+                    if(listaFiltro.length > 0) {
+                        $scope.listaFiltro = listaFiltro;
+                        $scope.time.atividades = $filter('filter')($scope.atividadesRoot, filterFunction);
+                    } else {
+                        $scope.time.atividades = [];
+                    }
+                }
+            };
+
+            function filterFunction (item) {
+                if(item) {
+                    if($scope.listaFiltro) {
+                        return $scope.listaFiltro.indexOf(item.status.toLowerCase()) > -1;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
             $scope.initTeamActivities = function () {
+                $scope.filtro = [true, true, false, false];
+                $scope.listaFiltro= ["aguardando", "iniciada", "concluída", "cancelada"];
                 loadTable();
             };
 
