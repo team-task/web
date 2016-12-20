@@ -117,35 +117,36 @@ angular.module('team-task')
                         }));
 
                         $q.all(prom).then(function () {
-                            for (var at = 0; at < projeto.atividades.length; at++) {
-                                var atividade = projeto.atividades[at];
-                                var rowPr = {
-                                    "name": atividade.nomeTime + " / " + atividade.nome,
-                                    "atividade": atividade.nome,
-                                    "projeto": projeto,
-                                    "indiceAt": at
-                                };
-                                rowPr.tasks = [];
-                                var listDep = [];
-                                if(atividade.predecessora) {
-                                    listDep.push({"from": atividade.predecessora.nomeComposto});
+                            if(projeto.atividades) {
+                                for (var at = 0; at < projeto.atividades.length; at++) {
+                                    var atividade = projeto.atividades[at];
+                                    var rowPr = {
+                                        "name": atividade.nomeTime + " / " + atividade.nome,
+                                        "atividade": atividade.nome,
+                                        "projeto": projeto,
+                                        "indiceAt": at
+                                    };
+                                    rowPr.tasks = [];
+                                    var listDep = [];
+                                    if (atividade.predecessora) {
+                                        listDep.push({"from": atividade.predecessora.nomeComposto});
+                                    }
+
+                                    var statusColor = atividade.status.toLowerCase() === 'aguardando' ? '#5bc0de' :
+                                        atividade.status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
+
+                                    rowPr.tasks.push({
+                                        "id": projeto.nome + " / " + atividade.nome,
+                                        "name": atividade.nome,
+                                        "from": moment(atividade.inicio.$date),
+                                        "to": moment(atividade.fim.$date),
+                                        "color": statusColor,
+                                        "status": atividade.status,
+                                        "dependencies": listDep
+                                    });
+                                    $scope.ganttData.push(rowPr);
                                 }
-
-                                var statusColor = atividade.status.toLowerCase() === 'aguardando' ? '#5bc0de' :
-                                atividade.status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
-
-                                rowPr.tasks.push({
-                                    "id": projeto.nome + " / " + atividade.nome,
-                                    "name": atividade.nome,
-                                    "from": moment(atividade.inicio.$date),
-                                    "to": moment(atividade.fim.$date),
-                                    "color": statusColor,
-                                    "status": atividade.status,
-                                    "dependencies": listDep
-                                });
-                                $scope.ganttData.push(rowPr);
                             }
-
                             if(projeto.administrador === $rootScope.usuarioLogado._id.$oid) {
                                 $scope.ganttOptions.contents = {
                                     'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +

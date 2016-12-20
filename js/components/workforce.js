@@ -239,6 +239,7 @@ angular.module('team-task')
             $scope.initWorkforce = function () {
                 $scope.filtro = [true, true, true];
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
+                $scope.usuarioLogado = $rootScope.usuarioLogado;
                 $scope.ganttOptions = {
                     "zoom": 1,
                     "scale": "week",
@@ -249,7 +250,8 @@ angular.module('team-task')
                     "sortMode": ["model.time.nome", "model.projeto.nome", "from"],
                     "contents": {
                         'model.name': '<a ng-click="scope.mostrarDetalheAtividade(row.model)" class="pointer-action">{{getValue()}}</a>' +
-                        '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +
+                        '&nbsp;<span class="pointer-action fa fa-pencil-square-o" ' +
+                        'ng-show="row.model.projeto.administrador === scope.usuarioLogado._id.$oid"' +
                             'ng-click="scope.editarAtividade(row.model)">'+
                         '</span>'
                     },
