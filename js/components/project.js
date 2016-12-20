@@ -28,10 +28,7 @@ angular.module('team-task')
                     "daily": true,
                     "sortMode": ["model.atividade.nomeTime"],
                     "contents": {
-                        'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
-                        '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +
-                        'ng-click="scope.editarAtividadeGantt(row.model)">' +
-                        '</span>'
+                        'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>'
                     },
                     "filtertask": ["aguardando", "iniciada", "concluída"],
                     api: function (api) {
@@ -148,6 +145,16 @@ angular.module('team-task')
                                 });
                                 $scope.ganttData.push(rowPr);
                             }
+
+                            if(projeto.administrador === $rootScope.usuarioLogado._id.$oid) {
+                                $scope.ganttOptions.contents = {
+                                    'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
+                                    '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +
+                                    'ng-click="scope.editarAtividadeGantt(row.model)">' +
+                                    '</span>'
+                                };
+                            }
+
                             $scope.projeto = projeto;
                             $scope.showLoading = false;
                         });

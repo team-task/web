@@ -4,10 +4,10 @@
     <file url="file://$PROJECT_DIR$/css/tt.css" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/components/login.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/components/workspace-workforce.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/js/db-services.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/directives.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/angular-mongolab.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/routes.js" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/js/services.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/tt.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/manifest.json" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/views/login.html" charset="UTF-8" />
