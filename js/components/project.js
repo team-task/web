@@ -1,10 +1,10 @@
 angular.module('team-task')
     .controller('ProjectController', ['$scope', '$rootScope', 'Projeto', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$q', '$resource', '$uibModal', '$stateParams', 'Pessoa', '$window',
-        function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $q, $resource, $uibModal,
-                  $stateParams, Pessoa, $window) {
+        'DTOptionsBuilder', '$q', '$uibModal', '$stateParams', 'Pessoa',
+        function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $q, $uibModal,
+                  $stateParams, Pessoa) {
             $scope.showLoading = false;
-            $scope.dtOptions = DTOptionsBuilder.newOptions();//.withLanguage($resource('js/dtOptions.json').get().$promise);
+            $scope.dtOptions = DTOptionsBuilder.newOptions();
             $scope.dtOptions.withOption('order', [[3, "asc"]]);
 
             $scope.csvAtividades = [];

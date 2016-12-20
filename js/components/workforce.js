@@ -45,12 +45,17 @@ angular.module('team-task')
                                         };
                                         rowAt.tasks = [];
                                         var listDep = [];
+
+                                        var statusColor =
+                                            atividades[indexTimeAtividade].status.toLowerCase() === 'aguardando' ? '#5bc0de' :
+                                                atividades[indexTimeAtividade].status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
+
                                         rowAt.tasks.push({
                                             "id": nomeTime + atividades[indexTimeAtividade].nome,
                                             "name": atividades[indexTimeAtividade].nome,
                                             "from": moment(atividades[indexTimeAtividade].inicio.$date),
                                             "to": moment(atividades[indexTimeAtividade].fim.$date),
-                                            "color": "#F1C232",
+                                            "color": statusColor,
                                             "status": atividades[indexTimeAtividade].status,
                                             "dependencies": listDep
                                         });
@@ -76,12 +81,17 @@ angular.module('team-task')
                                                     if(projetos[p].atividades[at].predecessora) {
                                                         listDep.push({"from": projetos[p].atividades[at].predecessora.nomeComposto});
                                                     }
+
+                                                    var statusColor =
+                                                        projetos[p].atividades[at].status.toLowerCase() === 'aguardando' ? '#5bc0de' :
+                                                            projetos[p].atividades[at].status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
+
                                                     rowPr.tasks.push({
                                                         "id": projetos[p].nome + " / " + projetos[p].atividades[at].nome,
                                                         "name": projetos[p].atividades[at].nome,
                                                         "from": moment(projetos[p].atividades[at].inicio.$date),
                                                         "to": moment(projetos[p].atividades[at].fim.$date),
-                                                        "color": "#9FC5F8",
+                                                        "color": statusColor,
                                                         "status": projetos[p].atividades[at].status,
                                                         "dependencies": listDep
                                                     });
