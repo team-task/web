@@ -1,4 +1,4 @@
-<div id="wrapper" class="login-wrapper page-content" ng-controller="LoginController" ng-init="initLogin()">
+<div id="wrapper" class="login-wrapper page-content" ng-controller="LoginController as vm" ng-init="initLogin()">
 
     <div class="header">
         <div class="logo">
@@ -11,14 +11,14 @@
             <h1 class="text-center">Entre com a sua conta</h1>
             <form class="form-horizontal login">
                 <div class="fieds">
-                    <p class="alert alert-danger space-top" ng-show="errorLogin !== ''">
-                        <span>{{errorLogin}}</span>
+                    <p class="alert alert-danger space-top" ng-show="vm.errorLogin !== ''">
+                        <span>{{vm.errorLogin}}</span>
                     </p>
                     <div class="control-group">
                         <label for="usuario">Usuário</label>
                         <div class="controls">
                             <input type="text" id="usuario" class="form-control" required autofocus
-                                   ng-model="usuario" ng-focus="errorLogin = ''" placeholder="Usuario">
+                                   ng-model="vm.usuario" ng-focus="vm.errorLogin = ''" placeholder="Usuario">
                         </div>
                     </div>
 
@@ -26,7 +26,7 @@
                         <label for="senha">Senha</label>
                         <div class="controls">
                             <input type="password" id="senha" class="form-control" required autofocus
-                                   ng-model="senha" ng-focus="errorLogin = ''" placeholder="Senha">
+                                   ng-model="vm.senha" ng-focus="vm.errorLogin = ''" placeholder="Senha">
                         </div>
                     </div>
 
