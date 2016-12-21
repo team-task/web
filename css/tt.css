@@ -198,6 +198,27 @@ form.login label {
     border-radius: 4px;
 }
 
+.span-alerta {
+    position: relative;
+    top: 9px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+}
+
+.vermelho {
+    background-color: #d9534f;
+}
+
+.verde {
+    background-color: #5cb85c;
+}
+
+.amarelo {
+    background-color: #f0ad4e;
+}
+
 .alerta-vermelho > .alerta-square {
     background-color: #d9534f;
 }
