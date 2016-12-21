@@ -289,16 +289,15 @@ angular.module('team-task')
 
             $q.all(promisses).then(function () {
                 if($scope.projeto.atividades[$scope.indice].predecessora) {
-                    var obj = $filter('some')
+                    var newArray = $filter('removeWith')
                         ($scope.atividadesPossiveis,
                             {
                                 "nomeComposto" : $scope.projeto.atividades[$scope.indice].predecessora.nomeComposto
                             }
                         );
-                    console.log($scope.atividadesPossiveis);
-                    console.log($scope.projeto.atividades[$scope.indice].predecessora);
-                    console.log(obj);
                 }
+                newArray.push($scope.projeto.atividades[$scope.indice].predecessora);
+                $scope.atividadesPossiveis = newArray;
                 $scope.showPredecessorLoading = false;
             });
         }

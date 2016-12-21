@@ -51,7 +51,7 @@ angular.module('team-task')
                             var listaAtividadesT = [];
                             angular.forEach(recursosTotais, function (rec, idRec) {
                                 promisses.push(Pessoa.getById(rec).then(function (pessoa) {
-                                    if (pessoa) {
+                                    if (pessoa && (pessoa.cadastrado === idusuario || pessoa._id.$oid === idusuario)) {
 
                                         var nomes = pessoa.nome.split(" ");
                                         var iniciais = nomes[0].substring(0, 1);
