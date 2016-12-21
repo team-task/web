@@ -150,7 +150,16 @@ angular.module('team-task')
                                         var recursosTotais = [];
                                         for (var a = 0; a < times.length; a++) {
                                             recursosTotais = recursosTotais.concat(times[a].recursos);
-                                            times[a].atividades = $filter('filter')(atividades, {'time': times[a]._id.$oid});
+                                            if(times[a].lider === $rootScope.usuarioLogado._id.$oid) {
+                                                times[a].atividades = $filter('filter')(atividades,
+                                                    {'time': times[a]._id.$oid});
+                                            } else {
+                                                times[a].atividades = $filter('filter')(atividades,
+                                                    {
+                                                        'time': times[a]._id.$oid,
+                                                        'designado': $rootScope.usuarioLogado._id.$oid
+                                                    });
+                                            }
                                         }
                                         recursosTotais = $filter('unique')(recursosTotais);
                                         var promisses = [];
