@@ -288,7 +288,17 @@ angular.module('team-task')
             }));
 
             $q.all(promisses).then(function () {
-                console.log($scope.projeto.atividades[$scope.indice].predecessora);
+                if($scope.projeto.atividades[$scope.indice].predecessora) {
+                    var obj = $filter('some')
+                        ($scope.atividadesPossiveis,
+                            {
+                                "nomeComposto" : $scope.projeto.atividades[$scope.indice].predecessora.nomeComposto
+                            }
+                        );
+                    console.log($scope.atividadesPossiveis);
+                    console.log($scope.projeto.atividades[$scope.indice].predecessora);
+                    console.log(obj);
+                }
                 $scope.showPredecessorLoading = false;
             });
         }

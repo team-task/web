@@ -126,7 +126,7 @@ angular.module('team-task')
                                         var promisses = [];
                                         angular.forEach(recursosTotais, function (rec, idRec) {
                                             var pessoaProm = Pessoa.getById(rec, {"sort": {"nome": 1}}).then(function (pessoa) {
-                                                if (pessoa) {
+                                                if (pessoa && (pessoa.cadastrado === idusuario || pessoa._id.$oid === idusuario)) {
                                                     pessoa.quantidadeAtividades = 0;
                                                     var aQtdQuery = {
                                                         "time": {
