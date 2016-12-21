@@ -29,7 +29,9 @@
                                  current-date="ganttOptions.currentDate"
                                  sort-mode="ganttOptions.sortMode"
                                  daily="ganttOptions.daily"
-                                 filter-task="filterFunction">
+                                 filter-task="filterFunction"
+                                 from-date="ganttOptions.fromDate"
+                                 to-date="ganttOptions.toDate">
                                 <gantt-table headers="ganttOptions.tableHeaders"
                                              contents="ganttOptions.contents"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
@@ -38,18 +40,37 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <label class="label label-info checkbox-inline tt-filter-label">
-                                <input type="checkbox" ng-model="filtro[0]" value="aguardando"
-                                       ng-click="filterChange();">Aguardando
-                            </label>
-                            <label class="label label-warning checkbox-inline tt-filter-label">
-                                <input type="checkbox" ng-model="filtro[1]" value="iniciada"
-                                       ng-click="filterChange();">Iniciada
-                            </label>
-                            <label class="label label-success checkbox-inline tt-filter-label">
-                                <input type="checkbox" ng-model="filtro[2]" value="concluida"
-                                       ng-click="filterChange();">Concluida
-                            </label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="label label-info checkbox-inline tt-filter-label">
+                                        <input type="checkbox" ng-model="filtro[0]" value="aguardando"
+                                               ng-click="filterChange();">Aguardando
+                                    </label>
+                                    <label class="label label-warning checkbox-inline tt-filter-label">
+                                        <input type="checkbox" ng-model="filtro[1]" value="iniciada"
+                                               ng-click="filterChange();">Iniciada
+                                    </label>
+                                    <label class="label label-success checkbox-inline tt-filter-label">
+                                        <input type="checkbox" ng-model="filtro[2]" value="concluida"
+                                               ng-click="filterChange();">Concluida
+                                    </label>
+                                    <label>Escala</label>
+                                    <select ng-model="ganttOptions.scale">
+                                        <option value="year">Ano</option>
+                                        <option value="week">Semana</option>
+                                        <option value="day">Dias</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-md-2">Escala de Datas</label>
+                                <div class="form-group col-md-3">
+                                    <input type="date" class="form-control" placeholder="de" ng-model="ganttOptions.fromDate">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input type="date" class="form-control" placeholder="ate" ng-model="ganttOptions.toDate">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
