@@ -158,6 +158,18 @@ angular.module('team-task')
     });
 
 angular.module('team-task')
+    .controller('ModalViewNotesController',
+    function ($scope, projetoSelecionado) {
+        $scope.initModalViewNotesActivity = function () {
+            $scope.projeto = projetoSelecionado;
+        };
+
+        $scope.cancel = function () {
+            $scope.$dismiss();
+        };
+    });
+
+angular.module('team-task')
     .controller('ModalViewActivityController',
     function ($scope, projetoSelecionado, indice, Pessoa, Time) {
         $scope.indice = 0;

@@ -25,6 +25,7 @@ angular.module('team-task')
                     "width": true,
                     "currentDate": 'line',
                     "tableHeaders": {'model.name': 'Time / Atividade'},
+                    "taskContent": '<span></span>',
                     "daily": true,
                     "sortMode": ["model.atividade.nomeTime"],
                     "contents": {
@@ -295,6 +296,21 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {}, function () {});
+            };
+
+            $scope.mostrarNotas = function () {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-notes.html',
+                        controller: 'ModalViewNotesController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
             };
 
             var customeEventListener = $scope.$on("CallImportTemplate", function(event, contents){

@@ -53,6 +53,7 @@
                                 <td>Inicio</td>
                                 <td>Duração</td>
                                 <td>Até</td>
+                                <td>Notas</td>
                             </tr>
                             </thead>
                             <tbody>
@@ -61,6 +62,11 @@
                                 <td>{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                                 <td>{{projeto.duracao}}</td>
                                 <td>{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
+                                <td>
+                                    <a ng-show="projeto.notas !== ''" ng-click="mostrarNotas();" class="pointer-action">
+                                        Notas...
+                                    </a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -129,6 +135,7 @@
                                              current-date="ganttOptions.currentDate"
                                              sort-mode="ganttOptions.sortMode"
                                              daily="ganttOptions.daily"
+                                             task-content="ganttOptions.taskContent"
                                              filter-task="filterFunctionGantt">
                                             <gantt-table headers="ganttOptions.tableHeaders"
                                                          contents="ganttOptions.contents"></gantt-table>

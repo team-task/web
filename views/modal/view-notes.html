@@ -1,0 +1,18 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">{{projeto.nome}}</h4>
+</div>
+<div class="modal-body" ng-init="initModalViewNotesActivity()">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label for="notas">Notas</label>
+                <textarea readonly id="notas" class="form-control" ng-model="projeto.notas" rows="10"></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Fechar</button>
+</div>
