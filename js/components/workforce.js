@@ -214,12 +214,13 @@ angular.module('team-task')
             };
 
             $scope.datasChange = function () {
-                console.log($scope.fromDate);
+                console.log(moment($scope.fromDate).year());
                 console.log(moment($scope.fromDate).isValid());
-                if($scope.fromDate && moment($scope.fromDate).isValid()) {
+
+                if($scope.fromDate && moment($scope.fromDate).isValid() && moment($scope.fromDate).year() > 2010) {
                     $scope.ganttOptions.fromDate = $scope.fromDate;
                 }
-                if($scope.toDate && moment($scope.toDate).isValid()) {
+                if($scope.toDate && moment($scope.toDate).isValid() && moment($scope.toDate).year() > 2010) {
                     $scope.ganttOptions.toDate = $scope.toDate;
                 }
             };
@@ -244,7 +245,7 @@ angular.module('team-task')
                     "contents": {
                         'model.name': '<a ng-click="scope.mostrarDetalheAtividade(row.model)" class="pointer-action">{{getValue()}}</a>' +
                         '&nbsp;<span class="pointer-action fa fa-pencil-square-o" ' +
-                        'ng-show="row.model.projeto.administrador === scope.usuarioLogado._id.$oid"' +
+                        'ng-show="row.model.projeto.administrador === scope.usuarioLogado._id.$oid || row.model.time[0].lider === scope.usuarioLogado._id.$oid"' +
                             'ng-click="scope.editarAtividade(row.model)">'+
                         '</span>'
                     },
