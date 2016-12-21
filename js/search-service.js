@@ -1,7 +1,7 @@
 angular.module('team-task')
     .factory('SearchFactory', function SearchFactory(Pessoa, Projeto, Atividade, Time) {
-        SearchFactory.searchAll = function (text) {
-            var resultadoBusca = [];
+        SearchFactory.searchAll = function (text, scope) {
+            scope.resultadoBusca = [];
             var proQuery = {
                 "$or": [
                     {
@@ -21,7 +21,7 @@ angular.module('team-task')
             Projeto.query(proQuery).then(function (projetos) {
 
                 angular.forEach(projetos, function (projeto) {
-                    resultadoBusca.push(
+                    scope.resultadoBusca.push(
                         {
                             "nome": projeto.nome,
                             "tipo": "projeto",
@@ -31,17 +31,17 @@ angular.module('team-task')
                 });
             });
 
-            proQuery = {
+            var nQuery = {
                 "nome": {
                     "$regex": text + ".*",
                     "$options": "gi"
                 }
 
             };
-            Atividade.query(proQuery).then(function (atividades) {
+            Atividade.query(nQuery).then(function (atividades) {
 
                 angular.forEach(atividades, function (atividade) {
-                    resultadoBusca.push(
+                    scope.resultadoBusca.push(
                         {
                             "nome": atividade.nome,
                             "tipo": "atividade",
@@ -50,10 +50,10 @@ angular.module('team-task')
                     );
                 });
             });
-            Pessoa.query(proQuery).then(function (pessoas) {
+            Pessoa.query(nQuery).then(function (pessoas) {
 
                 angular.forEach(pessoas, function (pessoa) {
-                    resultadoBusca.push(
+                    scope.resultadoBusca.push(
                         {
                             "nome": pessoa.nome,
                             "tipo": "pessoa",
@@ -63,9 +63,9 @@ angular.module('team-task')
                 });
             });
 
-            Time.query(proQuery).then(function (times) {
+            Time.query(nQuery).then(function (times) {
                 angular.forEach(times, function (time) {
-                    resultadoBusca.push(
+                    scope.resultadoBusca.push(
                         {
                             "nome": time.nome,
                             "tipo": "time",
@@ -74,7 +74,6 @@ angular.module('team-task')
                     );
                 });
             });
-
 
 
         };

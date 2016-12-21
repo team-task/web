@@ -109,29 +109,6 @@ angular.module('team-task')
                 $scope.showLoading = false;
             }
 
-            $scope.getColumnWidth = function(widthEnabled, scale, zoom) {
-                if (!widthEnabled) {
-                    return undefined;
-                }
-
-                if (scale.match(/.*?week.*?/)) {
-                    return 150 * zoom;
-                }
-
-                if (scale.match(/.*?month.*?/)) {
-                    return 300 * zoom;
-                }
-
-                if (scale.match(/.*?quarter.*?/)) {
-                    return 500 * zoom;
-                }
-
-                if (scale.match(/.*?year.*?/)) {
-                    return 800 * zoom;
-                }
-                return 40 * zoom;
-            };
-
             $scope.editarAtividade = function (model) {
                 if(model.projeto) {
                     $uibModal
@@ -236,10 +213,23 @@ angular.module('team-task')
                 }
             };
 
+            $scope.datasChange = function () {
+                console.log($scope.fromDate);
+                console.log(moment($scope.fromDate).isValid());
+                if($scope.fromDate && moment($scope.fromDate).isValid()) {
+                    $scope.ganttOptions.fromDate = $scope.fromDate;
+                }
+                if($scope.toDate && moment($scope.toDate).isValid()) {
+                    $scope.ganttOptions.toDate = $scope.toDate;
+                }
+            };
+
             $scope.initWorkforce = function () {
                 $scope.filtro = [true, true, true];
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.usuarioLogado = $rootScope.usuarioLogado;
+                $scope.fromDate = null;
+                $scope.toDate = null;
                 $scope.ganttOptions = {
                     "zoom": 1,
                     "scale": "week",
@@ -248,6 +238,7 @@ angular.module('team-task')
                     "tableHeaders": {'model.name': 'Atividade'},
                     "daily": true,
                     "sortMode": ["model.time.nome", "model.projeto.nome", "from"],
+                    "taskContent": '<span></span>',
                     "fromDate": undefined,
                     "toDate": undefined,
                     "contents": {

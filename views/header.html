@@ -21,6 +21,15 @@
                     </div>
                     <button type="button" ng-click="searchAll()" class="btn btn-default">Buscar</button>
                 </form>
+                <div class="tt-search-container">
+                    <div class="tt-search-listbox">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="resultado in resultadoBusca">
+                                {{resultado.nome}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <ul class="nav navbar-nav navbar-top-links navbar-right">
                     <li>
                         <a class="dropdown-toggle clickable" data-toggle="dropdown">

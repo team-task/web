@@ -29,9 +29,10 @@
                                  current-date="ganttOptions.currentDate"
                                  sort-mode="ganttOptions.sortMode"
                                  daily="ganttOptions.daily"
-                                 filter-task="filterFunction"
+                                 task-content="ganttOptions.taskContent"
                                  from-date="ganttOptions.fromDate"
-                                 to-date="ganttOptions.toDate">
+                                 to-date="ganttOptions.toDate"
+                                 filter-task="filterFunction">
                                 <gantt-table headers="ganttOptions.tableHeaders"
                                              contents="ganttOptions.contents"></gantt-table>
                                 <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
@@ -65,10 +66,10 @@
                             <div class="row">
                                 <label class="control-label col-md-2">Escala de Datas</label>
                                 <div class="form-group col-md-3">
-                                    <input type="date" class="form-control" placeholder="de" ng-model="ganttOptions.fromDate">
+                                    <input type="date" class="form-control" placeholder="de" ng-model="fromDate" ng-change="datasChange()">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <input type="date" class="form-control" placeholder="ate" ng-model="ganttOptions.toDate">
+                                    <input type="date" class="form-control" placeholder="ate" ng-model="toDate" ng-change="datasChange()">
                                 </div>
                             </div>
                         </div>

@@ -25,7 +25,7 @@ angular.module('team-task')
                 $scope.textSearch = "";
                 $scope.searchAll = function () {
                     var text = $scope.textSearch;
-                    SearchFactory.searchAll(text);
+                    SearchFactory.searchAll(text, $scope);
                 };
                 $scope.myProfile = function () {
                     $uibModal
