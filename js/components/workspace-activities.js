@@ -1,7 +1,7 @@
 angular.module('team-task')
     .controller('WorkspaceActivitiesController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$resource', '$filter', 'Pessoa', '$uibModal',
-        function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa, $uibModal) {
+        'DTOptionsBuilder', '$resource', '$filter', 'Pessoa', '$uibModal', '$q',
+        function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa, $uibModal, $q) {
             $scope.showLoading = false;
             //$scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtAOptions = DTOptionsBuilder.newOptions();
@@ -68,59 +68,70 @@ angular.module('team-task')
                     };
                     Time.query(qTime).then(function (times) {
                         if (times[0]) {
-                            var listaTimes = [];
-                            for (var i = 0; i < times.length; i++) {
-                                listaTimes.push(times[i]._id.$oid);
-                            }
-                            var aQuery = {
-                                "time": {
-                                    "$in": listaTimes
-                                }
-                            };
-                            Atividade.query(aQuery).then(function (atividades) {
-                                angular.forEach(atividades, function (atividade, idAtividade) {
-                                    var _id = {
-                                        "_id": {
-                                            "$oid": atividade.time
-                                        }
+                            var prom = [];
+                            var atividadesList = [];
+                            for (var t = 0; t < times.length; t++) {
+                                var aQuery;
+                                if(times[t].lider === $rootScope.usuarioLogado._id.$oid) {
+                                    aQuery = {
+                                        "time": times[t]._id.$oid
                                     };
-                                    var time = $filter('filter')(times, _id);
-                                    if (time && time.length > 0) {
-                                        time = time[0];
-                                        atividade.pessoaLider = {};
-                                        atividade.pessoaRecurso = {};
-                                        Pessoa.getById(time.lider).then(function (lider) {
-
-                                            var nomes = lider.nome.split(" ");
-                                            var iniciais = nomes[0].substring(0, 1);
-                                            var nomeSimples = nomes[0];
-                                            if (nomes.length > 1) {
-                                                iniciais += nomes[1].substring(0, 1);
+                                } else {
+                                    aQuery = {
+                                        "designado": $rootScope.usuarioLogado._id.$oid
+                                    };
+                                }
+                                prom.push(Atividade.query(aQuery).then(function (atividades) {
+                                    angular.forEach(atividades, function (atividade) {
+                                        var _id = {
+                                            "_id": {
+                                                "$oid": atividade.time
                                             }
-                                            lider.iniciais = iniciais.toUpperCase();
-                                            lider.nomeSimples = nomeSimples;
-                                            atividade.pessoaLider = lider;
-                                        });
+                                        };
+                                        var time = $filter('filter')(times, _id);
+                                        if (time && time.length > 0) {
+                                            time = time[0];
+                                            atividade.pessoaLider = {};
+                                            atividade.pessoaRecurso = {};
+                                            Pessoa.getById(time.lider).then(function (lider) {
 
-                                        if (atividade.designado) {
-                                            Pessoa.getById(atividade.designado).then(function (recurso) {
-
-                                                var nomes = recurso.nome.split(" ");
+                                                var nomes = lider.nome.split(" ");
                                                 var iniciais = nomes[0].substring(0, 1);
                                                 var nomeSimples = nomes[0];
                                                 if (nomes.length > 1) {
                                                     iniciais += nomes[1].substring(0, 1);
                                                 }
-                                                recurso.iniciais = iniciais.toUpperCase();
-                                                recurso.nomeSimples = nomeSimples;
-                                                atividade.pessoaRecurso = recurso;
+                                                lider.iniciais = iniciais.toUpperCase();
+                                                lider.nomeSimples = nomeSimples;
+                                                atividade.pessoaLider = lider;
                                             });
+
+                                            if (atividade.designado) {
+                                                Pessoa.getById(atividade.designado).then(function (recurso) {
+
+                                                    var nomes = recurso.nome.split(" ");
+                                                    var iniciais = nomes[0].substring(0, 1);
+                                                    var nomeSimples = nomes[0];
+                                                    if (nomes.length > 1) {
+                                                        iniciais += nomes[1].substring(0, 1);
+                                                    }
+                                                    recurso.iniciais = iniciais.toUpperCase();
+                                                    recurso.nomeSimples = nomeSimples;
+                                                    atividade.pessoaRecurso = recurso;
+                                                });
+                                            }
+                                            atividade.timeObj = time;
                                         }
-                                        atividade.timeObj = time;
-                                    }
-                                });
-                                $scope.listaAtividades = atividades;
-                                $scope.listaAtividadesRoot = atividades;
+                                    });
+
+                                    atividadesList = atividadesList.concat(atividades);
+                                }));
+
+                            }
+                            $q.all(prom).then(function () {
+                                atividadesList = $filter('unique')(atividadesList, "_id.$oid");
+                                $scope.listaAtividades = atividadesList;
+                                $scope.listaAtividadesRoot = atividadesList;
                                 $scope.filterChange();
                                 $scope.showLoading = false;
                             });
