@@ -37,24 +37,37 @@ angular.module('team-task')
             $scope.showSelectLoading = true;
             if ($scope.atividadeNova.time) {
                 Time.getById($scope.atividadeNova.time).then(function (time) {
+                    var pQuery;
                     if (time) {
-                        var arrayOids = [];
-                        for (var i = 0; i < time.recursos.length; i++) {
-                            arrayOids.push({"$oid": time.recursos[i]});
-                        }
-                        var pQuery = {
-                            "_id": {
-                                "$in": arrayOids
+                        if (time.lider === $rootScope.usuarioLogado._id.$oid) {
+                            var arrayOids = [];
+                            for (var i = 0; i < time.recursos.length; i++) {
+                                arrayOids.push({"$oid": time.recursos[i]});
                             }
-                        };
+                            pQuery = {
+                                "_id": {
+                                    "$in": arrayOids
+                                }
+                            };
+                        } else {
+                           pQuery = {
+                               "_id" : {
+                                   "$oid": $rootScope.usuarioLogado._id.$oid
+                               }
+                           }
+                        }
                         Pessoa.query(pQuery).then(function (pessoas) {
                             if (pessoas[0]) {
                                 $scope.listaRecursos = pessoas;
                                 $scope.showSelectLoading = false;
                             }
-                        })
+                        });
+                    } else {
+                        $scope.showSelectLoading = false;
                     }
                 });
+            } else {
+                $scope.showSelectLoading = false;
             }
         };
 
@@ -131,15 +144,24 @@ angular.module('team-task')
             $scope.atividadeNova.notas = "";
             $scope.atividadeNova.time = timeSelecionado._id.$oid;
 
-            var listaIdPessoa = [];
-            for (var i = 0; i < $scope.time.recursos.length; i++) {
-                listaIdPessoa.push({"$oid": $scope.time.recursos[i]});
-            }
-            var pQuery = {
-                "_id": {
-                    "$in": listaIdPessoa
+            var pQuery;
+            if (timeSelecionado.lider === $rootScope.usuarioLogado._id.$oid) {
+                var listaIdPessoa = [];
+                for (var i = 0; i < $scope.time.recursos.length; i++) {
+                    listaIdPessoa.push({"$oid": $scope.time.recursos[i]});
                 }
-            };
+                pQuery = {
+                    "_id": {
+                        "$in": listaIdPessoa
+                    }
+                };
+            } else {
+                pQuery = {
+                    "_id" : {
+                        "$oid": $rootScope.usuarioLogado._id.$oid
+                    }
+                }
+            }
 
             Pessoa.query(pQuery).then(function (pessoas) {
                 $scope.pessoas = pessoas;
@@ -204,15 +226,25 @@ angular.module('team-task')
         $scope.pessoas = [];
 
         $scope.initModalEditTeamActivity = function () {
-            var listaIdPessoa = [];
-            for (var i = 0; i < $scope.time.recursos.length; i++) {
-                listaIdPessoa.push({"$oid": $scope.time.recursos[i]});
-            }
-            var pQuery = {
-                "_id": {
-                    "$in": listaIdPessoa
+
+            var pQuery;
+            if (timeSelecionado.lider === $rootScope.usuarioLogado._id.$oid) {
+                var listaIdPessoa = [];
+                for (var i = 0; i < $scope.time.recursos.length; i++) {
+                    listaIdPessoa.push({"$oid": $scope.time.recursos[i]});
                 }
-            };
+                pQuery = {
+                    "_id": {
+                        "$in": listaIdPessoa
+                    }
+                };
+            } else {
+                pQuery = {
+                    "_id" : {
+                        "$oid": $rootScope.usuarioLogado._id.$oid
+                    }
+                }
+            }
 
             Pessoa.query(pQuery).then(function (pessoas) {
                 $scope.pessoas = pessoas;
