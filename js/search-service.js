@@ -1,22 +1,12 @@
 angular.module('team-task')
-    .factory('SearchFactory', function SearchFactory(Pessoa, Projeto, Atividade, Time) {
+    .factory('SearchFactory', function SearchFactory(Pessoa, Projeto, Atividade, Time, $filter) {
         SearchFactory.searchAll = function (text, scope) {
             scope.resultadoBusca = [];
             var proQuery = {
-                "$or": [
-                    {
-                        "nome": {
-                            "$regex": text + ".*",
-                            "$options": "gi"
-                        }
-                    },
-                    {
-                        "atividades.nome": {
-                            "$regex": text + ".*",
-                            "$options": "gi"
-                        }
-                    }
-                ]
+                "nome": {
+                    "$regex": text + ".*",
+                    "$options": "gi"
+                }
             };
             Projeto.query(proQuery).then(function (projetos) {
 
@@ -24,10 +14,32 @@ angular.module('team-task')
                     scope.resultadoBusca.push(
                         {
                             "nome": projeto.nome,
-                            "tipo": "projeto",
+                            "tipo": "project",
                             "id": projeto._id.$oid
                         }
                     );
+                });
+            });
+            var proAtvQuery = {
+                "atividades.nome": {
+                    "$regex": text + ".*",
+                    "$options": "gi"
+                }
+            };
+            Projeto.query(proAtvQuery).then(function (projetos) {
+                angular.forEach(projetos, function (projeto) {
+                    var proAtividades = $filter('filter')(projeto.atividades, {"nome": text});
+                    if (proAtividades) {
+                        angular.forEach(proAtividades, function (atividade) {
+                            scope.resultadoBusca.push(
+                                {
+                                    "nome": projeto.nome + "/" + atividade.nome,
+                                    "tipo": "project",
+                                    "id": projeto._id.$oid
+                                }
+                            );
+                        });
+                    }
                 });
             });
 
@@ -44,8 +56,8 @@ angular.module('team-task')
                     scope.resultadoBusca.push(
                         {
                             "nome": atividade.nome,
-                            "tipo": "atividade",
-                            "id": atividade._id.$oid
+                            "tipo": "team-activities",
+                            "id": atividade.time
                         }
                     );
                 });
@@ -56,7 +68,7 @@ angular.module('team-task')
                     scope.resultadoBusca.push(
                         {
                             "nome": pessoa.nome,
-                            "tipo": "pessoa",
+                            "tipo": "workforce",
                             "id": pessoa._id.$oid
                         }
                     );
@@ -68,7 +80,7 @@ angular.module('team-task')
                     scope.resultadoBusca.push(
                         {
                             "nome": time.nome,
-                            "tipo": "time",
+                            "tipo": "team-activities",
                             "id": time._id.$oid
                         }
                     );

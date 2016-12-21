@@ -19,13 +19,13 @@
                     <div class="form-group">
                         <input type="text" ng-model="textSearch" class="form-control" placeholder="Buscar">
                     </div>
-                    <button type="button" ng-click="searchAll()" class="btn btn-default">Buscar</button>
+                    <button type="button" ng-click="searchAll()" class="btn btn-default tt-search-btn">Buscar</button>
                 </form>
                 <div class="tt-search-container">
-                    <div class="tt-search-listbox">
+                    <div class="tt-search-listbox" ng-class="searchDisplay">
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="resultado in resultadoBusca">
-                                {{resultado.nome}}
+                                <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">{{resultado.nome}}</a>
                             </li>
                         </ul>
                     </div>

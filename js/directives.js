@@ -15,41 +15,65 @@ angular.module('team-task')
             );
         }
     })
-    .directive('header', function () {
+    .directive('header', ['$document', function ($document) {
         return {
             restrict: 'A',
             replace: true,
             templateUrl: 'views/header.html',
-            controller: ['$scope', '$rootScope', '$uibModal', 'SearchFactory',
-                function ($scope, $rootScope, $uibModal, SearchFactory) {
-                $scope.textSearch = "";
-                $scope.searchAll = function () {
-                    var text = $scope.textSearch;
-                    SearchFactory.searchAll(text, $scope);
-                };
-                $scope.myProfile = function () {
-                    $uibModal
-                        .open({
-                            templateUrl: 'views/modal/my-profile.html',
-                            controller: 'ModalMyProfileController'
-                        }).result.then(function () {
-                        }, function () {
-                        });
-                };
-            }]
+            link: function($scope, elem, attr) {
+                $document.on('click', eventHandler);
+
+                function eventHandler (e) {
+                    var element;
+                    var contem = false;
+                    for (element = e.target; element; element = element.parentNode) {
+                        if(element.className) {
+                            if (element.className.contains("tt-search-listbox") || element.className.contains("tt-search-btn")) {
+                                contem = true;
+                            }
+                        }
+                    }
+
+                    if(!contem) {
+                        $scope.searchDisplay = "nodisplay";
+                        if (!$scope.$$phase) $scope.$apply();
+                    }
+                }
+            },
+            controller: ['$scope', '$rootScope', '$uibModal', 'SearchFactory', '$document',
+                function ($scope, $rootScope, $uibModal, SearchFactory, $document) {
+                    $scope.textSearch = "";
+                    $scope.searchDisplay = "nodisplay";
+                    $scope.searchAll = function () {
+                        if ($scope.textSearch.length > 1) {
+                            var text = $scope.textSearch.trim();
+                            $scope.searchDisplay = "display";
+                            SearchFactory.searchAll(text, $scope);
+                        }
+                    };
+                    $scope.myProfile = function () {
+                        $uibModal
+                            .open({
+                                templateUrl: 'views/modal/my-profile.html',
+                                controller: 'ModalMyProfileController'
+                            }).result.then(function () {
+                            }, function () {
+                            });
+                    };
+                }]
         };
-    })
-    .directive('fileReader', function() {
+    }])
+    .directive('fileReader', function () {
         return {
             scope: {
-                fileReader:"="
+                fileReader: "="
             },
-            link: function(scope, element) {
-                $(element).on('change', function(changeEvent) {
+            link: function (scope, element) {
+                $(element).on('change', function (changeEvent) {
                     var files = changeEvent.target.files;
                     if (files.length) {
                         var r = new FileReader();
-                        r.onload = function(e) {
+                        r.onload = function (e) {
                             waitingDialog.show("Carregando Template. Aguarde.");
                             var contents = e.target.result;
                             scope.$apply(function () {
@@ -74,7 +98,7 @@ angular.module('team-task')
                     loadMenus();
                     $scope.collapsed = $state.current.data.collapsed;
 
-                    $rootScope.$on("CallLoadMenus", function(){
+                    $rootScope.$on("CallLoadMenus", function () {
                         loadMenus();
                     });
 
@@ -86,7 +110,7 @@ angular.module('team-task')
                         $scope.projetosMenu = [];
                         $scope.trabalhoPessoasMenu = [];
 
-                        if($rootScope.usuarioLogado) {
+                        if ($rootScope.usuarioLogado) {
 
                             var idusuario = $rootScope.usuarioLogado._id.$oid;
                             var qTime = {
@@ -178,6 +202,6 @@ angular.module('team-task')
                 }]
         };
     });
-function sendFileContent (contents) {
-    return {"contents" : contents};
+function sendFileContent(contents) {
+    return {"contents": contents};
 }
