@@ -19,7 +19,8 @@ angular.module('team-task')
                 ]
             };
             Projeto.query(proQuery).then(function (projetos) {
-                angular.forEach(projetos, function (projeto, idProjeto) {
+
+                angular.forEach(projetos, function (projeto) {
                     resultadoBusca.push(
                         {
                             "nome": projeto.nome,
@@ -29,7 +30,53 @@ angular.module('team-task')
                     );
                 });
             });
-            Atividade.query()
+
+            proQuery = {
+                "nome": {
+                    "$regex": text + ".*",
+                    "$options": "gi"
+                }
+
+            };
+            Atividade.query(proQuery).then(function (atividades) {
+
+                angular.forEach(atividades, function (atividade) {
+                    resultadoBusca.push(
+                        {
+                            "nome": atividade.nome,
+                            "tipo": "atividade",
+                            "id": atividade._id.$oid
+                        }
+                    );
+                });
+            });
+            Pessoa.query(proQuery).then(function (pessoas) {
+
+                angular.forEach(pessoas, function (pessoa) {
+                    resultadoBusca.push(
+                        {
+                            "nome": pessoa.nome,
+                            "tipo": "pessoa",
+                            "id": pessoa._id.$oid
+                        }
+                    );
+                });
+            });
+
+            Time.query(proQuery).then(function (times) {
+                angular.forEach(times, function (time) {
+                    resultadoBusca.push(
+                        {
+                            "nome": time.nome,
+                            "tipo": "time",
+                            "id": time._id.$oid
+                        }
+                    );
+                });
+            });
+
+
+
         };
         return SearchFactory;
     });
