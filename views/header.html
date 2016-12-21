@@ -15,6 +15,12 @@
                 </span>
             </div>
             <div class="collapse navbar-collapse" id="pe-navbar">
+                <form class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input type="text" ng-model="textSearch" class="form-control" placeholder="Buscar">
+                    </div>
+                    <button type="button" ng-click="searchAll()" class="btn btn-default">Buscar</button>
+                </form>
                 <ul class="nav navbar-nav navbar-top-links navbar-right">
                     <li>
                         <a class="dropdown-toggle clickable" data-toggle="dropdown">

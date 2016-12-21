@@ -20,7 +20,13 @@ angular.module('team-task')
             restrict: 'A',
             replace: true,
             templateUrl: 'views/header.html',
-            controller: ['$scope', '$rootScope', '$uibModal', function ($scope, $rootScope, $uibModal) {
+            controller: ['$scope', '$rootScope', '$uibModal', 'SearchFactory',
+                function ($scope, $rootScope, $uibModal, SearchFactory) {
+                $scope.textSearch = "";
+                $scope.searchAll = function () {
+                    var text = $scope.textSearch;
+                    SearchFactory.searchAll(text);
+                };
                 $scope.myProfile = function () {
                     $uibModal
                         .open({
