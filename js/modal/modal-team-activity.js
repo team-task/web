@@ -17,9 +17,13 @@ angular.module('team-task')
             $scope.atividadeNova.notas = "";
             $scope.atividadeNova.time = null;
 
-
             var idusuario = $rootScope.usuarioLogado._id.$oid;
-            var qTime = {"lider": idusuario};
+            var qTime = {
+                "$or": [
+                    {"lider": idusuario},
+                    {"recursos": idusuario}
+                ]
+            };
             Time.query(qTime).then(function (times) {
                 if (times[0]) {
                     $scope.listaTimes = times;
@@ -67,6 +71,7 @@ angular.module('team-task')
             $scope.activityNameErro = "";
             $scope.activityInicioErro = "";
             $scope.activityDuracaoErro = "";
+            $scope.activityTimeErro = "";
 
             if (!$scope.atividadeNova.nome) {
                 $scope.activityNameErro = "O Nome é obrigatório na criação da atividade.";
@@ -80,6 +85,11 @@ angular.module('team-task')
 
             if (!$scope.atividadeNova.duracao || $scope.atividadeNova.duracao === 0) {
                 $scope.activityDuracaoErro = "A Duração é obrigatório  e deve ser maior que zero na criação da atividade.";
+                valido = false;
+            }
+
+            if (!$scope.atividadeNova.time) {
+                $scope.activityTimeErro = "O Time é obrigatório na criação da atividade.";
                 valido = false;
             }
 

@@ -12,7 +12,7 @@ angular.module('team-task')
                 $scope.showLoading = true;
                 Time.getById($stateParams.id).then(function (time) {
                     if (time) {
-
+                        var idusuario = $rootScope.usuarioLogado._id.$oid;
                         time.pessoaLider = {};
                         time.pessoaRecurso = [];
                         Pessoa.getById(time.lider).then(function (lider) {
@@ -46,6 +46,9 @@ angular.module('team-task')
                         var aQuery = {
                             "time": time._id.$oid
                         };
+                        if(time.lider !== idusuario) {
+                            aQuery.designado = idusuario;
+                        }
                         Atividade.query(aQuery).then(function (atividades) {
                             angular.forEach(atividades, function (atividade, idAtividade) {
                                 if(atividade.designado) {
