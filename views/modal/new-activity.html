@@ -59,6 +59,7 @@
                 <label for="time">Time</label>
                 <select id="time" class="form-control" ng-model="atividadeNova.time" ng-options="time._id.$oid as time.nome for time in listaTimes"
                         ng-change="carregaPessoas();" aria-describedby="helpBlock" ng-focus="activityTimeErro = ''">
+                    <option value="">Selecione um time</option>
                 </select>
                 <span ng-show="activityTimeErro !==''" class="help-block alert-danger">
                     {{activityTimeErro}}

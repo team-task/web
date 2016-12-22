@@ -1,8 +1,8 @@
 angular.module('team-task')
     .controller('ProjectController', ['$scope', '$rootScope', 'Projeto', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$q', '$uibModal', '$stateParams', 'Pessoa',
+        'DTOptionsBuilder', '$q', '$uibModal', '$stateParams', 'Pessoa', '$state',
         function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $q, $uibModal,
-                  $stateParams, Pessoa) {
+                  $stateParams, Pessoa, $state) {
             $scope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions();
             $scope.dtOptions.withOption('order', [[3, "asc"]]);
@@ -370,8 +370,7 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {
-                        loadProject();
-                        $rootScope.$emit("CallLoadMenus", {});
+                        $state.go('workspace-projects');
                     }, function () {
                     });
             };
