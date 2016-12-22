@@ -1,6 +1,8 @@
 angular.module('team-task')
-    .factory('SearchFactory', function SearchFactory(Pessoa, Projeto, Atividade, Time, $filter) {
+    .factory('SearchFactory', function SearchFactory(Pessoa, Projeto, Atividade, Time, $filter, $q) {
         SearchFactory.searchAll = function (text, scope) {
+            scope.loadingSearch = true;
+            var proms = [];
             scope.resultadoBusca = [];
             var proQuery = {
                 "nome": {
@@ -8,7 +10,7 @@ angular.module('team-task')
                     "$options": "gi"
                 }
             };
-            Projeto.query(proQuery).then(function (projetos) {
+            proms.push(Projeto.query(proQuery).then(function (projetos) {
 
                 angular.forEach(projetos, function (projeto) {
                     scope.resultadoBusca.push(
@@ -19,14 +21,14 @@ angular.module('team-task')
                         }
                     );
                 });
-            });
+            }));
             var proAtvQuery = {
                 "atividades.nome": {
                     "$regex": text + ".*",
                     "$options": "gi"
                 }
             };
-            Projeto.query(proAtvQuery).then(function (projetos) {
+            proms.push(Projeto.query(proAtvQuery).then(function (projetos) {
                 angular.forEach(projetos, function (projeto) {
                     var proAtividades = $filter('filter')(projeto.atividades, {"nome": text});
                     if (proAtividades) {
@@ -41,7 +43,7 @@ angular.module('team-task')
                         });
                     }
                 });
-            });
+            }));
 
             var nQuery = {
                 "nome": {
@@ -50,7 +52,7 @@ angular.module('team-task')
                 }
 
             };
-            Atividade.query(nQuery).then(function (atividades) {
+            proms.push(Atividade.query(nQuery).then(function (atividades) {
                 angular.forEach(atividades, function (atividade) {
                     if(atividade.time) {
                         Time.getById(atividade.time).then(function (time) {
@@ -64,8 +66,8 @@ angular.module('team-task')
                         });
                     }
                 });
-            });
-            Pessoa.query(nQuery).then(function (pessoas) {
+            }));
+            proms.push(Pessoa.query(nQuery).then(function (pessoas) {
 
                 angular.forEach(pessoas, function (pessoa) {
                     scope.resultadoBusca.push(
@@ -76,9 +78,9 @@ angular.module('team-task')
                         }
                     );
                 });
-            });
+            }));
 
-            Time.query(nQuery).then(function (times) {
+            proms.push(Time.query(nQuery).then(function (times) {
                 angular.forEach(times, function (time) {
                     scope.resultadoBusca.push(
                         {
@@ -88,8 +90,10 @@ angular.module('team-task')
                         }
                     );
                 });
+            }));
+            $q.all(proms).then(function () {
+                scope.loadingSearch = false;
             });
-
 
         };
         return SearchFactory;

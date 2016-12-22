@@ -19,6 +19,7 @@
                     <div class="form-group">
                         <input type="text" ng-model="textSearch" class="form-control" placeholder="Buscar">
                     </div>
+                    <span ng-show="loadingSearch" class="glyphicon glyphicon-refresh rotating loading-search"></span>
                     <button type="submit" ng-click="searchAll()" class="btn btn-default tt-search-btn">Buscar</button>
                 </form>
                 <div class="tt-search-container">

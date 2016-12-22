@@ -481,3 +481,8 @@ form.login label {
 .nodisplay {
     display: none;
 }
+
+.loading-search {
+    left: -30px;
+    top: 3px;
+}
