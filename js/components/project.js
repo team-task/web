@@ -313,6 +313,21 @@ angular.module('team-task')
                     });
             };
 
+            $scope.mostrarDescricao = function () {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-description.html',
+                        controller: 'ModalViewDescriptionController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return $scope.projeto;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
+            };
+
             var customeEventListener = $scope.$on("CallImportTemplate", function(event, contents){
                 importTemplate(contents);
                 event.stopPropagation();
