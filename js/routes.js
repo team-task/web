@@ -8,7 +8,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             controller: 'LoginController',
             data: {
-                requiredlogin: false
+                requiredlogin: false,
+                showMenu: false
             }
         })
         .state('workspace-projects', {
@@ -18,7 +19,8 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             controller: 'WorkspaceProjectsController',
             data: {
                 requiredlogin: true,
-                collapsed: ["in", "", ""]
+                collapsed: ["in", "", ""],
+                showMenu: true
             }
 
         })

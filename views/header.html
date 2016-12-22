@@ -19,13 +19,27 @@
                     <div class="form-group">
                         <input type="text" ng-model="textSearch" class="form-control" placeholder="Buscar">
                     </div>
-                    <button type="button" ng-click="searchAll()" class="btn btn-default tt-search-btn">Buscar</button>
+                    <button type="submit" ng-click="searchAll()" class="btn btn-default tt-search-btn">Buscar</button>
                 </form>
                 <div class="tt-search-container">
                     <div class="tt-search-listbox" ng-class="searchDisplay">
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="resultado in resultadoBusca">
-                                <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">{{resultado.nome}}</a>
+                                <span ng-show="resultado.tipo === 'project'">
+                                    <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">
+                                        <i class="fa fa-folder-open-o"></i>&nbsp;{{resultado.nome}}
+                                    </a>
+                                </span>
+                                <span ng-show="resultado.tipo === 'workforce'">
+                                    <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">
+                                        <i class="fa fa-user-o"></i>&nbsp;{{resultado.nome}}
+                                    </a>
+                                </span>
+                                <span ng-show="resultado.tipo === 'team-activities'">
+                                    <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">
+                                        <i class="fa fa-file-o"></i>&nbsp;{{resultado.nome}}
+                                    </a>
+                                </span>
                             </li>
                         </ul>
                     </div>
