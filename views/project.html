@@ -53,7 +53,9 @@
                                 </ul>
                             </div>
                         </h3>
-
+                        <small>
+                            {{projeto.descricao}}
+                        </small>
                         <table class="table table-condensed">
                             <thead>
                             <tr>
@@ -61,7 +63,6 @@
                                 <td>Inicio</td>
                                 <td>Duração</td>
                                 <td>Até</td>
-                                <td>Descrição</td>
                                 <td>Notas</td>
                             </tr>
                             </thead>
@@ -71,11 +72,6 @@
                                 <td>{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                                 <td>{{projeto.duracao}}</td>
                                 <td>{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
-                                <td>
-                                    <a ng-show="projeto.descricao !== ''" ng-click="mostrarDescricao();" class="pointer-action">
-                                        Mostrar descrição
-                                    </a>
-                                </td>
                                 <td>
                                     <a ng-show="projeto.notas !== ''" ng-click="mostrarNotas();" class="pointer-action">
                                         Mostrar Notas
