@@ -180,7 +180,6 @@ angular.module('team-task')
                                                 "$in": arrayOids
                                             }
                                         };
-                                        console.log(pesQuery);
                                         Pessoa.query(pesQuery).then(function (pessoas) {
                                             angular.forEach(pessoas, function (pessoa) {
                                             //angular.forEach(recursosTotais, function (rec, idRec) {
