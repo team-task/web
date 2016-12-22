@@ -465,6 +465,10 @@ form.login label {
     overflow-y: auto;
 }
 
+.tt-search-listbox > ul {
+    padding: 0;
+}
+
 .nodisplay {
     display: none;
 }
