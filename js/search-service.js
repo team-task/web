@@ -51,15 +51,18 @@ angular.module('team-task')
 
             };
             Atividade.query(nQuery).then(function (atividades) {
-
                 angular.forEach(atividades, function (atividade) {
-                    scope.resultadoBusca.push(
-                        {
-                            "nome": atividade.nome,
-                            "tipo": "team-activities",
-                            "id": atividade.time
-                        }
-                    );
+                    if(atividade.time) {
+                        Time.getById(atividade.time).then(function (time) {
+                            scope.resultadoBusca.push(
+                                {
+                                    "nome": time.nome + " / " + atividade.nome,
+                                    "tipo": "team-activities",
+                                    "id": atividade.time
+                                }
+                            );
+                        });
+                    }
                 });
             });
             Pessoa.query(nQuery).then(function (pessoas) {
