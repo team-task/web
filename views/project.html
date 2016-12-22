@@ -31,9 +31,17 @@
                                     <i class="fa fa-ellipsis-v"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
-                                    <li><a class="pointer-action" ng-csv="csvAtividades" csv-header="getHeader();"
-                                           field-separator=";" filename="team-task-export.csv" lazy-load="true">
-                                        <i class="fa fa-cloud-upload"></i>&nbsp;Exportar Template</a>
+                                    <li>
+                                        <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
+                                              class="pointer-action upload-csv" ng-click="editarProjeto(projeto);">
+                                            <i class="fa fa-pencil-square-o"></i>&nbsp;Editar Projeto
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <a class="pointer-action" ng-csv="csvAtividades" csv-header="getHeader();"
+                                            field-separator=";" filename="team-task-export.csv" lazy-load="true">
+                                            <i class="fa fa-cloud-upload"></i>&nbsp;Exportar Template
+                                        </a>
                                     </li>
                                     <li>
                                         <label class="pointer-action upload-csv">

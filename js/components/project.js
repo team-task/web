@@ -343,4 +343,21 @@ angular.module('team-task')
                     }, function () {
                     });
             }
+
+            $scope.editarProjeto = function (projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/edit-project.html',
+                        controller: 'ModalEditProjectController',
+                        resolve: {
+                            projetoEdicao: function () {
+                                return projeto;
+                            }
+                        }
+                    }).result.then(function () {
+                        loadProject();
+                        $rootScope.$emit("CallLoadMenus", {});
+                    }, function () {
+                    });
+            };
         }]);

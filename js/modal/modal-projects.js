@@ -3,6 +3,7 @@ angular.module('team-task')
     function ($scope, $rootScope, Projeto, $state) {
         $scope.novoProjeto = new Projeto();
         $scope.novoProjeto.nome = "";
+        $scope.novoProjeto.descricao = "";
         $scope.novoProjeto.status = "Ativo";
         $scope.novoProjeto.alerta = "verde";
         $scope.novoProjeto.inicio = null;
