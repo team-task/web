@@ -22,7 +22,7 @@ angular.module('team-task')
 
             var idusuario = $rootScope.usuarioLogado._id.$oid;
             var qTime = {"lider": idusuario};
-            Time.query(qTime).then(function (times) {
+            Time.query(qTime, {'sort': {'nome': 1}}).then(function (times) {
 
                 if (times[0]) {
                     $scope.listaTimes = times;
@@ -246,7 +246,7 @@ angular.module('team-task')
 
             var idusuario = $rootScope.usuarioLogado._id.$oid;
             var qTime = {"lider": idusuario};
-            Time.query(qTime).then(function (times) {
+            Time.query(qTime, {"sort": {"nome": 1}}).then(function (times) {
                 if (times[0]) {
                     $scope.listaTimes = times;
                     //if (projetoSelecionado.atividades[indice].designado) {

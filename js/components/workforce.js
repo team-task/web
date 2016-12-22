@@ -13,7 +13,7 @@ angular.module('team-task')
                         var qTime = {
                             "recursos": $stateParams.id
                         };
-                        Time.query(qTime).then(function (times) {
+                        Time.query(qTime, {"sort": {"nome": 1}}).then(function (times) {
                             if (times[0]) {
                                 var listaTimes = [];
                                 for (var i = 0; i < times.length; i++) {

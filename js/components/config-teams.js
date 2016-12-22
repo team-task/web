@@ -16,7 +16,7 @@ angular.module('team-task')
                             {"recursos": idusuario}
                         ]
                     };
-                    Time.query(qTime).then(function (times) {
+                    Time.query(qTime, {"sort": {"nome": 1}}).then(function (times) {
                         angular.forEach(times, function (time, idTime) {
                             time.pessoaRecurso = [];
                             for (var a = 0; a < time.recursos.length; a++) {

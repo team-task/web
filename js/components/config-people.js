@@ -83,7 +83,7 @@ angular.module('team-task')
             var tquery = {
                 "recursos": pessoaSelecionada._id.$oid
             };
-            Time.query(tquery).then(function (times) {
+            Time.query(tquery, {"sort": {"nome": 1}}).then(function (times) {
                 $scope.listaTimesPessoa = times;
             });
         };
@@ -102,7 +102,7 @@ angular.module('team-task')
             var tquery = {
                 "recursos": pessoaEdicao._id.$oid
             };
-            Time.query(tquery).then(function (times) {
+            Time.query(tquery, {"sort": {"nome": 1}}).then(function (times) {
                 $scope.listaTimesPessoa = times;
             });
         };
