@@ -172,7 +172,7 @@ angular.module('team-task')
                                             //var promisses = [];
 
                                         var arrayOids = [];
-                                        for (var r = 0; r < recursosTotais; r++) {
+                                        for (var r = 0; r < recursosTotais.length; r++) {
                                             arrayOids.push({"$oid": recursosTotais[r]});
                                         }
                                         var pesQuery = {
@@ -180,6 +180,7 @@ angular.module('team-task')
                                                 "$in": arrayOids
                                             }
                                         };
+                                        console.log(pesQuery);
                                         Pessoa.query(pesQuery).then(function (pessoas) {
                                             angular.forEach(pessoas, function (pessoa) {
                                             //angular.forEach(recursosTotais, function (rec, idRec) {
