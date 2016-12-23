@@ -16,10 +16,6 @@ body {
     height: 100%;
 }
 
-.mainsec > .wrapper {
-    height: 100%;
-}
-
 .mainsec.ng-enter {
     transition: .5s;
     opacity: 0;
