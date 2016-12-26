@@ -68,6 +68,12 @@
             </div>
 
             <div class="form-group">
+                <label>Percentual de Conclusão</label>
+                <input type="number" min="0" max="100" ng-model="projeto.atividades[indice].progresso"
+                        placeholder="Percentual de Conclusão" class="form-control">
+            </div>
+
+            <div class="form-group">
                 <label for="time">Time</label>
                 <select id="time" class="form-control" ng-model="projeto.atividades[indice].time" ng-options="time._id.$oid as time.nome for time in listaTimes"
                         ng-change="carregaPessoas();" aria-describedby="helpBlock" ng-focus="activityTimeErro = ''">

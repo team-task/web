@@ -49,6 +49,12 @@
             </div>
 
             <div class="form-group">
+                <label>Percentual de Conclusão</label>
+                <input type="number" min="0" max="100" ng-model="atividade.progresso"
+                       placeholder="Percentual de Conclusão" class="form-control">
+            </div>
+
+            <div class="form-group">
                 <label for="designado">Desigando para</label>
                 <select id="designado" class="form-control" ng-model="atividade.designado"
                         ng-options="recurso._id.$oid as recurso.nome for recurso in pessoas">

@@ -57,7 +57,11 @@ angular.module('team-task')
                                             "to": moment(atividades[indexTimeAtividade].fim.$date),
                                             "color": statusColor,
                                             "status": atividades[indexTimeAtividade].status,
-                                            "dependencies": listDep
+                                            "dependencies": listDep,
+                                            "progress": {
+                                                "percent": atividades[indexTimeAtividade].progresso,
+                                                "color": "#606060"
+                                            }
                                         });
                                         $scope.ganttData.push(rowAt);
                                     }
@@ -93,7 +97,11 @@ angular.module('team-task')
                                                         "to": moment(projetos[p].atividades[at].fim.$date),
                                                         "color": statusColor,
                                                         "status": projetos[p].atividades[at].status,
-                                                        "dependencies": listDep
+                                                        "dependencies": listDep,
+                                                        "progress": {
+                                                            "percent": projetos[p].atividades[at].progresso,
+                                                            "color": "#606060"
+                                                        }
                                                     });
                                                     $scope.ganttData.push(rowPr);
                                                 }

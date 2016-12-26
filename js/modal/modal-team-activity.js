@@ -16,6 +16,7 @@ angular.module('team-task')
             $scope.atividadeNova.designado = null;
             $scope.atividadeNova.notas = "";
             $scope.atividadeNova.time = null;
+            $scope.atividadeNova.progresso = 0;
 
             var idusuario = $rootScope.usuarioLogado._id.$oid;
             var qTime = {
@@ -143,6 +144,7 @@ angular.module('team-task')
             $scope.atividadeNova.designado = null;
             $scope.atividadeNova.notas = "";
             $scope.atividadeNova.time = timeSelecionado._id.$oid;
+            $scope.atividadeNova.progresso = 0;
 
             var pQuery;
             if (timeSelecionado.lider === $rootScope.usuarioLogado._id.$oid) {

@@ -16,7 +16,8 @@ angular.module('team-task')
                 "fim": {"$date": new Date()},
                 "designado": "",
                 "notas": "",
-                "time": ""
+                "time": "",
+                "progresso": 0
             };
             $scope.listaTimes = [];
 
