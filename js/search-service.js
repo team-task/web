@@ -1,14 +1,18 @@
 angular.module('team-task')
-    .factory('SearchFactory', function SearchFactory(Pessoa, Projeto, Atividade, Time, $filter, $q) {
+    .factory('SearchFactory', function SearchFactory(Pessoa, Projeto, Atividade, Time, $filter, $q, $rootScope) {
         SearchFactory.searchAll = function (text, scope) {
             scope.loadingSearch = true;
+            var idusuario = $rootScope.usuarioLogado._id.$oid;
             var proms = [];
             scope.resultadoBusca = [];
             var proQuery = {
                 "nome": {
                     "$regex": text + ".*",
                     "$options": "gi"
-                }
+                },
+                "$or": [
+                    {"administrador": idusuario}
+                    , {"atividades.designado": idusuario}]
             };
             proms.push(Projeto.query(proQuery).then(function (projetos) {
 
@@ -26,7 +30,10 @@ angular.module('team-task')
                 "atividades.nome": {
                     "$regex": text + ".*",
                     "$options": "gi"
-                }
+                },
+                "$or": [
+                    {"administrador": idusuario}
+                    , {"atividades.designado": idusuario}]
             };
             proms.push(Projeto.query(proAtvQuery).then(function (projetos) {
                 angular.forEach(projetos, function (projeto) {
@@ -45,31 +52,42 @@ angular.module('team-task')
                 });
             }));
 
-            var nQuery = {
+            var aQuery = {
                 "nome": {
                     "$regex": text + ".*",
                     "$options": "gi"
                 }
-
             };
-            proms.push(Atividade.query(nQuery).then(function (atividades) {
+            proms.push(Atividade.query(aQuery).then(function (atividades) {
                 angular.forEach(atividades, function (atividade) {
                     if(atividade.time) {
                         Time.getById(atividade.time).then(function (time) {
-                            atividade.timeObj = time;
-                            scope.resultadoBusca.push(
-                                {
-                                    "nome": time.nome + " / " + atividade.nome,
-                                    "tipo": "team-activity",
-                                    "id": atividade.time,
-                                    "atividade": atividade
-                                }
-                            );
+                            if(atividade.designado === idusuario || time.lider === idusuario) {
+                                atividade.timeObj = time;
+                                scope.resultadoBusca.push(
+                                    {
+                                        "nome": time.nome + " / " + atividade.nome,
+                                        "tipo": "team-activity",
+                                        "id": atividade.time,
+                                        "atividade": atividade
+                                    }
+                                );
+                            }
                         });
                     }
                 });
             }));
-            proms.push(Pessoa.query(nQuery).then(function (pessoas) {
+            var peQuery = {
+                "nome": {
+                    "$regex": text + ".*",
+                    "$options": "gi"
+                },
+                "$or": [
+                    {"cadastrado": idusuario},
+                    {"_id": { "$oid": idusuario } }
+                ]
+            };
+            proms.push(Pessoa.query(peQuery).then(function (pessoas) {
 
                 angular.forEach(pessoas, function (pessoa) {
                     scope.resultadoBusca.push(
@@ -82,7 +100,17 @@ angular.module('team-task')
                 });
             }));
 
-            proms.push(Time.query(nQuery).then(function (times) {
+            var tQuery = {
+                "nome": {
+                    "$regex": text + ".*",
+                    "$options": "gi"
+                },
+                "$or": [
+                    {"lider": idusuario},
+                    {"recursos": idusuario}
+                ]
+            };
+            proms.push(Time.query(tQuery).then(function (times) {
                 angular.forEach(times, function (time) {
                     scope.resultadoBusca.push(
                         {
