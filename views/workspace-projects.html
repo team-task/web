@@ -24,7 +24,22 @@
                         </h3>
                     </div>
                     <div>
-
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="filtro[0]" value="Ativo"
+                                   ng-click="filterChange();">Ativo
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="filtro[1]" value="Suspenso"
+                                   ng-click="filterChange();">Suspenso
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="filtro[2]" value="Concluído"
+                                   ng-click="filterChange();">Concluído
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="filtro[3]" value="Cancelado"
+                                   ng-click="filterChange();">Cancelado
+                        </label>
                     </div>
                     <table datatable="ng" dt-options="dtOptions" class="table table-hover">
                         <thead>
