@@ -133,7 +133,8 @@ angular.module('team-task')
                                         var pQuery = {
                                             "$or": [
                                                 {"administrador": idusuario}
-                                                , {"atividades.designado": idusuario}]
+                                                , {"atividades.designado": idusuario}],
+                                            "status": {"$ne": "Concluído"}
                                         };
                                         Projeto.query(pQuery, {"sort": {"nome": 1}}).then(function (projetos) {
                                             $scope.projetosMenu = projetos;
