@@ -436,6 +436,10 @@ angular.module('team-task')
                     projetoSelecionado.duracao = null;
                 }
 
+                if(projetoSelecionado.atividades[indice].status === "Concluída") {
+                    projetoSelecionado.atividades[indice].progresso = 100;
+                }
+
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close(true);
                 });

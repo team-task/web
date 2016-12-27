@@ -168,9 +168,11 @@ angular.module('team-task')
                         }
                     }
                 }).result.then(function () {
-
+                    pessoaEdicao.$remove().then(function () {
+                        $scope.$close(true);
+                    });
                 }, function () {
-
+                    $scope.$close(true);
                 });
         };
 
@@ -262,7 +264,7 @@ angular.module('team-task')
                                             }
                                         }
                                         $q.all(desativarProm).then(function () {
-                                            salvarUsuario(pessoaEdicao);
+                                            salvarUsuario(pessoaEdicao, $scope);
                                         });
                                     }, function () {
 
@@ -271,15 +273,15 @@ angular.module('team-task')
                         });
                     } else {
                         //esta tudo bem.
-                        salvarUsuario(pessoaEdicao);
+                        salvarUsuario(pessoaEdicao, $scope);
                     }
                 });
             }
         };
 
-        function salvarUsuario (pessoaEdicao) {
+        function salvarUsuario (pessoaEdicao, scope) {
             pessoaEdicao.$saveOrUpdate().then(function () {
-                $scope.$close(true);
+                scope.$close(true);
             });
         }
 

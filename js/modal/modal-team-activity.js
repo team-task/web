@@ -301,6 +301,9 @@ angular.module('team-task')
                 waitingDialog.show('Salvando atividade. Aguarde');
                 delete $scope.atividade.pessoaDesignado;
                 delete $scope.atividade.pessoaRecurso;
+                if($scope.atividade.status === "concluída") {
+                    $scope.atividade.progresso = 100;
+                }
                 $scope.atividade.$saveOrUpdate().then(function () {
                     waitingDialog.hide();
                     $scope.$close(true);

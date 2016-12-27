@@ -10,7 +10,7 @@
             <div class="form-group">
                 <label for="nome">Nome</label>
                 <input id="nome" type="text" class="form-control" ng-model="pessoaNew.nome"
-                       ng-focus="nomeErro = ''">
+                       ng-focus="nomeErro = ''" autofocus>
                 <span ng-show="nomeErro !==''" class="help-block alert-danger">
                     {{nomeErro}}
                 </span>

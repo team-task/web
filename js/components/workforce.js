@@ -41,6 +41,7 @@ angular.module('team-task')
                                         var rowAt = {
                                             "name": nomeTime + atividades[indexTimeAtividade].nome,
                                             "time": time,
+                                            "status": atividades[indexTimeAtividade].status,
                                             "atividade": atividades[indexTimeAtividade]
                                         };
                                         rowAt.tasks = [];
@@ -77,6 +78,7 @@ angular.module('team-task')
                                                     var rowPr = {
                                                         "name": projetos[p].nome + " / " + projetos[p].atividades[at].nome,
                                                         "atividade": projetos[p].atividades[at],
+                                                        "status": projetos[p].atividades[at].status,
                                                         "projeto": projetos[p],
                                                         "indiceAt": at
                                                     };
