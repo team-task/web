@@ -94,6 +94,7 @@
                                         <td>Inicio</td>
                                         <td>Duração</td>
                                         <td>Até</td>
+                                        <td>Conclusão</td>
                                         <td>Designado</td>
 
                                     </tr>
@@ -124,6 +125,7 @@
                                         <td data-order="{{atividade.inicio.$date | timeMils}}">{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
                                         <td>{{atividade.duracao}}</td>
                                         <td data-order="{{atividade.fim.$date | timeMils}}">{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
+                                        <td>{{atividade.progresso}}</td>
                                         <td data-search="{{atividade.pessoaDesignado.nome}}">
                                             <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"
                                                               class="tt-avatar-table" fontsize="14"
