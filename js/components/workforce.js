@@ -227,9 +227,13 @@ angular.module('team-task')
 
                 if($scope.fromDate && moment($scope.fromDate).isValid() && moment($scope.fromDate).year() > 2010) {
                     $scope.ganttOptions.fromDate = $scope.fromDate;
+                } else {
+                    $scope.ganttOptions.fromDate = undefined;
                 }
                 if($scope.toDate && moment($scope.toDate).isValid() && moment($scope.toDate).year() > 2010) {
                     $scope.ganttOptions.toDate = $scope.toDate;
+                } else {
+                    $scope.ganttOptions.toDate = undefined;
                 }
             };
 
