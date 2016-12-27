@@ -60,6 +60,39 @@ angular.module('team-task')
                             }, function () {
                             });
                     };
+                    $scope.editarAtividadeTimeSearch = function (atividade) {
+                        $uibModal
+                            .open({
+                                templateUrl: 'views/modal/edit-team-activity.html',
+                                controller: 'ModalEditTeamActivityController',
+                                resolve: {
+                                    timeSelecionado: function () {
+                                        return atividade.timeObj;
+                                    },
+                                    atividadeSelecionada: function () {
+                                        return atividade;
+                                    }
+                                }
+                            }).result.then(function () {
+                                $rootScope.$emit("CallLoadMenus", {});
+                            }, function () {
+                            });
+                    };
+                    $scope.mostrarDetalheAtividadeTimeSearch = function (atividade) {
+                        $uibModal
+                            .open({
+                                templateUrl: 'views/modal/view-team-activity.html',
+                                controller: 'ModalViewTeamActivityController',
+                                resolve: {
+                                    atividadeSelecionada: function () {
+                                        return atividade;
+                                    }
+                                }
+                            }).result.then(function () {
+                            }, function () {
+                            });
+                    };
+
                 }]
         };
     }])

@@ -41,6 +41,14 @@
                                         <i class="fa fa-file-o"></i>&nbsp;{{resultado.nome}}
                                     </a>
                                 </span>
+                                <span ng-show="resultado.tipo === 'team-activity'">
+                                    <a ng-click="mostrarDetalheAtividadeTimeSearch(resultado.atividade);" class="pointer-action">
+                                        <i class="fa fa-file-o"></i>&nbsp;{{resultado.nome}}
+                                    </a>&nbsp;
+                                    <span class="pointer-action" ng-click="editarAtividadeTimeSearch(resultado.atividade);">
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </span>
+                                </span>
                             </li>
                         </ul>
                     </div>

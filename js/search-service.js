@@ -56,11 +56,13 @@ angular.module('team-task')
                 angular.forEach(atividades, function (atividade) {
                     if(atividade.time) {
                         Time.getById(atividade.time).then(function (time) {
+                            atividade.timeObj = time;
                             scope.resultadoBusca.push(
                                 {
                                     "nome": time.nome + " / " + atividade.nome,
-                                    "tipo": "team-activities",
-                                    "id": atividade.time
+                                    "tipo": "team-activity",
+                                    "id": atividade.time,
+                                    "atividade": atividade
                                 }
                             );
                         });
