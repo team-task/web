@@ -41,6 +41,36 @@ angular.module('team-task')
                 }
             }
 
+            $scope.mostrarNotas = function (projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-notes.html',
+                        controller: 'ModalViewNotesController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return projeto;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
+            };
+
+            $scope.mostrarDescricao = function (projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/view-description.html',
+                        controller: 'ModalViewDescriptionController',
+                        resolve: {
+                            projetoSelecionado: function () {
+                                return projeto;
+                            }
+                        }
+                    }).result.then(function () {
+                    }, function () {
+                    });
+            };
+
             $scope.editarProjeto = function (projeto) {
                 $uibModal
                     .open({
