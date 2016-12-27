@@ -222,8 +222,6 @@ angular.module('team-task')
             };
 
             $scope.datasChange = function () {
-                console.log(moment($scope.fromDate).year());
-                console.log(moment($scope.fromDate).isValid());
 
                 if($scope.fromDate && moment($scope.fromDate).isValid() && moment($scope.fromDate).year() > 2010) {
                     $scope.ganttOptions.fromDate = $scope.fromDate;
@@ -258,6 +256,10 @@ angular.module('team-task')
                         '</span>'
                     },
                     "filtertask": ["aguardando", "iniciada", "concluída"],
+                    "tooltipcontent": '{{task.model.name}}<span ng-show="task.model.progress.percent"> - {{task.model.progress.percent}}%</span></br>' +
+                    '<small>' +
+                    '{{task.isMilestone() === true && getFromLabel() || getFromLabel() + \' - \' + getToLabel()}}' +
+                    '</small>',
                     api: function(api) {
                         $scope.api = api;
                     }
