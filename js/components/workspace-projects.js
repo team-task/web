@@ -3,11 +3,13 @@ angular.module('team-task')
         'DTOptionsBuilder', '$resource', '$uibModal', '$filter',
         function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal, $filter) {
             $scope.showLoading = false;
+            /*
             $scope.dtOptions = DTOptionsBuilder.newOptions()
                 .withButtons([{
                     extend: 'excel',
                     text: '<i class="fa fa-file-excel-o"></i>&nbsp;Exportar para Excel'
                 }]);
+                */
 
             $scope.initWorkspaceProjects = function () {
                 $scope.filtro = [true, true, false, false];
