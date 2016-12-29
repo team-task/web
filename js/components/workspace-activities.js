@@ -5,8 +5,12 @@ angular.module('team-task')
             $scope.showLoading = false;
             //$scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtAOptions = DTOptionsBuilder.newOptions();
-            $scope.dtAOptions.withOption('responsive', true);
-            $scope.dtAOptions.withOption('order', [[2,"asc"]]);
+            $scope.dtAOptions.withOption('order', [[2,"asc"]])
+                .withButtons([{
+                    extend: 'excel',
+                    text: '<i class="fa fa-file-excel-o"></i>&nbsp;Exportar para Excel'
+                }]);
+
 
             $scope.novaAtividade = function () {
                 $uibModal

@@ -3,7 +3,11 @@ angular.module('team-task')
         'DTOptionsBuilder', '$resource', '$uibModal', '$filter',
         function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal, $filter) {
             $scope.showLoading = false;
-            //$scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
+            $scope.dtOptions = DTOptionsBuilder.newOptions()
+                .withButtons([{
+                    extend: 'excel',
+                    text: '<i class="fa fa-file-excel-o"></i>&nbsp;Exportar para Excel'
+                }]);
 
             $scope.initWorkspaceProjects = function () {
                 $scope.filtro = [true, true, false, false];
@@ -13,6 +17,7 @@ angular.module('team-task')
 
             function loadTable() {
                 $scope.showLoading = true;
+
                 $scope.listaProjetos = [];
                 $scope.listaProjetosRoot = [];
                 if($rootScope.usuarioLogado) {
