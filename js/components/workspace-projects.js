@@ -88,6 +88,12 @@ angular.module('team-task')
                 }
             }
 
+            $scope.exportarTabela = function () {
+                if($scope.listaProjetos) {
+
+                }
+            };
+
             $scope.mostrarNotas = function (projeto) {
                 $uibModal
                     .open({

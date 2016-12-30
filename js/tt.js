@@ -1,7 +1,7 @@
 angular.module('team-task', [
     'ui.router', 'ngResource', 'mongolabResourceHttp', 'ui.bootstrap', 'angular.filter', 'ngLetterAvatar', 'angularMoment',
     'datatables', 'datatables.buttons', 'datatables.bootstrap',
-    'ngAnimate',
+    'ngAnimate', 'ngExcel',
     'gantt', 'gantt.table', 'gantt.tooltips', 'gantt.overlap', 'gantt.dependencies', 'gantt.progress',
     'checklist-model', 'ngSanitize', 'ngCsv', 'angular-md5'
 ])

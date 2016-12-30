@@ -21,6 +21,19 @@
                                     uib-tooltip="Novo Projeto">
                                 <i class="fa fa-plus"></i>
                             </button>
+                            <div class="dropdown pull-right">
+                                <button class="btn btn-primary btn-inverse tt-btn-bordeless"
+                                        data-toggle="dropdown" id="dropdownProjectMenu">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
+                                    <li>
+                                        <span class="pointer-action upload-csv" ng-click="exportarTabela();">
+                                            <i class="fa fa-file-excel-o"></i>&nbsp;Exportar Projetos
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
                         </h3>
                     </div>
                     <div>
