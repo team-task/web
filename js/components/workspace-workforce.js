@@ -201,6 +201,8 @@ angular.module('team-task')
                                         }));
 
                                     }
+                                }, function (response) {
+                                    //error
                                 }));
                             });
 
