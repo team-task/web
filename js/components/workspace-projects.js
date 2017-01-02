@@ -12,6 +12,7 @@ angular.module('team-task')
                 */
 
             $scope.initWorkspaceProjects = function () {
+                $scope.excel = {down: function() {}};
                 $scope.filtro = [true, true, false, false];
                 $scope.listaFiltro= ["Ativo", "Suspenso", "Concluído", "Cancelado"];
                 loadTable();
@@ -89,8 +90,42 @@ angular.module('team-task')
             }
 
             $scope.exportarTabela = function () {
-                if($scope.listaProjetos) {
+                if($scope.listaProjetosRoot) {
+                    waitingDialog.show('Gerando arquivo. Aguarde.');
+                    var dados = [];
+                    dados.push(['Projeto', 'Inicio', 'Duração(d)', 'Até', 'Status',
+                        'Notas', 'Descrição', 'Qtd Atividade']);
+                    for(var i = 0; i < $scope.listaProjetosRoot.length; i++) {
+                        var inicio = $scope.listaProjetosRoot[i].inicio ?
+                            moment($scope.listaProjetosRoot[i].inicio.$date).format("DD/MM/YYYY")
+                            : "";
+                        var fim = $scope.listaProjetosRoot[i].fim ?
+                            moment($scope.listaProjetosRoot[i].fim.$date).format("DD/MM/YYYY")
+                            : "";
+                        var quantidadeAtv = $scope.listaProjetosRoot[i].atividades ?
+                            $scope.listaProjetosRoot[i].atividades.length
+                            : 0;
+                        var linha = [
+                            $scope.listaProjetosRoot[i].nome,
+                            inicio,
+                            $scope.listaProjetosRoot[i].duracao ? $scope.listaProjetosRoot[i].duracao : 0,
+                            fim,
+                            $scope.listaProjetosRoot[i].status,
+                            $scope.listaProjetosRoot[i].notas,
+                            $scope.listaProjetosRoot[i].descricao,
+                            quantidadeAtv
+                        ];
+                        dados.push(linha);
+                    }
 
+                    var excelData = [
+                        {
+                            "name": "projetos",
+                            "data": dados
+                        }
+                    ];
+                    waitingDialog.hide();
+                    $scope.excel.down(excelData);
                 }
             };
 

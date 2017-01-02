@@ -54,6 +54,48 @@ angular.module('team-task')
                     });
             };
 
+            $scope.exportarTabela = function () {
+                if($scope.listaAtividadesRoot) {
+                    waitingDialog.show('Gerando arquivo. Aguarde.');
+                    var dados = [];
+                    dados.push(['Atividade', 'Status', 'Inicio', 'Duração(d)', 'Até', 'Conclusão(%)',
+                        'Notas', 'Time', 'Recurso']);
+                    for(var i = 0; i < $scope.listaAtividadesRoot.length; i++) {
+                        var inicio = $scope.listaAtividadesRoot[i].inicio ?
+                            moment($scope.listaAtividadesRoot[i].inicio.$date).format("DD/MM/YYYY") : " ";
+                        var fim = $scope.listaAtividadesRoot[i].fim ?
+                            moment($scope.listaAtividadesRoot[i].fim.$date).format("DD/MM/YYYY") : " ";
+                        var nomeTime = $scope.listaAtividadesRoot[i].timeObj ?
+                            $scope.listaAtividadesRoot[i].timeObj.nome : " ";
+
+                        var nomeRecurso = $scope.listaAtividadesRoot[i].pessoaRecurso ?
+                            $scope.listaAtividadesRoot[i].pessoaRecurso.nome : " ";
+
+                        var linha = [
+                            $scope.listaAtividadesRoot[i].nome,
+                            $scope.listaAtividadesRoot[i].status,
+                            inicio,
+                            $scope.listaAtividadesRoot[i].duracao ? $scope.listaAtividadesRoot[i].duracao : 0,
+                            fim,
+                            $scope.listaAtividadesRoot[i].progresso ? $scope.listaAtividadesRoot[i].progresso : 0,
+                            $scope.listaAtividadesRoot[i].notas ? $scope.listaAtividadesRoot[i].notas : " ",
+                            nomeTime,
+                            nomeRecurso
+                        ];
+                        dados.push(linha);
+                    }
+
+                    var excelData = [
+                        {
+                            "name": "atividades",
+                            "data": dados
+                        }
+                    ];
+                    waitingDialog.hide();
+                    $scope.excel.down(excelData);
+                }
+            };
+
             function loadTable() {
                 $scope.listaAtividades = [];
                 $scope.showLoading = true;
@@ -175,6 +217,7 @@ angular.module('team-task')
             }
 
             $scope.initWorkspaceActivities = function () {
+                $scope.excel = {down: function() {}};
                 $scope.filtro = [true, true, false, false];
                 $scope.listaFiltro= ["aguardando", "iniciada", "concluída", "cancelada"];
                 loadTable();
