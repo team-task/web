@@ -1,0 +1,91 @@
+<div class="task-list-panel container-fluid" ng-init="initWorkspaceProjects()">
+    <div>
+        <h3 class="page-header">
+            Projetos
+            <button ng-click="novoProjeto();" class="btn btn-danger btn-sm tt-btn-round"
+                    uib-tooltip="Novo Projeto">
+                <i class="fa fa-plus"></i>
+            </button>
+            <div class="dropdown pull-right">
+                <button class="btn btn-primary btn-inverse tt-btn-bordeless"
+                        data-toggle="dropdown" id="dropdownProjectMenu">
+                    <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
+                    <li>
+                        <span class="pointer-action upload-csv" ng-click="exportarTabela();">
+                            <i class="fa fa-file-excel-o"></i>&nbsp;Exportar Projetos
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </h3>
+    </div>
+    <div ng-excel="" type="'excel'" data="excel.data" xlsfilename="'projetos.xls'" down="excel.down"></div>
+    <div>
+        <label class="checkbox-inline">
+            <input type="checkbox" ng-model="filtro[0]" value="Ativo"
+                   ng-click="filterChange();">Ativo
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" ng-model="filtro[1]" value="Suspenso"
+                   ng-click="filterChange();">Suspenso
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" ng-model="filtro[2]" value="Concluído"
+                   ng-click="filterChange();">Concluído
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" ng-model="filtro[3]" value="Cancelado"
+                   ng-click="filterChange();">Cancelado
+        </label>
+    </div>
+    <table datatable="ng" dt-options="dtOptions" class="table table-hover">
+        <thead>
+        <tr>
+            <td>Projeto</td>
+            <td>Inicio</td>
+            <td>Duração(d)</td>
+            <td>Até</td>
+            <td>Status</td>
+            <td>Alerta</td>
+            <td>Notas</td>
+            <td>Descrição</td>
+            <td>Atividades</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="projeto in listaProjetos">
+            <td class="tb-project-name">
+                <a ui-sref="workspace.project({'id' : projeto._id.$oid})">{{projeto.nome}}</a>&nbsp;
+                <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
+                      class="btn-edit-project" ng-click="editarProjeto(projeto);">
+                    <i class="fa fa-pencil-square-o"></i>
+                </span>
+            </td>
+            <td data-order="{{projeto.inicio.$date | timeMils}}">{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+            <td>{{projeto.duracao}}</td>
+            <td data-order="{{projeto.fim.$date | timeMils}}">{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
+            <td>{{projeto.status}}</td>
+            <td>
+                <span class="label"
+                      ng-class="projeto.alerta === 'verde' ? 'label-success' :
+                      projeto.alerta === 'amarelo' ? 'label-warning' : 'label-danger'">
+                    {{projeto.alerta}}
+                </span>
+            </td>
+            <td>
+                <a ng-show="projeto.notas !== ''" ng-click="mostrarNotas(projeto);" class="pointer-action">
+                    Mostrar Notas
+                </a>
+            </td>
+            <td>
+                <a ng-show="projeto.descricao !== ''" ng-click="mostrarDescricao(projeto);" class="pointer-action">
+                    Mostrar Descrição
+                </a>
+            </td>
+            <td>{{projeto.atividades.length}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

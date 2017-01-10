@@ -2,10 +2,10 @@ angular.module('team-task')
     .controller('WorkforceController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
         'Pessoa', '$stateParams', 'Projeto', '$filter', '$uibModal',
         function ($scope, $rootScope, $state, Atividade, Time, Pessoa, $stateParams, Projeto, $filter, $uibModal) {
-            $scope.showLoading = false;
+            $rootScope.showLoading = false;
 
             function loadTable() {
-                $scope.showLoading = true;
+                $rootScope.showLoading = true;
 
                 Pessoa.getById($stateParams.id).then(function (pessoa) {
                     if (pessoa) {
@@ -116,7 +116,7 @@ angular.module('team-task')
                     }
                 });
 
-                $scope.showLoading = false;
+                $rootScope.showLoading = false;
             }
 
             $scope.editarAtividade = function (model) {

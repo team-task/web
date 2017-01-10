@@ -3,7 +3,7 @@ angular.module('team-task')
         '$resource', '$filter', 'Pessoa', 'Projeto', '$q', 'DTOptionsBuilder', '$uibModal',
         function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q, DTOptionsBuilder,
                   $uibModal) {
-            $scope.showLoading = false;
+            $rootScope.showLoading = false;
             $scope.ganttData = [];
             $scope.listaAtividadesIniciando = [];
             $scope.listaAtividadesTerminando = [];
@@ -15,7 +15,7 @@ angular.module('team-task')
             $scope.dtOptions2.withOption('order', [[2,"asc"]]);
 
             function loadTable() {
-                $scope.showLoading = true;
+                $rootScope.showLoading = true;
                 $scope.ganttData = [];
                 $scope.listaAtividadesIniciando = [];
                 $scope.listaAtividadesTerminando = [];
@@ -207,7 +207,7 @@ angular.module('team-task')
                             });
 
                             $q.all(promisses).then(function () {
-                                $scope.showLoading = false;
+                                $rootScope.showLoading = false;
                                 $q.all(aPromisses).then(function () {
                                     $scope.listaAtividadesIniciando = listaAtividadesI;
                                     $scope.listaAtividadesTerminando = listaAtividadesT;
@@ -322,13 +322,14 @@ angular.module('team-task')
                     "daily": true,
                     "taskContent": '<span></span>',
                     "contents": {
-                        'model.name': '<a ui-sref="workforce({\'id\': row.model.idpessoa})">{{getValue()}}</a>'
+                        'model.name': '<a ui-sref="workspace.workforce({\'id\': row.model.idpessoa})">{{getValue()}}</a>'
                     },
                     "filtertask": ["aguardando", "iniciada", "concluída"],
                     api: function(api) {
                         $scope.api = api;
                     }
                 };
+                $rootScope.collapsed = $state.current.data.collapsed;
                 loadTable();
             };
         }]);

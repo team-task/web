@@ -12,21 +12,33 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 showMenu: false
             }
         })
-        .state('workspace-projects', {
-            url: '/workspace/projects',
-            templateUrl: 'views/workspace-projects.html',
+        .state('workspace', {
+            url: '/workspace',
             reloadOnSearch: false,
-            controller: 'WorkspaceProjectsController',
+            templateUrl: 'views/workspace.html',
+            controller: function ($rootScope) {
+                $rootScope.showLoading = false;
+            },
             data: {
                 requiredlogin: true,
                 collapsed: ["in", "", ""],
                 showMenu: true
             }
-
         })
-        .state('workspace-activities', {
-            url: '/workspace/activities',
-            templateUrl: 'views/workspace-activities.html',
+        .state('workspace.projects', {
+            url: '/projects',
+            templateUrl: 'views/projects.html',
+            controller: 'WorkspaceProjectsController',
+            reloadOnSearch: false,
+            data: {
+                requiredlogin: true,
+                collapsed: ["in", "", ""],
+                showMenu: true
+            }
+        })
+        .state('workspace.activities', {
+            url: '/activities',
+            templateUrl: 'views/activities.html',
             reloadOnSearch: false,
             controller: 'WorkspaceActivitiesController',
             data: {
@@ -34,11 +46,11 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 collapsed: ["", "in", ""]
             }
         })
-        .state('project', {
+        .state('workspace.project', {
             url: '/project/:id',
-            templateUrl: 'views/project.html',
-            reloadOnSearch: false,
+            templateUrl: 'views/project-2.html',
             controller: 'ProjectController',
+            reloadOnSearch: false,
             data: {
                 requiredlogin: true,
                 collapsed: ["in", "", ""]
@@ -62,9 +74,9 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 requiredlogin: true
             }
         })
-        .state('team-activities', {
-            url: '/activities/team/:id',
-            templateUrl: 'views/team-activities.html',
+        .state('workspace.team', {
+            url: '/team/:id',
+            templateUrl: 'views/team.html',
             reloadOnSearch: false,
             controller: 'TeamActivitiesController',
             data: {
@@ -72,9 +84,9 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 collapsed: ["", "in", ""]
             }
         })
-        .state('workspace-workforce', {
-            url: '/workspace/workforce',
-            templateUrl: 'views/workspace-workforce.html',
+        .state('workspace.workforces', {
+            url: '/workforces',
+            templateUrl: 'views/workforces.html',
             reloadOnSearch: false,
             controller: 'WorkspaceWorkforceController',
             data: {
@@ -82,9 +94,9 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 collapsed: ["", "", "in"]
             }
         })
-        .state('workforce', {
+        .state('workspace.workforce', {
             url: '/workforce/:id',
-            templateUrl: 'views/workforce.html',
+            templateUrl: 'views/workforce-2.html',
             reloadOnSearch: false,
             controller: 'WorkforceController',
             data: {

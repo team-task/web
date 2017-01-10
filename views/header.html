@@ -26,17 +26,17 @@
                     <div class="tt-search-listbox" ng-class="searchDisplay">
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="resultado in resultadoBusca">
-                                <span ng-show="resultado.tipo === 'project'">
+                                <span ng-show="resultado.tipo === 'workspace.project'">
                                     <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">
                                         <i class="fa fa-folder-open-o"></i>&nbsp;{{resultado.nome}}
                                     </a>
                                 </span>
-                                <span ng-show="resultado.tipo === 'workforce'">
+                                <span ng-show="resultado.tipo === 'workspace.workforce'">
                                     <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">
                                         <i class="fa fa-user-o"></i>&nbsp;{{resultado.nome}}
                                     </a>
                                 </span>
-                                <span ng-show="resultado.tipo === 'team-activities'">
+                                <span ng-show="resultado.tipo === 'workspace.team'">
                                     <a ui-sref="{{resultado.tipo}}({'id' : resultado.id})">
                                         <i class="fa fa-file-o"></i>&nbsp;{{resultado.nome}}
                                     </a>

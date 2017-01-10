@@ -1,0 +1,161 @@
+
+<div class="task-list-panel container-fluid" ng-init="initWorkspaceProject()">
+    <div>
+        <h3 class="page-header">
+            {{projeto.nome}}
+            <span class="span-alerta" ng-class="projeto.alerta === 'vermelho' ? 'vermelho' :
+               projeto.alerta === 'amarelo' ? 'amarelo' : 'verde'">
+            </span>
+            <button ng-click="novaAtividade();" class="btn btn-danger btn-sm tt-btn-round"
+                    uib-tooltip="Nova Atividade"
+                    ng-show="usuarioLogado._id.$oid === projeto.administrador">
+                <i class="fa fa-plus"></i>
+            </button>
+            <div class="dropdown pull-right">
+                <button class="btn btn-primary btn-inverse tt-btn-bordeless"
+                        data-toggle="dropdown" id="dropdownProjectMenu">
+                    <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
+                    <li>
+                        <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
+                              class="pointer-action upload-csv" ng-click="editarProjeto(projeto);">
+                            <i class="fa fa-pencil-square-o"></i>&nbsp;Editar Projeto
+                        </span>
+                    </li>
+                    <li>
+                        <a class="pointer-action" ng-csv="csvAtividades" csv-header="getHeader();"
+                            field-separator=";" filename="team-task-export.csv" lazy-load="true">
+                            <i class="fa fa-cloud-upload"></i>&nbsp;Exportar Template
+                        </a>
+                    </li>
+                    <li>
+                        <label class="pointer-action upload-csv">
+                            <i class="fa fa-cloud-download"></i>
+                            &nbsp;Importar Template
+                            <input type="file" file-reader="fileContent" style="display: none;">
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </h3>
+        <small>
+            {{projeto.descricao}}
+        </small>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <td>Status</td>
+                <td>Inicio</td>
+                <td>Duração(d)</td>
+                <td>Até</td>
+                <td>Notas</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="active">
+                <td>{{projeto.status}}</td>
+                <td>{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                <td>{{projeto.duracao}}</td>
+                <td>{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
+                <td>
+                    <a ng-show="projeto.notas !== ''" ng-click="mostrarNotas();" class="pointer-action">
+                        Mostrar Notas
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <uib-tabset>
+            <uib-tab index="0" heading="Tabela">
+                <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"
+                       class="table table-hover">
+                    <thead>
+                    <tr>
+                        <td>Time</td>
+                        <td>Atividade</td>
+                        <td>Status</td>
+                        <td>Inicio</td>
+                        <td>Duração(d)</td>
+                        <td>Até</td>
+                        <td>Conclusão(%)</td>
+                        <td>Designado</td>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="atividade in projeto.atividades">
+                        <td data-order="{{atividade.nomeTime}}">{{atividade.nomeTime}}</td>
+                        <td class="tb-project-name">
+                            <a ng-click="mostrarDetalheAtividade($index)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
+                            <div class="dropdown tt-dropdown" ng-show="usuarioLogado._id.$oid === projeto.administrador">
+                                <span ng-show="usuarioLogado._id.$oid === projeto.administrador" class="btn-edit-project"
+                                      data-toggle="dropdown" id="dropdownMenu1">
+                                    <i class="fa fa-ellipsis-h"></i></span>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a ng-click="editarAtividade($index);">
+                                        <i class="fa fa-pencil-square-o"></i>&nbsp;Editar</a>
+                                    </li>
+                                    <li><a ng-click="copiarAtividade($index);">
+                                        <i class="fa fa-clone"></i>&nbsp;Copiar</a>
+                                    </li>
+                                    <li><a ng-click="moverAtividade($index);">
+                                        <i class="fa fa-scissors"></i>&nbsp;Recortar</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>{{atividade.status}}</td>
+                        <td data-order="{{atividade.inicio.$date | timeMils}}">{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                        <td>{{atividade.duracao}}</td>
+                        <td data-order="{{atividade.fim.$date | timeMils}}">{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
+                        <td>{{atividade.progresso}}</td>
+                        <td data-search="{{atividade.pessoaDesignado.nome}}">
+                            <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27"
+                                              class="tt-avatar-table" fontsize="14"
+                                              data="{{atividade.pessoaDesignado.iniciais}}"
+                                              uib-tooltip="{{atividade.pessoaDesignado.nome}}"></ng-letter-avatar>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+            <uib-tab index="1" heading="Gannt" ng-click="ganntClick();">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div gantt
+                             api="ganttOptions.api"
+                             data="ganttData"
+                             view-scale="ganttOptions.scale"
+                             current-date="ganttOptions.currentDate"
+                             sort-mode="ganttOptions.sortMode"
+                             daily="ganttOptions.daily"
+                             task-content="ganttOptions.taskContent"
+                             filter-task="filterFunctionGantt">
+                            <gantt-table headers="ganttOptions.tableHeaders"
+                                         contents="ganttOptions.contents"></gantt-table>
+                            <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <label class="label label-info checkbox-inline tt-filter-label">
+                            <input type="checkbox" ng-model="filtro[0]" value="aguardando"
+                                   ng-click="filterChange();">Aguardando
+                        </label>
+                        <label class="label label-warning checkbox-inline tt-filter-label">
+                            <input type="checkbox" ng-model="filtro[1]" value="iniciada"
+                                   ng-click="filterChange();">Iniciada
+                        </label>
+                        <label class="label label-success checkbox-inline tt-filter-label">
+                            <input type="checkbox" ng-model="filtro[2]" value="concluida"
+                                   ng-click="filterChange();">Concluida
+                        </label>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>

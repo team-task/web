@@ -3,7 +3,7 @@ angular.module('team-task')
         'DTOptionsBuilder', '$q', '$uibModal', '$stateParams', 'Pessoa', '$state',
         function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $q, $uibModal,
                   $stateParams, Pessoa, $state) {
-            $scope.showLoading = false;
+            $rootScope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions();
             $scope.dtOptions.withOption('order', [[3, "asc"]]);
 
@@ -78,7 +78,7 @@ angular.module('team-task')
             };
 
             function loadProject() {
-                $scope.showLoading = true;
+                $rootScope.showLoading = true;
                 $scope.ganttData = [];
                 Projeto.getById($stateParams.id).then(function (projeto) {
                     if (projeto) {
@@ -158,7 +158,7 @@ angular.module('team-task')
                             }
 
                             $scope.projeto = projeto;
-                            $scope.showLoading = false;
+                            $rootScope.showLoading = false;
                         });
                     }
                 });
@@ -370,7 +370,7 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {
-                        $state.go('workspace-projects');
+                        $state.go('workspace.projects');
                     }, function () {
                     });
             };

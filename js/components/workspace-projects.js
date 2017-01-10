@@ -2,7 +2,7 @@ angular.module('team-task')
     .controller('WorkspaceProjectsController', ['$scope', '$rootScope', '$state', 'Projeto', 'Atividade', 'Time',
         'DTOptionsBuilder', '$resource', '$uibModal', '$filter',
         function ($scope, $rootScope, $state, Projeto, Atividade, Time, DTOptionsBuilder, $resource, $uibModal, $filter) {
-            $scope.showLoading = false;
+            $rootScope.showLoading = false;
             /*
             $scope.dtOptions = DTOptionsBuilder.newOptions()
                 .withButtons([{
@@ -15,11 +15,12 @@ angular.module('team-task')
                 $scope.excel = {down: function() {}};
                 $scope.filtro = [true, true, false, false];
                 $scope.listaFiltro= ["Ativo", "Suspenso", "Concluído", "Cancelado"];
+                $rootScope.collapsed = $state.current.data.collapsed;
                 loadTable();
             };
 
             function loadTable() {
-                $scope.showLoading = true;
+                $rootScope.showLoading = true;
 
                 $scope.listaProjetos = [];
                 $scope.listaProjetosRoot = [];
@@ -47,7 +48,7 @@ angular.module('team-task')
                                 $scope.listaProjetos = projetos;
                                 $scope.listaProjetosRoot = projetos;
                                 $scope.filterChange();
-                                $scope.showLoading = false;
+                                $rootScope.showLoading = false;
                             });
                         }
                     });

@@ -4,7 +4,7 @@
             <li>
                 <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseProjects"
                       data-target="#collapseProjects" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
-                <a ui-sref="workspace-projects" class="pointer-action link-leftnavigation">
+                <a ui-sref="workspace.projects" class="pointer-action link-leftnavigation">
                     Projetos
                     &nbsp;<span ng-show="menuProjetoLoading" class="glyphicon glyphicon-refresh rotating"></span>
                 </a>
@@ -16,7 +16,7 @@
                                 uib-tooltip="{{projeto.alerta}}">
                             <div class="alerta-square"></div>
                         </div>
-                        <a ui-sref="project({'id' : projeto._id.$oid})" class="pointer-action link-leftnavigation-project">
+                        <a ui-sref="workspace.project({'id' : projeto._id.$oid})" class="pointer-action link-leftnavigation-project">
                             {{projeto.nome}}
                         </a>
                     </li>
@@ -26,12 +26,12 @@
             <li>
                 <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseActivities"
                       data-target="#collapseActivities" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
-                <a ui-sref="workspace-activities" class="pointer-action link-leftnavigation">Atividades
+                <a ui-sref="workspace.activities" class="pointer-action link-leftnavigation">Atividades
                     &nbsp;<span ng-show="menuAtividadesLoading" class="glyphicon glyphicon-refresh rotating"></span>
                 </a>
                 <ul class="nav collapse {{collapsed[1]}}" id="collapseActivities">
                     <li class="tt-sub-menu" ng-repeat="time in timesMenu">
-                        <a ui-sref="team-activities({'id': time._id.$oid})">
+                        <a ui-sref="workspace.team({'id': time._id.$oid})">
                             {{time.nome}}
                             <span class="badge pull-right">{{time.atividades.length}}</span>
                         </a>
@@ -42,12 +42,12 @@
             <li>
                 <span data-toggle="collapse" aria-expanded="false" aria-controls="collapseWorkforce"
                       data-target="#collapseWorkforce" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
-                <a ui-sref="workspace-workforce" class="pointer-action link-leftnavigation">Carga de Trabalho
+                <a ui-sref="workspace.workforces" class="pointer-action link-leftnavigation">Carga de Trabalho
                     &nbsp;<span ng-show="menuCargaLoading" class="glyphicon glyphicon-refresh rotating"></span>
                 </a>
                 <ul class="nav collapse {{collapsed[2]}}" id="collapseWorkforce">
                     <li class="tt-sub-menu" ng-repeat="pessoa in trabalhoPessoasMenu | orderBy: 'nome'">
-                        <a ui-sref="workforce({'id': pessoa._id.$oid})">
+                        <a ui-sref="workspace.workforce({'id': pessoa._id.$oid})">
                             {{pessoa.nome}}
                             <span class="badge pull-right">{{pessoa.quantidadeAtividades}}</span>
                         </a>

@@ -1,0 +1,123 @@
+
+<div class="task-list-panel container-fluid" ng-init="initWorkspaceWorkforce()">
+    <div>
+        <h3 class="page-header">
+            Carga de Trabalho
+        </h3>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div gantt
+                 api="ganttOptions.api"
+                 data="ganttData"
+                 view-scale="ganttOptions.scale"
+                 current-date="ganttOptions.currentDate"
+                 sort-mode="ganttOptions.sortMode"
+                 daily="ganttOptions.daily"
+                 task-content="ganttOptions.taskContent"
+                 headers="ganttOptions.headers"
+                 filter-task="filterFunction">
+                <gantt-table headers="ganttOptions.tableHeaders"
+                             contents="ganttOptions.contents"></gantt-table>
+                <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="filtro[0]" value="aguardando"
+                       ng-click="filterChange();">Aguardando
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="filtro[1]" value="iniciada"
+                       ng-click="filterChange();">Iniciada
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="filtro[2]" value="concluida"
+                       ng-click="filterChange();">Concluida
+            </label>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Iniciando entre {{dataTerminando | date: 'dd/MM/yyyy'}} e {{dataIniciando | date: 'dd/MM/yyyy'}}
+        </div>
+        <div class="panel-body">
+            <table datatable="ng" class="table table-hover table-responsive" dt-options="dtOptions">
+                <thead>
+                <tr>
+                    <td>Atividade</td>
+                    <td>Inicio</td>
+                    <td>Fim</td>
+
+                    <td>Recurso</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="atividade in listaAtividadesIniciando">
+                    <td class="tb-project-name">
+                        <a ng-click="mostrarDetalheAtividadeTime(atividade.atividadeObj);" class="pointer-action">
+                            {{atividade.nome}}
+                        </a>&nbsp;
+                        <span class="btn-edit-project"
+                              ng-click="editarAtividadeTime(atividade.atividadeObj);">
+                            <i class="fa fa-pencil-square-o"></i>
+                        </span>
+                    </td>
+                    <td data-order="{{atividade.inicio.$date | timeMils}}">{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                    <td data-order="{{atividade.fim.$date | timeMils}}">{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
+
+                    <td data-search="{{atividade.pessoaRecurso.nome}}">
+                        <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
+                                          data="{{atividade.pessoaRecurso.iniciais}}"
+                                          uib-tooltip="{{atividade.pessoaRecurso.nome}}"></ng-letter-avatar>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Terminando entre {{dataTerminando | date: 'dd/MM/yyyy'}} e {{dataIniciando | date: 'dd/MM/yyyy'}}
+        </div>
+        <div class="panel-body">
+            <table datatable="ng" class="table table-hover table-responsive" dt-options="dtOptions2">
+                <thead>
+                <tr>
+                    <td>Atividade</td>
+                    <td>Inicio</td>
+                    <td>Fim</td>
+
+                    <td>Recurso</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="atividade in listaAtividadesTerminando">
+                    <td class="tb-project-name">
+                        <a ng-click="mostrarDetalheAtividadeTime(atividade.atividadeObj);" class="pointer-action">
+                            {{atividade.nome}}
+                        </a>&nbsp;
+                        <span class="btn-edit-project"
+                              ng-click="editarAtividadeTime(atividade.atividadeObj);">
+                            <i class="fa fa-pencil-square-o"></i>
+                        </span>
+                    </td>
+                    <td data-order="{{atividade.inicio.$date | timeMils}}">{{atividade.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                    <td data-order="{{atividade.fim.$date | timeMils}}">{{atividade.fim.$date | date : 'dd/MM/yyyy'}}</td>
+
+                    <td data-search="{{atividade.pessoaRecurso.nome}}">
+                        <ng-letter-avatar dynamic="true" charCount="2" width="27" height="27" fontsize="14"
+                                          data="{{atividade.pessoaRecurso.iniciais}}"
+                                          uib-tooltip="{{atividade.pessoaRecurso.nome}}"></ng-letter-avatar>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

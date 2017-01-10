@@ -1,0 +1,65 @@
+
+<div class="task-list-panel container-fluid" ng-init="initWorkforce()">
+    <div>
+        <h3 class="page-header">
+            {{cargaPessoa.nome}}
+        </h3>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div gantt
+                 api="ganttOptions.api"
+                 data="ganttData"
+                 view-scale="ganttOptions.scale"
+                 current-date="ganttOptions.currentDate"
+                 sort-mode="ganttOptions.sortMode"
+                 daily="ganttOptions.daily"
+                 task-content="ganttOptions.taskContent"
+                 from-date="ganttOptions.fromDate"
+                 to-date="ganttOptions.toDate"
+                 filter-row="filterFunction">
+                <gantt-table headers="ganttOptions.tableHeaders"
+                             contents="ganttOptions.contents"></gantt-table>
+                <gantt-tooltips date-format="dateFormat" content="ganttOptions.tooltipcontent"></gantt-tooltips>
+                <gantt-progress enabled="true"></gantt-progress>
+                <gantt-dependencies enabled="true" read-only="true">
+                </gantt-dependencies>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="label label-info checkbox-inline tt-filter-label">
+                        <input type="checkbox" ng-model="filtro[0]" value="aguardando"
+                               ng-click="filterChange();">Aguardando
+                    </label>
+                    <label class="label label-warning checkbox-inline tt-filter-label">
+                        <input type="checkbox" ng-model="filtro[1]" value="iniciada"
+                               ng-click="filterChange();">Iniciada
+                    </label>
+                    <label class="label label-success checkbox-inline tt-filter-label">
+                        <input type="checkbox" ng-model="filtro[2]" value="concluida"
+                               ng-click="filterChange();">Concluida
+                    </label>
+                    <label>Escala</label>
+                    <select ng-model="ganttOptions.scale">
+                        <option value="year">Ano</option>
+                        <option value="week">Semana</option>
+                        <option value="day">Dias</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2">Escala de Datas</label>
+                <div class="form-group col-md-3">
+                    <input type="date" class="form-control" placeholder="de"  ng-model="fromDate" ng-change="datasChange()">
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="date" class="form-control" placeholder="ate" ng-model="toDate" ng-change="datasChange()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

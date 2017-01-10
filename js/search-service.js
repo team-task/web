@@ -20,7 +20,7 @@ angular.module('team-task')
                     scope.resultadoBusca.push(
                         {
                             "nome": projeto.nome,
-                            "tipo": "project",
+                            "tipo": "workspace.project",
                             "id": projeto._id.$oid
                         }
                     );
@@ -43,7 +43,7 @@ angular.module('team-task')
                             scope.resultadoBusca.push(
                                 {
                                     "nome": projeto.nome + "/" + atividade.nome,
-                                    "tipo": "project",
+                                    "tipo": "workspace.project",
                                     "id": projeto._id.$oid
                                 }
                             );
@@ -93,7 +93,7 @@ angular.module('team-task')
                     scope.resultadoBusca.push(
                         {
                             "nome": pessoa.nome,
-                            "tipo": "workforce",
+                            "tipo": "workspace.workforce",
                             "id": pessoa._id.$oid
                         }
                     );
@@ -115,7 +115,7 @@ angular.module('team-task')
                     scope.resultadoBusca.push(
                         {
                             "nome": time.nome,
-                            "tipo": "team-activities",
+                            "tipo": "workspace.team",
                             "id": time._id.$oid
                         }
                     );

@@ -3,13 +3,13 @@ angular.module('team-task')
         'DTOptionsBuilder', '$resource', '$filter', 'Pessoa', '$uibModal', '$stateParams',
         function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa,
                   $uibModal, $stateParams) {
-            $scope.showLoading = false;
+            $rootScope.showLoading = false;
             $scope.dtAOptions = DTOptionsBuilder.newOptions();//.withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtAOptions.withOption('responsive', true);
 
             function loadTable() {
                 $scope.listaAtividades = [];
-                $scope.showLoading = true;
+                $rootScope.showLoading = true;
                 Time.getById($stateParams.id).then(function (time) {
                     if (time) {
                         var idusuario = $rootScope.usuarioLogado._id.$oid;
@@ -71,7 +71,7 @@ angular.module('team-task')
 
                             $scope.filterChange();
 
-                            $scope.showLoading = false;
+                            $rootScope.showLoading = false;
                         });
                     }
                 });

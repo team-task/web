@@ -2,7 +2,7 @@ angular.module('team-task')
     .controller('WorkspaceActivitiesController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
         'DTOptionsBuilder', '$resource', '$filter', 'Pessoa', '$uibModal', '$q',
         function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa, $uibModal, $q) {
-            $scope.showLoading = false;
+            $rootScope.showLoading = false;
             //$scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtAOptions = DTOptionsBuilder.newOptions();
             $scope.dtAOptions.withOption('order', [[2,"asc"]]);
@@ -98,7 +98,7 @@ angular.module('team-task')
 
             function loadTable() {
                 $scope.listaAtividades = [];
-                $scope.showLoading = true;
+                $rootScope.showLoading = true;
                 if($rootScope.usuarioLogado) {
                     var idusuario = $rootScope.usuarioLogado._id.$oid;
                     var qTime = {
@@ -174,7 +174,7 @@ angular.module('team-task')
                                 $scope.listaAtividades = atividadesList;
                                 $scope.listaAtividadesRoot = atividadesList;
                                 $scope.filterChange();
-                                $scope.showLoading = false;
+                                $rootScope.showLoading = false;
                             });
                         }
                     });
@@ -220,6 +220,7 @@ angular.module('team-task')
                 $scope.excel = {down: function() {}};
                 $scope.filtro = [true, true, false, false];
                 $scope.listaFiltro= ["aguardando", "iniciada", "concluída", "cancelada"];
+                $rootScope.collapsed = $state.current.data.collapsed;
                 loadTable();
             };
         }]);

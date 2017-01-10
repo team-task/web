@@ -129,11 +129,9 @@ angular.module('team-task')
                 function ($scope, $rootScope, Projeto, Time, Atividade, $filter, Pessoa, $state, $q) {
 
                     if($state.current.data) {
-                        $scope.menuClass = "col-md-3";
-                        $scope.mainClass = "col-md-9";
 
                         loadMenus();
-                        $scope.collapsed = $state.current.data.collapsed;
+
 
                         $rootScope.$on("CallLoadMenus", function () {
                             loadMenus();
@@ -260,9 +258,6 @@ angular.module('team-task')
                                 });
                             }
                         }
-                    } else {
-                        $scope.menuClass = "nodisplay";
-                        $scope.mainClass = "col-md-12 maxima";
                     }
                 }]
         };

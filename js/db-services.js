@@ -32,7 +32,7 @@ angular.module('team-task')
 					logado.iniciais = iniciais.toUpperCase();
 					logado.nomeSimples = nomeSimples;
 					$window.sessionStorage.setItem('usuarioLogado', angular.toJson(pessoas[0]));
-					$state.go('workspace-projects');
+					$state.go('workspace.projects');
 				} else {
 					vm.errorLogin = "Login e ou senha inválidos";
 					waitingDialog.hide();
