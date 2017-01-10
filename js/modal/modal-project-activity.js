@@ -320,9 +320,9 @@ angular.module('team-task')
                                 "nomeComposto" : $scope.projeto.atividades[$scope.indice].predecessora.nomeComposto
                             }
                         );
+                    newArray.push($scope.projeto.atividades[$scope.indice].predecessora);
+                    $scope.atividadesPossiveis = newArray;
                 }
-                newArray.push($scope.projeto.atividades[$scope.indice].predecessora);
-                $scope.atividadesPossiveis = newArray;
                 $scope.showPredecessorLoading = false;
             });
         }
