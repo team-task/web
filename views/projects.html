@@ -45,7 +45,6 @@
         <tr>
             <td>Projeto</td>
             <td>Inicio</td>
-            <td>Duração(d)</td>
             <td>Até</td>
             <td>Status</td>
             <td>Alerta</td>
@@ -64,14 +63,14 @@
                 </span>
             </td>
             <td data-order="{{projeto.inicio.$date | timeMils}}">{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
-            <td>{{projeto.duracao}}</td>
             <td data-order="{{projeto.fim.$date | timeMils}}">{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
             <td>{{projeto.status}}</td>
-            <td>
+            <td data-search="{{projeto.alerta}}">
                 <span class="label"
                       ng-class="projeto.alerta === 'verde' ? 'label-success' :
-                      projeto.alerta === 'amarelo' ? 'label-warning' : 'label-danger'">
-                    {{projeto.alerta}}
+                      projeto.alerta === 'amarelo' ? 'label-warning' : 'label-danger'"
+                      uib-tooltip="{{projeto.alerta}}">
+                    &nbsp;&nbsp;&nbsp;
                 </span>
             </td>
             <td>
