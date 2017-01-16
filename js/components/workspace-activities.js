@@ -5,6 +5,7 @@ angular.module('team-task')
             $rootScope.showLoading = false;
             //$scope.dtAOptions = DTOptionsBuilder.newOptions().withLanguage($resource('js/dtOptions.json').get().$promise);
             $scope.dtAOptions = DTOptionsBuilder.newOptions();
+            $scope.dtAOptions.withOption('displayLength', 25);
             $scope.dtAOptions.withOption('order', [[2,"asc"]]);
 
             $scope.novaAtividade = function () {

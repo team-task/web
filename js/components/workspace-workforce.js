@@ -9,9 +9,11 @@ angular.module('team-task')
             $scope.listaAtividadesTerminando = [];
 
             $scope.dtOptions = DTOptionsBuilder.newOptions();
+            $scope.dtOptions.withOption('displayLength', 25);
             $scope.dtOptions.withOption('order', [[1,"asc"]]);
 
             $scope.dtOptions2 = DTOptionsBuilder.newOptions();
+            $scope.dtOptions2.withOption('displayLength', 25);
             $scope.dtOptions2.withOption('order', [[2,"asc"]]);
 
             function loadTable() {

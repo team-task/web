@@ -6,6 +6,7 @@ angular.module('team-task')
             $rootScope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions();
             $scope.dtOptions.withOption('order', [[3, "asc"]]);
+            $scope.dtOptions.withOption('displayLength', 25);
 
             $scope.csvAtividades = [];
 

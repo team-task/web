@@ -4,8 +4,8 @@ angular.module('team-task')
         function ($scope, $rootScope, $state, Atividade, Time, DTOptionsBuilder, $resource, $filter, Pessoa,
                   $uibModal, $stateParams) {
             $rootScope.showLoading = false;
-            $scope.dtAOptions = DTOptionsBuilder.newOptions();//.withLanguage($resource('js/dtOptions.json').get().$promise);
-            $scope.dtAOptions.withOption('responsive', true);
+            $scope.dtAOptions = DTOptionsBuilder.newOptions();
+            $scope.dtAOptions.withOption('displayLength', 25);
 
             function loadTable() {
                 $scope.listaAtividades = [];
