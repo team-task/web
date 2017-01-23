@@ -303,6 +303,15 @@ angular.module('team-task')
             $scope.pessoaNew.usuario = "";
             $scope.pessoaNew.senha = "team";
             $scope.pessoaNew.cadastrado = $rootScope.usuarioLogado._id.$oid;
+            //ajuste para nova pessao ser abaixo do user.
+            if($rootScope.usuarioLogado.perfil === 'gerente') {
+                $scope.pessoaNew.perfil = 'lider';
+            }
+            if($rootScope.usuarioLogado.perfil === 'lider' ||
+                $rootScope.usuarioLogado.perfil === 'especialista') {
+                $scope.pessoaNew.perfil = 'especialista';
+            }
+
             $scope.pessoaNew.ativo = true;
             $scope.pessoaNew.tecnologias = [];
         };
