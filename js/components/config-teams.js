@@ -10,7 +10,12 @@ angular.module('team-task')
             function loadTable () {
                 $scope.showLoading = true;
                 if($rootScope.usuarioLogado) {
-                    var idusuario = $rootScope.usuarioLogado._id.$oid;
+                    var idusuario;
+                    if($rootScope.usuarioLogado.perfil === 'gerente') {
+                        idusuario = $rootScope.usuarioLogado.subordinado;
+                    } else {
+                        idusuario = $rootScope.usuarioLogado._id.$oid;
+                    }
                     var qTime = {
                         "$or": [
                             {"lider": idusuario},

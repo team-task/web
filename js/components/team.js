@@ -12,7 +12,12 @@ angular.module('team-task')
                 $rootScope.showLoading = true;
                 Time.getById($stateParams.id).then(function (time) {
                     if (time) {
-                        var idusuario = $rootScope.usuarioLogado._id.$oid;
+                        var idusuario;
+                        if($rootScope.usuarioLogado.perfil === 'gerente') {
+                            idusuario = $rootScope.usuarioLogado.subordinado;
+                        } else {
+                            idusuario = $rootScope.usuarioLogado._id.$oid;
+                        }
                         time.pessoaLider = {};
                         time.pessoaRecurso = [];
                         Pessoa.getById(time.lider).then(function (lider) {

@@ -101,7 +101,12 @@ angular.module('team-task')
                 $scope.listaAtividades = [];
                 $rootScope.showLoading = true;
                 if($rootScope.usuarioLogado) {
-                    var idusuario = $rootScope.usuarioLogado._id.$oid;
+                    var idusuario;
+                    if($rootScope.usuarioLogado.perfil === 'gerente') {
+                        idusuario = $rootScope.usuarioLogado.subordinado;
+                    } else {
+                        idusuario = $rootScope.usuarioLogado._id.$oid;
+                    }
                     var qTime = {
                         "$or": [
                             {"lider": idusuario},
@@ -114,13 +119,13 @@ angular.module('team-task')
                             var atividadesList = [];
                             for (var t = 0; t < times.length; t++) {
                                 var aQuery;
-                                if(times[t].lider === $rootScope.usuarioLogado._id.$oid) {
+                                if(times[t].lider === idusuario) {
                                     aQuery = {
                                         "time": times[t]._id.$oid
                                     };
                                 } else {
                                     aQuery = {
-                                        "designado": $rootScope.usuarioLogado._id.$oid
+                                        "designado": idusuario
                                     };
                                 }
                                 prom.push(Atividade.query(aQuery).then(function (atividades) {

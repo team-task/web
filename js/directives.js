@@ -137,6 +137,20 @@ angular.module('team-task')
                             loadMenus();
                         });
 
+                        /*
+                        $rootScope.$on("CallLoadProjectMenu", function () {
+                            loadMenus();
+                        });
+
+                        $rootScope.$on("CallLoadTeamMenus", function () {
+                            loadMenus();
+                        });
+
+                        $rootScope.$on("CallLoadWorkforceMenus", function () {
+                            loadMenus();
+                        });
+                        */
+
                         function loadMenus() {
                             $scope.menuProjetoLoading = true;
                             $scope.menuAtividadesLoading = true;
@@ -146,8 +160,14 @@ angular.module('team-task')
                             $scope.trabalhoPessoasMenu = [];
 
                             if ($rootScope.usuarioLogado) {
+                                //ajueste para atender a gerente.
+                                var idusuario;
+                                if($rootScope.usuarioLogado.perfil === 'gerente') {
+                                    idusuario = $rootScope.usuarioLogado.subordinado;
+                                } else {
+                                    idusuario = $rootScope.usuarioLogado._id.$oid;
+                                }
 
-                                var idusuario = $rootScope.usuarioLogado._id.$oid;
                                 var qTime = {
                                     "$or": [
                                         {"lider": idusuario},
@@ -216,6 +236,8 @@ angular.module('team-task')
                                             angular.forEach(pessoas, function (pessoa) {
                                             //angular.forEach(recursosTotais, function (rec, idRec) {
                                                 //var pessoaProm = Pessoa.getById(rec, {"sort": {"nome": 1}}).then(function (pessoa) {
+
+
                                                     if (pessoa && (pessoa.cadastrado === idusuario || pessoa._id.$oid === idusuario)) {
                                                         $scope.trabalhoPessoasMenu.push(pessoa);
                                                         /*
