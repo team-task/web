@@ -27,201 +27,255 @@ angular.module('team-task')
                 $scope.dataIniciando = dataIniciando.toDate();
                 $scope.dataTerminando = dataTerminando.toDate();
                 if($rootScope.usuarioLogado) {
-                    var idusuario;
-                    if($rootScope.usuarioLogado.perfil === 'gerente') {
-                        idusuario = $rootScope.usuarioLogado.subordinado;
-                    } else {
-                        idusuario = $rootScope.usuarioLogado._id.$oid;
-                    }
-                    var qTime = {
-                        "$or": [
-                            {"lider": idusuario},
-                            {"recursos": idusuario}
-                        ]
-                    };
-                    Time.query(qTime, {"sort": {"nome": 1}}).then(function (times) {
+                    if ($rootScope.usuarioLogado.perfil === 'gerente') {
+                        var subordinados = $rootScope.usuarioLogado.subordinados;
+                        angular.forEach(subordinados, function (subordinado) {
+                            Pessoa.getById(subordinado).then(function (pessoa) {
+                                var nomes = pessoa.nome.split(" ");
+                                var iniciais = nomes[0].substring(0, 1);
+                                var nomeSimples = nomes[0];
+                                if (nomes.length > 1) {
+                                    iniciais += nomes[1].substring(0, 1);
+                                }
+                                pessoa.iniciais = iniciais.toUpperCase();
+                                pessoa.nomeSimples = nomeSimples;
 
-                        if (times[0]) {
-                            var listaTimes = [];
-                            for (var i = 0; i < times.length; i++) {
-                                listaTimes.push(times[i]._id.$oid);
-                            }
+                                var row = { "name": pessoa.nome, "idpessoa": pessoa._id.$oid };
+                                var aQtdQuery = { "designado": pessoa._id.$oid };
 
-                            var recursosTotais = [];
-                            for (var a = 0; a < times.length; a++) {
-                                recursosTotais = recursosTotais.concat(times[a].recursos);
-                            }
-                            recursosTotais = $filter('unique')(recursosTotais);
-                            var promisses = [];
-                            var aPromisses = [];
-                            var listaAtividadesI = [];
-                            var listaAtividadesT = [];
-                            angular.forEach(recursosTotais, function (rec, idRec) {
-                                promisses.push(Pessoa.getById(rec).then(function (pessoa) {
-                                    if (pessoa && (pessoa.cadastrado === idusuario || pessoa._id.$oid === idusuario)) {
+                                Atividade.query(aQtdQuery).then(function (atividades) {
+                                    row.tasks = [];
 
-                                        var nomes = pessoa.nome.split(" ");
-                                        var iniciais = nomes[0].substring(0, 1);
-                                        var nomeSimples = nomes[0];
-                                        if (nomes.length > 1) {
-                                            iniciais += nomes[1].substring(0, 1);
-                                        }
-                                        pessoa.iniciais = iniciais.toUpperCase();
-                                        pessoa.nomeSimples = nomeSimples;
+                                    for (var indexTimeAtividade = 0; indexTimeAtividade < atividades.length; indexTimeAtividade++) {
+                                        row.tasks.push({
+                                            "name": atividades[indexTimeAtividade].nome,
+                                            "from": moment(atividades[indexTimeAtividade].inicio.$date),
+                                            "to": moment(atividades[indexTimeAtividade].fim.$date),
+                                            "color": "#F1C232",
+                                            "status": atividades[indexTimeAtividade].status
+                                        });
+                                    }
 
-                                        var row = {
-                                            "name": pessoa.nome,
-                                            "idpessoa": pessoa._id.$oid
-                                        };
+                                    var pQtdQuery = {
+                                        "administrador": idusuario,
+                                        "status": "Ativo",
+                                        "atividades.designado": pessoa._id.$oid
+                                    };
+                                    Projeto.query(pQtdQuery).then(function (projetos) {
+                                        for (var p = 0; p < projetos.length; p++) {
+                                            for (var at = 0; at < projetos[p].atividades.length; at++) {
+                                                if (projetos[p].atividades[at].designado === pessoa._id.$oid) {
 
-                                        var aQtdQuery = {
-                                            "time": {
-                                                "$in": listaTimes
-                                            },
-                                            "designado": pessoa._id.$oid
-                                        };
-                                        Atividade.query(aQtdQuery).then(function (atividades) {
-
-                                            row.tasks = [];
-
-                                            for (var indexTimeAtividade = 0; indexTimeAtividade < atividades.length; indexTimeAtividade++) {
-                                                row.tasks.push({
-                                                    "name": atividades[indexTimeAtividade].nome,
-                                                    "from": moment(atividades[indexTimeAtividade].inicio.$date),
-                                                    "to": moment(atividades[indexTimeAtividade].fim.$date),
-                                                    "color": "#F1C232",
-                                                    "status": atividades[indexTimeAtividade].status
-                                                });
+                                                    row.tasks.push({
+                                                        "name": projetos[p].atividades[at].nome,
+                                                        "from": moment(projetos[p].atividades[at].inicio.$date),
+                                                        "to": moment(projetos[p].atividades[at].fim.$date),
+                                                        "color": "#F1C232",
+                                                        "status": projetos[p].atividades[at].status
+                                                    });
+                                                }
                                             }
+                                        }
+                                        $scope.ganttData.push(row);
+                                    });
+                                });
 
-                                            var pQtdQuery = {
-                                                "administrador": idusuario,
-                                                "status": "Ativo",
-                                                "atividades.designado": pessoa._id.$oid
+                            });
+                        });
+
+                        $rootScope.showLoading = false;
+                    } else {
+                        var idusuario = $rootScope.usuarioLogado._id.$oid;
+                        var qTime = {
+                            "$or": [
+                                {"lider": idusuario},
+                                {"recursos": idusuario}
+                            ]
+                        };
+                        Time.query(qTime, {"sort": {"nome": 1}}).then(function (times) {
+
+                            if (times[0]) {
+                                var listaTimes = [];
+                                for (var i = 0; i < times.length; i++) {
+                                    listaTimes.push(times[i]._id.$oid);
+                                }
+
+                                var recursosTotais = [];
+                                for (var a = 0; a < times.length; a++) {
+                                    recursosTotais = recursosTotais.concat(times[a].recursos);
+                                }
+                                recursosTotais = $filter('unique')(recursosTotais);
+                                var promisses = [];
+                                var aPromisses = [];
+                                var listaAtividadesI = [];
+                                var listaAtividadesT = [];
+                                angular.forEach(recursosTotais, function (rec, idRec) {
+                                    promisses.push(Pessoa.getById(rec).then(function (pessoa) {
+                                        if (pessoa && (pessoa.cadastrado === idusuario || pessoa._id.$oid === idusuario)) {
+
+                                            var nomes = pessoa.nome.split(" ");
+                                            var iniciais = nomes[0].substring(0, 1);
+                                            var nomeSimples = nomes[0];
+                                            if (nomes.length > 1) {
+                                                iniciais += nomes[1].substring(0, 1);
+                                            }
+                                            pessoa.iniciais = iniciais.toUpperCase();
+                                            pessoa.nomeSimples = nomeSimples;
+
+                                            var row = {
+                                                "name": pessoa.nome,
+                                                "idpessoa": pessoa._id.$oid
                                             };
-                                            Projeto.query(pQtdQuery).then(function (projetos) {
-                                                for (var p = 0; p < projetos.length; p++) {
-                                                    for (var at = 0; at < projetos[p].atividades.length; at++) {
-                                                        if (projetos[p].atividades[at].designado === pessoa._id.$oid) {
 
-                                                            row.tasks.push({
-                                                                "name": projetos[p].atividades[at].nome,
-                                                                "from": moment(projetos[p].atividades[at].inicio.$date),
-                                                                "to": moment(projetos[p].atividades[at].fim.$date),
-                                                                "color": "#F1C232",
-                                                                "status": projetos[p].atividades[at].status
-                                                            });
+                                            var aQtdQuery = {
+                                                "time": {
+                                                    "$in": listaTimes
+                                                },
+                                                "designado": pessoa._id.$oid
+                                            };
+                                            Atividade.query(aQtdQuery).then(function (atividades) {
+
+                                                row.tasks = [];
+
+                                                for (var indexTimeAtividade = 0; indexTimeAtividade < atividades.length; indexTimeAtividade++) {
+                                                    row.tasks.push({
+                                                        "name": atividades[indexTimeAtividade].nome,
+                                                        "from": moment(atividades[indexTimeAtividade].inicio.$date),
+                                                        "to": moment(atividades[indexTimeAtividade].fim.$date),
+                                                        "color": "#F1C232",
+                                                        "status": atividades[indexTimeAtividade].status
+                                                    });
+                                                }
+
+                                                var pQtdQuery = {
+                                                    "administrador": idusuario,
+                                                    "status": "Ativo",
+                                                    "atividades.designado": pessoa._id.$oid
+                                                };
+                                                Projeto.query(pQtdQuery).then(function (projetos) {
+                                                    for (var p = 0; p < projetos.length; p++) {
+                                                        for (var at = 0; at < projetos[p].atividades.length; at++) {
+                                                            if (projetos[p].atividades[at].designado === pessoa._id.$oid) {
+
+                                                                row.tasks.push({
+                                                                    "name": projetos[p].atividades[at].nome,
+                                                                    "from": moment(projetos[p].atividades[at].inicio.$date),
+                                                                    "to": moment(projetos[p].atividades[at].fim.$date),
+                                                                    "color": "#F1C232",
+                                                                    "status": projetos[p].atividades[at].status
+                                                                });
+                                                            }
                                                         }
                                                     }
-                                                }
-                                                $scope.ganttData.push(row);
+                                                    $scope.ganttData.push(row);
+                                                });
                                             });
-                                        });
-                                        //tabelas iniciando e terminando.
+                                            //tabelas iniciando e terminando.
 
-                                        var aIniciandoQuery = {
-                                            "time": {
-                                                "$in": listaTimes
-                                            },
-                                            "designado": pessoa._id.$oid,
-                                            "inicio" : {
-                                                "$gte" : {
-                                                    "$date": dataTerminando.toDate()
-
+                                            var aIniciandoQuery = {
+                                                "time": {
+                                                    "$in": listaTimes
                                                 },
-                                                "$lte": {
-                                                    "$date": dataIniciando.toDate()
+                                                "designado": pessoa._id.$oid,
+                                                "inicio": {
+                                                    "$gte": {
+                                                        "$date": dataTerminando.toDate()
+
+                                                    },
+                                                    "$lte": {
+                                                        "$date": dataIniciando.toDate()
+                                                    }
                                                 }
-                                            }
-                                        };
+                                            };
 
-                                        aPromisses.push(Atividade.query(aIniciandoQuery).then(function (atividades) {
-                                            if(atividades.length > 0) {
-                                                angular.forEach(atividades, function (atividade, idAtividade) {
-                                                    var time = $filter('filter')(times, {"_id" : {"$oid" : atividade.time}});
-                                                    var nomeTime = "";
-                                                    if(time && time.length > 0) {
-                                                        nomeTime = time[0].nome + " / ";
-                                                    }
-                                                    atividade.timeObj = time[0];
-                                                    if(atividade.status === "aguardando" || atividade.status === "iniciada") {
-                                                        listaAtividadesI.push({
-                                                            "nome": nomeTime + atividade.nome,
-                                                            "inicio": atividade.inicio,
-                                                            "duracao": atividade.duracao,
-                                                            "notas": atividade.notas,
-                                                            "fim": atividade.fim,
-                                                            "pessoaRecurso": {
-                                                                "nome": pessoa.nome,
-                                                                "iniciais": pessoa.iniciais
-                                                            },
+                                            aPromisses.push(Atividade.query(aIniciandoQuery).then(function (atividades) {
+                                                if (atividades.length > 0) {
+                                                    angular.forEach(atividades, function (atividade, idAtividade) {
+                                                        var time = $filter('filter')(times, {"_id": {"$oid": atividade.time}});
+                                                        var nomeTime = "";
+                                                        if (time && time.length > 0) {
+                                                            nomeTime = time[0].nome + " / ";
+                                                        }
+                                                        atividade.timeObj = time[0];
+                                                        if (atividade.status === "aguardando" || atividade.status === "iniciada") {
+                                                            listaAtividadesI.push({
+                                                                "nome": nomeTime + atividade.nome,
+                                                                "inicio": atividade.inicio,
+                                                                "duracao": atividade.duracao,
+                                                                "notas": atividade.notas,
+                                                                "fim": atividade.fim,
+                                                                "pessoaRecurso": {
+                                                                    "nome": pessoa.nome,
+                                                                    "iniciais": pessoa.iniciais
+                                                                },
 
-                                                            "atividadeObj": atividade,
-                                                            "timeObj": time[0]
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        }));
-                                        var aTerminandoQuery = {
-                                            "time": {
-                                                "$in": listaTimes
-                                            },
-                                            "designado": pessoa._id.$oid,
-                                            "fim" : {
-                                                "$gte" : {
-                                                    "$date": dataTerminando.toDate()
-
+                                                                "atividadeObj": atividade,
+                                                                "timeObj": time[0]
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }));
+                                            var aTerminandoQuery = {
+                                                "time": {
+                                                    "$in": listaTimes
                                                 },
-                                                "$lte": {
-                                                    "$date": dataIniciando.toDate()
+                                                "designado": pessoa._id.$oid,
+                                                "fim": {
+                                                    "$gte": {
+                                                        "$date": dataTerminando.toDate()
+
+                                                    },
+                                                    "$lte": {
+                                                        "$date": dataIniciando.toDate()
+                                                    }
                                                 }
-                                            }
-                                        };
-                                        aPromisses.push(Atividade.query(aTerminandoQuery).then(function (atividades) {
-                                            if(atividades.length > 0) {
-                                                angular.forEach(atividades, function (atividade, idAtividade) {
-                                                    var time = $filter('filter')(times, {"_id" : {"$oid" : atividade.time}});
-                                                    var nomeTime = "";
-                                                    if(time && time.length > 0) {
-                                                        nomeTime = time[0].nome + " / ";
-                                                    }
-                                                    atividade.timeObj = time[0];
-                                                    if(atividade.status === "aguardando" || atividade.status === "iniciada") {
-                                                        listaAtividadesT.push({
-                                                            "nome": nomeTime + atividade.nome,
-                                                            "fim": atividade.fim,
-                                                            "duracao": atividade.duracao,
-                                                            "inicio": atividade.inicio,
-                                                            "notas": atividade.notas,
-                                                            "pessoaRecurso": {
-                                                                "nome": pessoa.nome,
-                                                                "iniciais": pessoa.iniciais
-                                                            },
+                                            };
+                                            aPromisses.push(Atividade.query(aTerminandoQuery).then(function (atividades) {
+                                                if (atividades.length > 0) {
+                                                    angular.forEach(atividades, function (atividade, idAtividade) {
+                                                        var time = $filter('filter')(times, {"_id": {"$oid": atividade.time}});
+                                                        var nomeTime = "";
+                                                        if (time && time.length > 0) {
+                                                            nomeTime = time[0].nome + " / ";
+                                                        }
+                                                        atividade.timeObj = time[0];
+                                                        if (atividade.status === "aguardando" || atividade.status === "iniciada") {
+                                                            listaAtividadesT.push({
+                                                                "nome": nomeTime + atividade.nome,
+                                                                "fim": atividade.fim,
+                                                                "duracao": atividade.duracao,
+                                                                "inicio": atividade.inicio,
+                                                                "notas": atividade.notas,
+                                                                "pessoaRecurso": {
+                                                                    "nome": pessoa.nome,
+                                                                    "iniciais": pessoa.iniciais
+                                                                },
 
-                                                            "atividadeObj": atividade,
-                                                            "timeObj": time[0]
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        }));
+                                                                "atividadeObj": atividade,
+                                                                "timeObj": time[0]
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }));
 
-                                    }
-                                }, function (response) {
-                                    //error
-                                }));
-                            });
-
-                            $q.all(promisses).then(function () {
-                                $rootScope.showLoading = false;
-                                $q.all(aPromisses).then(function () {
-                                    $scope.listaAtividadesIniciando = listaAtividadesI;
-                                    $scope.listaAtividadesTerminando = listaAtividadesT;
+                                        }
+                                    }, function (response) {
+                                        //error
+                                    }));
                                 });
-                            });
-                        }
-                    });
+
+                                $q.all(promisses).then(function () {
+                                    $rootScope.showLoading = false;
+                                    $q.all(aPromisses).then(function () {
+                                        $scope.listaAtividadesIniciando = listaAtividadesI;
+                                        $scope.listaAtividadesTerminando = listaAtividadesT;
+                                    });
+                                });
+                            }
+                        });
+                    }
                 }
             }
 

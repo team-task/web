@@ -16,8 +16,11 @@ angular.module('team-task')
                             "cadastrado": logado._id.$oid
                         };
                         Pessoa.query(gQuery).then(function (pessoa) {
+                            pessoas[0].subordinados = [];
                             if(pessoa[0]) {
-                                pessoas[0].subordinado = pessoa[0]._id.$oid;
+                                for (var a = 0; a < pessoa.length; a++) {
+                                    pessoas[0].subordinados.push(pessoa[a]._id.$oid);
+                                }
                             }
                             finalizeLogin(logado, pessoas);
                         });
