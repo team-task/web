@@ -182,6 +182,8 @@ angular.module('team-task')
                                 $scope.filterChange();
                                 $rootScope.showLoading = false;
                             });
+                        } else {
+                            $rootScope.showLoading = false;
                         }
                     });
                 }

@@ -273,6 +273,8 @@ angular.module('team-task')
                                         $scope.listaAtividadesTerminando = listaAtividadesT;
                                     });
                                 });
+                            } else {
+                                $rootScope.showLoading = false;
                             }
                         });
                     }

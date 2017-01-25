@@ -197,6 +197,8 @@ angular.module('team-task')
 
                                         $scope.timesMenu = times;
                                         $scope.menuAtividadesLoading = false;
+                                    } else {
+                                        $scope.menuAtividadesLoading = false;
                                     }
                                 });
                             }
