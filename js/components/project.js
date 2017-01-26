@@ -29,15 +29,43 @@ angular.module('team-task')
                     "taskContent": '<span></span>',
                     "daily": true,
                     "sortMode": ["model.atividade.nomeTime"],
+                    "resize": false,
+                    "movable": false,
                     "contents": {
                         'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>'
                     },
                     "filtertask": ["aguardando", "iniciada", "concluída"],
                     api: function (api) {
                         $scope.api = api;
+                        api.core.on.ready($scope, function() {
+                            if (api.tasks.on.moveBegin) {
+                                api.tasks.on.moveEnd($scope, addEventName('tasks.on.moveEnd', atualizaAtividadeProjeto));
+                                api.tasks.on.resizeEnd($scope, addEventName('tasks.on.resizeEnd', atualizaAtividadeProjeto));
+                            }
+                        });
                     }
                 };
                 loadProject();
+            };
+
+            var atualizaAtividadeProjeto = function(eventName, task) {
+
+                console.log(task);
+
+                /*
+                task.row.model.recurso.ocupacao[task.model.ind].inicio.$date = task.model.from.toDate();
+                task.row.model.recurso.ocupacao[task.model.ind].fim.$date = task.model.to.toDate();
+
+                task.row.model.recurso.$saveOrUpdate().then(function(){
+                    console.log("funfa mesmo");
+                });
+                */
+            };
+
+            var addEventName = function(eventName, func) {
+                return function(data) {
+                    return func(eventName, data);
+                };
             };
 
             $scope.getHeader = function () {
@@ -150,6 +178,10 @@ angular.module('team-task')
                                 }
                             }
                             if(projeto.administrador === $rootScope.usuarioLogado._id.$oid) {
+                                //por enquanto
+                                $scope.ganttOptions.resize = false;
+                                $scope.ganttOptions.movable = false;
+
                                 $scope.ganttOptions.contents = {
                                     'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
                                     '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +

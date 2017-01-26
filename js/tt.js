@@ -3,6 +3,7 @@ angular.module('team-task', [
     'datatables', 'datatables.buttons', 'datatables.bootstrap',
     'ngAnimate', 'ngExcel',
     'gantt', 'gantt.table', 'gantt.tooltips', 'gantt.overlap', 'gantt.dependencies', 'gantt.progress',
+    'gantt.movable', 'gantt.resizeSensor',
     'checklist-model', 'ngSanitize', 'ngCsv', 'angular-md5'
 ])
     .constant('MONGOLAB_CONFIG', {API_KEY: 'YXgR-q92vuVCKlSm-ji3nplDTE7rHIQh', DB_NAME: 'tt'})
