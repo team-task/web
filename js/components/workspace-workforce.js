@@ -384,6 +384,20 @@ angular.module('team-task')
                     "sortMode": "model.name",
                     "daily": true,
                     "taskContent": '<span></span>',
+                    "timeFrames": {
+                        closed: {
+                            magnet: false, // This will disable magnet snapping
+                            working: false // We don't work when it's closed
+                        }
+                    },
+                    "dateFrames": {
+                        weekend: {
+                            evaluator: function(date) {
+                                return date.isoWeekday() === 6 || date.isoWeekday() === 7;
+                            },
+                            targets: ['closed']
+                        }
+                    },
                     "contents": {
                         'model.name': '<a ui-sref="workspace.workforce({\'id\': row.model.idpessoa})">{{getValue()}}</a>'
                     },

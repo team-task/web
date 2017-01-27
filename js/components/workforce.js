@@ -252,6 +252,20 @@ angular.module('team-task')
                     "daily": true,
                     "sortMode": ["model.time.nome", "model.projeto.nome", "from"],
                     "taskContent": '<span></span>',
+                    "timeFrames": {
+                        closed: {
+                            magnet: false, // This will disable magnet snapping
+                            working: false // We don't work when it's closed
+                        }
+                    },
+                    "dateFrames": {
+                        weekend: {
+                            evaluator: function(date) {
+                                return date.isoWeekday() === 6 || date.isoWeekday() === 7;
+                            },
+                            targets: ['closed']
+                        }
+                    },
                     "fromDate": undefined,
                     "toDate": undefined,
                     "contents": {

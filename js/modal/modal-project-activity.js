@@ -148,7 +148,7 @@ angular.module('team-task')
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     waitingDialog.hide();
-                    $scope.$close(true);
+                    $scope.$close("novo");
                 });
             }
         };
@@ -441,7 +441,7 @@ angular.module('team-task')
                 }
 
                 projetoSelecionado.$saveOrUpdate().then(function () {
-                    $scope.$close(true);
+                    $scope.$close("edicao");
                 });
             }
         };
@@ -506,7 +506,7 @@ angular.module('team-task')
             }
             projetoSelecionado.$saveOrUpdate().then(function () {
                 waitingDialog.hide();
-                $scope.$close(true);
+                $scope.$close("delete");
             });
         }
 

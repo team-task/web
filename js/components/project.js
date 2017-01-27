@@ -30,6 +30,20 @@ angular.module('team-task')
                     "daily": true,
                     "sortMode": ["model.atividade.nomeTime"],
                     "resize": false,
+                    "timeFrames": {
+                        closed: {
+                            magnet: false,
+                            working: false
+                        }
+                    },
+                    "dateFrames": {
+                        weekend: {
+                            evaluator: function(date) {
+                                return date.isoWeekday() === 6 || date.isoWeekday() === 7;
+                            },
+                            targets: ['closed']
+                        }
+                    },
                     "movable": false,
                     "contents": {
                         'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>'
@@ -50,7 +64,9 @@ angular.module('team-task')
 
             var atualizaAtividadeProjeto = function(eventName, task) {
 
-                console.log(task);
+                if(task) {
+                    console.log(task.row);
+                }
 
                 /*
                 task.row.model.recurso.ocupacao[task.model.ind].inicio.$date = task.model.from.toDate();
@@ -113,6 +129,13 @@ angular.module('team-task')
                     if (projeto) {
                         var prom = [];
                         prom.push(angular.forEach(projeto.atividades, function (atividade, idAtividade) {
+                            if (atividade.time) {
+                                Time.getById(atividade.time).then(function (time) {
+                                    if (time) {
+                                        atividade.nomeTime = time.nome;
+                                    }
+                                });
+                            }
                             if (atividade.designado) {
                                 Pessoa.getById(atividade.designado).then(function (pessoa) {
                                     if (pessoa) {
@@ -127,13 +150,6 @@ angular.module('team-task')
 
                                         atividade.pessoaDesignado = pessoa;
                                         atividade.nomeDesignado = pessoa.nome;
-                                    }
-                                });
-                            }
-                            if (atividade.time) {
-                                Time.getById(atividade.time).then(function (time) {
-                                    if (time) {
-                                        atividade.nomeTime = time.nome;
                                     }
                                 });
                             }
@@ -178,9 +194,9 @@ angular.module('team-task')
                                 }
                             }
                             if(projeto.administrador === $rootScope.usuarioLogado._id.$oid) {
-                                //por enquanto
-                                $scope.ganttOptions.resize = false;
-                                $scope.ganttOptions.movable = false;
+
+                                $scope.ganttOptions.resize = true;
+                                $scope.ganttOptions.movable = true;
 
                                 $scope.ganttOptions.contents = {
                                     'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
@@ -195,6 +211,31 @@ angular.module('team-task')
                         });
                     }
                 });
+            }
+
+            function editGantt (indice) {
+                $rootScope.showLoading = true;
+                var atividade = $scope.projeto.atividades[indice];
+                for(var a = 0; a < $scope.ganttData.length; a++) {
+                    if($scope.ganttData[a].indiceAt === indice) {
+                        var statusColor = atividade.status.toLowerCase() === 'aguardando' ? '#5bc0de' :
+                            atividade.status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
+                        $scope.ganttData[a].name = atividade.nomeTime + " / " + atividade.nome;
+                        $scope.ganttData[a].atividade = atividade.nome;
+                        $scope.ganttData[a].tasks[0].id = $scope.projeto.nome + " / " + atividade.nome;
+                        $scope.ganttData[a].tasks[0].name = atividade.nome;
+                        $scope.ganttData[a].tasks[0].from = moment(atividade.inicio.$date);
+                        $scope.ganttData[a].tasks[0].to = moment(atividade.fim.$date);
+                        $scope.ganttData[a].tasks[0].color = statusColor;
+                        $scope.ganttData[a].tasks[0].status = atividade.status;
+                        var listDep = [];
+                        if (atividade.predecessora) {
+                            listDep.push({"from": atividade.predecessora.nomeComposto});
+                        }
+                        $scope.ganttData[a].tasks[0].dependencies = listDep;
+                    }
+                }
+                $rootScope.showLoading = false;
             }
 
             $scope.copiarAtividade = function (indice) {
@@ -212,7 +253,6 @@ angular.module('team-task')
                         }
                     }).result.then(function () {
                         loadProject();
-                        $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
             };
@@ -232,7 +272,6 @@ angular.module('team-task')
                         }
                     }).result.then(function () {
                         loadProject();
-                        $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
             };
@@ -250,9 +289,13 @@ angular.module('team-task')
                                 return indice;
                             }
                         }
-                    }).result.then(function () {
-                        loadProject();
-                        $rootScope.$emit("CallLoadMenus", {});
+                    }).result.then(function (acao) {
+                        //loadProject();
+                        if(acao === "edicao") {
+                            editGantt(indice);
+                        } else {
+                            loadProject();
+                        }
                     }, function () {
                     });
             };
@@ -269,7 +312,6 @@ angular.module('team-task')
                         }
                     }).result.then(function () {
                         loadProject();
-                        $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
                     });
             };
@@ -307,9 +349,12 @@ angular.module('team-task')
                                     return model.indiceAt;
                                 }
                             }
-                        }).result.then(function () {
-                            loadProject();
-                            $rootScope.$emit("CallLoadMenus", {});
+                        }).result.then(function (acao) {
+                            if(acao === "edicao") {
+                                editGantt(model.indiceAt);
+                            } else {
+                                loadProject();
+                            }
                         }, function () {
                         });
                 }
