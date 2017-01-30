@@ -64,8 +64,7 @@
                             <td>Até</td>
                             <td>Status</td>
                             <td>Alerta</td>
-                            <td>Notas</td>
-                            <td>Descrição</td>
+                            <td><i class="fa fa-plus"></i>&nbsp;Infos</td>
                             <td>Atividades</td>
                         </tr>
                         </thead>
@@ -88,14 +87,25 @@
                                 </span>
                             </td>
                             <td>
-                                <a ng-show="projeto.notas !== ''" ng-click="mostrarNotas(projeto);" class="pointer-action">
-                                    Mostrar Notas
-                                </a>
-                            </td>
-                            <td>
-                                <a ng-show="projeto.descricao !== ''" ng-click="mostrarDescricao(projeto);" class="pointer-action">
-                                    Mostrar Descrição
-                                </a>
+                                <div>
+                                    <span data-toggle="dropdown" id="dropdownExtra1">
+                                        <i class="fa fa-ellipsis-h"></i>
+                                    </span>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownExtra1">
+                                        <li>
+                                            <a ng-show="projeto.descricao !== ''"
+                                               ng-click="mostrarDescricao(projeto);" class="pointer-action">
+                                                Descrição
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-show="projeto.notas !== ''"
+                                               ng-click="mostrarNotas(projeto);" class="pointer-action">
+                                                Notas
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                             <td>{{projeto.atividades.length}}</td>
                         </tr>

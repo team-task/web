@@ -123,7 +123,7 @@
                     </tbody>
                 </table>
             </uib-tab>
-            <uib-tab index="1" heading="Gannt" ng-click="ganntClick();">
+            <uib-tab index="1" heading="Gannt">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div gantt
@@ -136,13 +136,16 @@
                              task-content="ganttOptions.taskContent"
                              filter-task="filterFunctionGantt"
                              time-frames="ganttOptions.timeFrames"
-                             date-frames="ganttOptions.dateFrames">
+                             date-frames="ganttOptions.dateFrames"
+                             js-plumb-defaults="ganttOptions.jsPlumbDefaults">
                             <gantt-table headers="ganttOptions.tableHeaders"
                                          contents="ganttOptions.contents"></gantt-table>
                             <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
                             <gantt-progress enabled="true"></gantt-progress>
                             <gantt-resize-sensor enabled="ganttOptions.resize"></gantt-resize-sensor>
                             <gantt-movable enabled="ganttOptions.movable" allow-row-switching="false"></gantt-movable>
+                            <gantt-dependencies enabled="ganttOptions.dependencies.enabled">
+                            </gantt-dependencies>
                         </div>
                     </div>
                     <div class="panel-footer">

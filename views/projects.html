@@ -48,8 +48,7 @@
             <td>Até</td>
             <td>Status</td>
             <td>Alerta</td>
-            <td>Notas</td>
-            <td>Descrição</td>
+            <td>Infos</td>
             <td>Atividades</td>
         </tr>
         </thead>
@@ -74,14 +73,25 @@
                 </span>
             </td>
             <td>
-                <a ng-show="projeto.notas !== ''" ng-click="mostrarNotas(projeto);" class="pointer-action">
-                    Mostrar Notas
-                </a>
-            </td>
-            <td>
-                <a ng-show="projeto.descricao !== ''" ng-click="mostrarDescricao(projeto);" class="pointer-action">
-                    Mostrar Descrição
-                </a>
+                <div class="dropdown tt-dropdown">
+                    <a data-toggle="dropdown" id="dropdownExtra1">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownExtra1">
+                        <li>
+                            <a ng-show="projeto.descricao !== ''"
+                               ng-click="mostrarDescricao(projeto);" class="pointer-action">
+                                <i class="fa fa-file-text-o"></i>&nbsp;Descrição
+                            </a>
+                        </li>
+                        <li>
+                            <a ng-show="projeto.notas !== ''"
+                               ng-click="mostrarNotas(projeto);" class="pointer-action">
+                               <i class="fa fa-sticky-note-o"></i>&nbsp;Notas
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </td>
             <td>{{projeto.atividades.length}}</td>
         </tr>

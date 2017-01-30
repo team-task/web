@@ -10,12 +10,6 @@ angular.module('team-task')
 
             $scope.csvAtividades = [];
 
-            $scope.ganntClick = function () {
-                setTimeout(function () {
-                    $scope.api.rows.refresh();
-                }, 200);
-            };
-
             $scope.initWorkspaceProject = function () {
                 $scope.filtro = [true, true, true];
                 $scope.listaFiltro= ["aguardando", "iniciada", "concluída"];
@@ -30,6 +24,9 @@ angular.module('team-task')
                     "daily": true,
                     "sortMode": ["model.atividade.nomeTime"],
                     "resize": false,
+                    "dependencies": {
+                        "enabled": false
+                    },
                     "timeFrames": {
                         closed: {
                             magnet: false,
@@ -65,7 +62,58 @@ angular.module('team-task')
             var atualizaAtividadeProjeto = function(eventName, task) {
 
                 if(task) {
-                    console.log(task.row);
+                    //console.log(task.row);
+
+                    if($scope.projeto.atividades.length) {
+
+                        var atividade = $scope.projeto.atividades[task.row.model.indiceAt];
+                        atividade.inicio.$date = task.model.from.toDate();
+                        atividade.fim.$date = task.model.to.toDate();
+
+                        if(moment(atividade.inicio.$date).isoWeekday() === 6) {
+                            atividade.inicio.$date = moment(atividade.inicio.$date).subtract(1, 'd').toDate();
+                            task.model.from = moment(atividade.inicio.$date);
+                        }
+                        if(moment(atividade.inicio.$date).isoWeekday() === 7) {
+                            atividade.inicio.$date = moment(atividade.inicio.$date).add(1, 'd').toDate();
+                            task.model.from = moment(atividade.inicio.$date);
+                        }
+                        if(moment(atividade.fim.$date).isoWeekday() === 6) {
+                            atividade.fim.$date = moment(atividade.fim.$date).subtract(1, 'd').toDate();
+                            task.model.to = moment(atividade.fim.$date);
+                        }
+                        if(moment(atividade.fim.$date).isoWeekday() === 7) {
+                            atividade.fim.$date = (moment(atividade.fim.$date).add(1, 'd')).toDate();
+                            task.model.to = moment(atividade.fim.$date);
+                        }
+                        atividade.duracao = Math.floor(moment(atividade.fim.$date).businessDiff(moment(atividade.inicio.$date), 'days'));
+
+                        var menorDataInicio = null;
+                        var maiorDataFim = null;
+                        for (var i = 0; i < $scope.projeto.atividades.length; i++) {
+                            if (!menorDataInicio) {
+                                menorDataInicio = $scope.projeto.atividades[i].inicio.$date;
+                            } else {
+                                if (moment(menorDataInicio).isAfter(moment($scope.projeto.atividades[i].inicio.$date))) {
+                                    menorDataInicio = $scope.projeto.atividades[i].inicio.$date;
+                                }
+                            }
+                            if (!maiorDataFim) {
+                                maiorDataFim = $scope.projeto.atividades[i].fim.$date;
+                            } else {
+                                if (moment(maiorDataFim).isBefore(moment($scope.projeto.atividades[i].fim.$date))) {
+                                    maiorDataFim = $scope.projeto.atividades[i].fim.$date;
+                                }
+                            }
+                        }
+                        $scope.projeto.inicio = {"$date": menorDataInicio};
+                        $scope.projeto.fim = {"$date": maiorDataFim};
+                        $scope.projeto.duracao = Math.floor(moment($scope.projeto.fim.$date).businessDiff(moment($scope.projeto.inicio.$date), 'days')) + 1;
+                        $rootScope.showLoading = true;
+                        $scope.projeto.$saveOrUpdate().then(function () {
+                            $rootScope.showLoading = false;
+                        });
+                    }
                 }
 
                 /*
@@ -197,6 +245,7 @@ angular.module('team-task')
 
                                 $scope.ganttOptions.resize = true;
                                 $scope.ganttOptions.movable = true;
+                                $scope.ganttOptions.dependencies.enabled = true;
 
                                 $scope.ganttOptions.contents = {
                                     'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
