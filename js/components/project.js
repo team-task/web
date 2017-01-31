@@ -1,8 +1,8 @@
 angular.module('team-task')
     .controller('ProjectController', ['$scope', '$rootScope', 'Projeto', 'Atividade', 'Time',
-        'DTOptionsBuilder', '$q', '$uibModal', '$stateParams', 'Pessoa', '$state',
+        'DTOptionsBuilder', '$q', '$uibModal', '$stateParams', 'Pessoa', '$state', 'md5',
         function ($scope, $rootScope, Projeto, Atividade, Time, DTOptionsBuilder, $q, $uibModal,
-                  $stateParams, Pessoa, $state) {
+                  $stateParams, Pessoa, $state, md5) {
             $rootScope.showLoading = false;
             $scope.dtOptions = DTOptionsBuilder.newOptions();
             $scope.dtOptions.withOption('order', [[3, "asc"]]);
@@ -43,15 +43,22 @@ angular.module('team-task')
                     },
                     "movable": false,
                     "contents": {
-                        'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>'
+                        'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" ' +
+                        'class="pointer-action">{{getValue()}}</a>'
                     },
                     "filtertask": ["aguardando", "iniciada", "concluída"],
                     api: function (api) {
                         $scope.api = api;
                         api.core.on.ready($scope, function() {
                             if (api.tasks.on.moveBegin) {
-                                api.tasks.on.moveEnd($scope, addEventName('tasks.on.moveEnd', atualizaAtividadeProjeto));
-                                api.tasks.on.resizeEnd($scope, addEventName('tasks.on.resizeEnd', atualizaAtividadeProjeto));
+                                api.tasks.on.moveEnd($scope,
+                                    addEventName('tasks.on.moveEnd', atualizaAtividadeProjeto));
+                                api.tasks.on.resizeEnd($scope,
+                                    addEventName('tasks.on.resizeEnd', atualizaAtividadeProjeto));
+                                api.dependencies.on.add($scope,
+                                    addEventName('dependencies.on.add', adicionaDependenciaAtividadeProjeto));
+                                api.dependencies.on.remove($scope,
+                                    addEventName('dependencies.on.remove', removeDependenciaAtividadeProjeto));
                             }
                         });
                     }
@@ -59,6 +66,31 @@ angular.module('team-task')
                 loadProject();
             };
 
+            var adicionaDependenciaAtividadeProjeto = function (eventName, dependency) {
+                if(dependency && dependency.getToTask().model) {
+                    var atividadePara = dependency.getToTask().model;
+                    var atividadeDe = dependency.task.model;
+                    if(atividadePara) {
+                        if (atividadePara.from.isSameOrBefore(atividadeDe.to)) {
+                            atividadePara.from = atividadeDe.to.businessAdd(1);
+                            var addDuracao = atividadePara.atividadeObj.duracao;
+                            atividadePara.to = moment(atividadePara.from.businessAdd(addDuracao));
+                        }
+                        atividadePara.atividadeObj.predecessora = {
+                            "id": dependency.getFromTaskId()
+                        };
+                    }
+                    atualizaAtividadeProjeto('dependencies.on.add', dependency.task);
+                }
+            };
+
+            var removeDependenciaAtividadeProjeto = function (eventName, dependency) {
+                if(dependency) {
+                    console.log(dependency);
+                    console.log("exclui");
+                }
+            };
+            
             var atualizaAtividadeProjeto = function(eventName, task) {
 
                 if(task) {
@@ -86,7 +118,8 @@ angular.module('team-task')
                             atividade.fim.$date = (moment(atividade.fim.$date).add(1, 'd')).toDate();
                             task.model.to = moment(atividade.fim.$date);
                         }
-                        atividade.duracao = Math.floor(moment(atividade.fim.$date).businessDiff(moment(atividade.inicio.$date), 'days'));
+                        atividade.duracao =
+                            Math.floor(moment(atividade.fim.$date).businessDiff(moment(atividade.inicio.$date), 'days'));
 
                         var menorDataInicio = null;
                         var maiorDataFim = null;
@@ -108,7 +141,8 @@ angular.module('team-task')
                         }
                         $scope.projeto.inicio = {"$date": menorDataInicio};
                         $scope.projeto.fim = {"$date": maiorDataFim};
-                        $scope.projeto.duracao = Math.floor(moment($scope.projeto.fim.$date).businessDiff(moment($scope.projeto.inicio.$date), 'days')) + 1;
+                        $scope.projeto.duracao =
+                            Math.floor(moment($scope.projeto.fim.$date).businessDiff(moment($scope.projeto.inicio.$date), 'days')) + 1;
                         $rootScope.showLoading = true;
                         $scope.projeto.$saveOrUpdate().then(function () {
                             $rootScope.showLoading = false;
@@ -223,19 +257,20 @@ angular.module('team-task')
                                     rowPr.tasks = [];
                                     var listDep = [];
                                     if (atividade.predecessora) {
-                                        listDep.push({"from": atividade.predecessora.nomeComposto});
+                                        listDep.push({"from": atividade.predecessora.id});
                                     }
 
                                     var statusColor = atividade.status.toLowerCase() === 'aguardando' ? '#5bc0de' :
                                         atividade.status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
 
                                     rowPr.tasks.push({
-                                        "id": projeto.nome + " / " + atividade.nome,
+                                        "id": atividade.id,
                                         "name": atividade.nome,
                                         "from": moment(atividade.inicio.$date),
                                         "to": moment(atividade.fim.$date),
                                         "color": statusColor,
                                         "status": atividade.status,
+                                        "atividadeObj": atividade,
                                         "dependencies": listDep
                                     });
                                     $scope.ganttData.push(rowPr);
@@ -248,7 +283,8 @@ angular.module('team-task')
                                 $scope.ganttOptions.dependencies.enabled = true;
 
                                 $scope.ganttOptions.contents = {
-                                    'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" class="pointer-action">{{getValue()}}</a>' +
+                                    'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" ' +
+                                    'class="pointer-action">{{getValue()}}</a>' +
                                     '&nbsp;<span class="pointer-action fa fa-pencil-square-o"' +
                                     'ng-click="scope.editarAtividadeGantt(row.model)">' +
                                     '</span>'
@@ -271,7 +307,7 @@ angular.module('team-task')
                             atividade.status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
                         $scope.ganttData[a].name = atividade.nomeTime + " / " + atividade.nome;
                         $scope.ganttData[a].atividade = atividade.nome;
-                        $scope.ganttData[a].tasks[0].id = $scope.projeto.nome + " / " + atividade.nome;
+                        $scope.ganttData[a].tasks[0].id = atividade.id;
                         $scope.ganttData[a].tasks[0].name = atividade.nome;
                         $scope.ganttData[a].tasks[0].from = moment(atividade.inicio.$date);
                         $scope.ganttData[a].tasks[0].to = moment(atividade.fim.$date);
@@ -279,7 +315,7 @@ angular.module('team-task')
                         $scope.ganttData[a].tasks[0].status = atividade.status;
                         var listDep = [];
                         if (atividade.predecessora) {
-                            listDep.push({"from": atividade.predecessora.nomeComposto});
+                            listDep.push({"from": atividade.predecessora.id});
                         }
                         $scope.ganttData[a].tasks[0].dependencies = listDep;
                     }

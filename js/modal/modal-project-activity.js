@@ -114,7 +114,6 @@ angular.module('team-task')
                     if (projetoSelecionado.inicio) {
                         projetoSelecionado.inicio.$date = inicioAtividade;
                     } else {
-
                         projetoSelecionado.inicio = {
                             "$date": inicioAtividade
                         }
@@ -137,6 +136,8 @@ angular.module('team-task')
 
                 $scope.atividadeNova.atividadeId =
                     md5.createHash(projetoSelecionado.nome + $scope.atividadeNova.nome + $scope.atividadeNova.time);
+                $scope.atividadeNova.id =
+                    md5.createHash(projetoSelecionado.nome + $scope.atividadeNova.nome + projetoSelecionado.atividades.length);
                 if (projetoSelecionado.atividades) {
                     projetoSelecionado.atividades.push($scope.atividadeNova);
                 } else {
@@ -224,7 +225,7 @@ angular.module('team-task')
 angular.module('team-task')
     .controller('ModalEditActivityController',
     function ($scope, $rootScope, projetoSelecionado, indice, $state, Time, Pessoa, Atividade, Projeto,
-              $uibModal, $filter, $q) {
+              $uibModal, $filter, $q, md5) {
         $scope.projeto = {};
         $scope.indice = 0;
         $scope.listaRecursos = [];
@@ -234,9 +235,11 @@ angular.module('team-task')
         $scope.initModalEditActivity = function () {
             $scope.indice = indice;
             $scope.listaTimes = [];
+            /*
             if(!projetoSelecionado.atividades[indice].predecessora) {
                 projetoSelecionado.atividades[indice].predecessora = null;
             }
+            */
             if (projetoSelecionado.atividades[indice].inicio.$date) {
                 projetoSelecionado.atividades[indice].inicio.$date =
                     moment(projetoSelecionado.atividades[indice].inicio.$date).toDate();
@@ -256,12 +259,15 @@ angular.module('team-task')
                 }
             });
 
+            /*
             if(projetoSelecionado.atividades[indice].designado) {
                 carregaListaPredecessoras (projetoSelecionado.atividades[indice].designado);
             }
+            */
 
         };
 
+        /*
         function carregaListaPredecessoras (idPessoa) {
             $scope.showPredecessorLoading = true;
             $scope.atividadesPossiveis = [];
@@ -271,6 +277,7 @@ angular.module('team-task')
             promisses.push(Atividade.query(aQuery).then(function (atividades) {
                 for (var i = 0; i < atividades.length; i++) {
                     var predecessora = {
+                        "id": atividades[i]._id.$oid,
                         "nome": atividades[i].nome,
                         "inicio": atividades[i].inicio.$date,
                         "fim": atividades[i].fim.$date,
@@ -300,6 +307,7 @@ angular.module('team-task')
                         if(projetos[j].atividades[a].designado === idPessoa) {
                             var predecessora = {
                                 "nome": projetos[j].atividades[a].nome,
+                                "id": projetos[j].atividades[a].id,
                                 "nomeComposto": projetos[j].nome + " / " + projetos[j].atividades[a].nome,
                                 "inicio": projetos[j].atividades[a].inicio.$date,
                                 "fim": projetos[j].atividades[a].fim.$date,
@@ -326,7 +334,9 @@ angular.module('team-task')
                 $scope.showPredecessorLoading = false;
             });
         }
+        */
 
+        /*
         $scope.recalcularInicio = function () {
             if($scope.projeto.atividades[$scope.indice].predecessora) {
                 if($scope.projeto.atividades[$scope.indice].predecessora.fim) {
@@ -337,6 +347,7 @@ angular.module('team-task')
             }
 
         };
+        */
 
         $scope.calculaFim = function () {
             if ($scope.projeto.atividades[$scope.indice].duracao !== 0 && $scope.projeto.atividades[$scope.indice].inicio.$date) {

@@ -27,7 +27,7 @@ angular.module('team-task')
                     var element;
                     var contem = false;
                     for (element = e.target; element; element = element.parentNode) {
-                        if(element.className) {
+                        if(element.className && element.className.contains) {
                             if (element.className.contains("tt-search-listbox") || element.className.contains("tt-search-btn")) {
                                 contem = true;
                             }
@@ -40,10 +40,13 @@ angular.module('team-task')
                     }
                 }
             },
-            controller: ['$scope', '$rootScope', '$uibModal', 'SearchFactory', '$document',
-                function ($scope, $rootScope, $uibModal, SearchFactory, $document) {
+            controller: ['$scope', '$rootScope', '$uibModal', 'SearchFactory', '$document', 'idFactory',
+                function ($scope, $rootScope, $uibModal, SearchFactory, $document, idFactory) {
                     $scope.textSearch = "";
                     $scope.searchDisplay = "nodisplay";
+                    $scope.refactoryIdActivity = function () {
+                        idFactory.refactoryIdActivity();
+                    };
                     $scope.searchAll = function () {
                         if ($scope.textSearch.length > 1) {
                             var text = $scope.textSearch.trim();

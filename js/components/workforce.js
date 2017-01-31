@@ -85,7 +85,7 @@ angular.module('team-task')
                                                     rowPr.tasks = [];
                                                     var listDep = [];
                                                     if(projetos[p].atividades[at].predecessora) {
-                                                        listDep.push({"from": projetos[p].atividades[at].predecessora.nomeComposto});
+                                                        listDep.push({"from": projetos[p].atividades[at].predecessora.id});
                                                     }
 
                                                     var statusColor =
@@ -93,7 +93,7 @@ angular.module('team-task')
                                                             projetos[p].atividades[at].status.toLowerCase() === 'iniciada' ? '#f0ad4e' : '#5cb85c';
 
                                                     rowPr.tasks.push({
-                                                        "id": projetos[p].nome + " / " + projetos[p].atividades[at].nome,
+                                                        "id": projetos[p].atividades[at].id,
                                                         "name": projetos[p].atividades[at].nome,
                                                         "from": moment(projetos[p].atividades[at].inicio.$date),
                                                         "to": moment(projetos[p].atividades[at].fim.$date),
