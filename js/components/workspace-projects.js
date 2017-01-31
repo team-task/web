@@ -106,7 +106,8 @@ angular.module('team-task')
                             moment($scope.listaProjetosRoot[i].fim.$date).format("DD/MM/YYYY")
                             : "";
                         var nota = $scope.listaProjetosRoot[i].notas;
-
+                        //repalce do \n por string de quebra do excel
+                        nota = nota.replace(/\n/g, "&#10;");
                         var linha = [
                             $scope.listaProjetosRoot[i].nome,
                             $scope.listaProjetosRoot[i].descricao,
