@@ -451,6 +451,31 @@ angular.module('team-task')
                     projetoSelecionado.atividades[indice].progresso = 100;
                 }
 
+                if(!projetoSelecionado.atividades[indice].designado) {
+                    delete projetoSelecionado.atividades[indice].pessoaDesignado;
+                    delete projetoSelecionado.atividades[indice].nomeDesignado;
+                } else {
+                    Pessoa.getById(projetoSelecionado.atividades[indice].designado).then(function (pessoa) {
+                        if (pessoa) {
+                            var pessoaCopy = {};
+                            pessoaCopy = angular.copy(pessoa, pessoaCopy);
+                            delete pessoaCopy.senha;
+                            delete pessoaCopy.usuario;
+                            var nomes = pessoaCopy.nome.split(" ");
+                            var iniciais = nomes[0].substring(0, 1);
+                            var nomeSimples = nomes[0];
+                            if (nomes.length > 1) {
+                                iniciais += nomes[1].substring(0, 1);
+                            }
+                            pessoaCopy.iniciais = iniciais.toUpperCase();
+                            pessoaCopy.nomeSimples = nomeSimples;
+
+                            projetoSelecionado.atividades[indice].pessoaDesignado = pessoaCopy;
+                            projetoSelecionado.atividades[indice].nomeDesignado = pessoaCopy.nome;
+                        }
+                    });
+                }
+
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     $scope.$close("edicao");
                 });

@@ -73,21 +73,24 @@ angular.module('team-task')
                     if(atividadePara) {
                         if (atividadePara.from.isSameOrBefore(atividadeDe.to)) {
                             atividadePara.from = atividadeDe.to.businessAdd(1);
+                            atividadePara.atividadeObj.inicio.$date = atividadePara.from.toDate();
                             var addDuracao = atividadePara.atividadeObj.duracao;
                             atividadePara.to = moment(atividadePara.from.businessAdd(addDuracao));
+                            atividadePara.atividadeObj.fim.$date = atividadePara.to.toDate();
                         }
                         atividadePara.atividadeObj.predecessora = {
                             "id": dependency.getFromTaskId()
                         };
+                        atualizaAtividadeProjeto('dependencies.on.add', dependency.task);
                     }
-                    atualizaAtividadeProjeto('dependencies.on.add', dependency.task);
                 }
             };
 
             var removeDependenciaAtividadeProjeto = function (eventName, dependency) {
-                if(dependency) {
-                    console.log(dependency);
-                    console.log("exclui");
+                if(dependency && dependency.getToTask().model) {
+                    var atividadePara = dependency.getToTask().model;
+                    atividadePara.atividadeObj.predecessora = null;
+                    atualizaAtividadeProjeto('dependencies.on.add', dependency.task);
                 }
             };
             
@@ -234,6 +237,9 @@ angular.module('team-task')
                                         atividade.nomeDesignado = pessoa.nome;
                                     }
                                 });
+                            } else {
+                                delete atividade.pessoaDesignado;
+                                delete atividade.nomeDesignado;
                             }
                             $scope.csvAtividades.push({
                                 "Time": "",
