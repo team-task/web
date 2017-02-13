@@ -1,0 +1,14 @@
+{
+  "lang": "pt-br",
+  "name": "Team Task APP",
+  "description": "Team Task its a aplication for Project and Teams collaborate with other.",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "white",
+  "icons": [
+    {
+      "src": "img/team-logo-01.png",
+      "sizes": "46x46"
+    }
+  ]
+}

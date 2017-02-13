@@ -482,3 +482,13 @@ form.login label {
     left: -30px;
     top: 3px;
 }
+
+.notes-panel{
+    max-height: 300px;
+    overflow: auto;
+}
+
+.notes-view-panel {
+    max-height: 150px;
+    overflow: auto;
+}
