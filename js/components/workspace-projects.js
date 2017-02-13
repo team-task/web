@@ -105,9 +105,17 @@ angular.module('team-task')
                         var fim = $scope.listaProjetosRoot[i].fim ?
                             moment($scope.listaProjetosRoot[i].fim.$date).format("DD/MM/YYYY")
                             : "";
-                        var nota = $scope.listaProjetosRoot[i].notas;
+                        var nota = "";
                         //repalce do \n por string de quebra do excel
-                        nota = nota.replace(/\n/g, "&#10;");
+                        if($scope.listaProjetosRoot[i].notas && $scope.listaProjetosRoot[i].notas.length > 0) {
+                            for (var nIndex = 0; nIndex < $scope.listaProjetosRoot[i].notas.length; nIndex++) {
+                                nota += $scope.listaProjetosRoot[i].notas[nIndex].data.$date ?
+                                    moment($scope.listaProjetosRoot[i].notas[nIndex].data.$date).format("DD/MM/YYYY") + ": "
+                                    : "";
+                                nota += $scope.listaProjetosRoot[i].notas[nIndex].nota;
+                                nota += "&#10;";
+                            }
+                        }
                         var linha = [
                             $scope.listaProjetosRoot[i].nome,
                             $scope.listaProjetosRoot[i].descricao,
