@@ -539,8 +539,9 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {
-                        $state.go('workspace.projects');
+                        loadProject();
                     }, function () {
+                        loadProject();
                     });
             };
         }]);

@@ -492,3 +492,16 @@ form.login label {
     max-height: 150px;
     overflow: auto;
 }
+
+.painel-animado {
+    max-height: 800px;
+    -moz-transition: max-height 0.8s;
+    -webkit-transition: max-height 0.8s;
+    -ms-transition: max-height 0.8s;
+    -o-transition: max-height 0.8s;
+    transition: max-height 0.8s;
+}
+
+.painel-animado.ng-leave-active {
+    max-height: 0;
+}

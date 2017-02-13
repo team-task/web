@@ -38,8 +38,34 @@
             </div>
 
             <div class="form-group">
-                <label for="notas">Notas</label>
-                <textarea id="notas" class="form-control" ng-model="projeto.notas"></textarea>
+                <label>Notas&nbsp;
+                    <span class="pointer-action" uib-tooltip="Criar nova nota" ng-click="novaNota();">
+                        <i class="fa fa-plus-square-o"></i>
+                    </span>
+                </label>
+                <div class="list-group notes-view-panel">
+                    <div class="list-group-item painel-animado" ng-repeat="nota in projeto.notas">
+                        <div class="list-group-item-text">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    {{nota.data.$date | date:"dd/MM/yyyy"}}: {{nota.nota}}
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="pointer-action" uib-tooltip="Editar nota" tooltip-placement="left"
+                                            ng-click="novaNota($index);">
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="pointer-action" uib-tooltip="Excluir nota" tooltip-placement="left"
+                                            ng-click="excluirNota($index)">
+                                        <i class="fa fa-minus-square-o"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

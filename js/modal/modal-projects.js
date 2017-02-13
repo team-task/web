@@ -75,6 +75,89 @@ angular.module('team-task')
             });
         }
 
+        $scope.novaNota = function (indice) {
+            if ($scope.projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/new-note.html',
+                        controller: function ($scope, projetoEdicao, indice) {
+                            $scope.projeto = projetoEdicao;
+                            $scope.edicao = false;
+                            if(indice != undefined) {
+                                $scope.nota = projetoEdicao.notas[indice];
+                                $scope.edicao = true;
+                            } else {
+                                $scope.nota = {"data": {"$date": new Date()},"nota": ""};
+                            }
+
+                            $scope.ok = function () {
+                                if($scope.nota.nota) {
+                                    if($scope.edicao) {
+                                        //edicao
+                                        projetoEdicao.notas[indice].nota = "[Editada " +
+                                                moment(new Date()).format("DD/MM/YYYY") +
+                                            "] " + $scope.nota.nota;
+                                    } else {
+                                        //nova
+                                        if(projetoEdicao.notas) {
+                                            projetoEdicao.notas.push($scope.nota);
+                                        } else {
+                                            projetoEdicao.notas = [];
+                                            projetoEdicao.notas.push($scope.nota);
+                                        }
+                                    }
+                                    $scope.$close(true);
+                                }
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            projetoEdicao: function () {
+                                return $scope.projeto;
+                            },
+                            indice: function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {
+
+                    }, function () {
+
+                    });
+            }
+        };
+
+        $scope.excluirNota = function (indice) {
+            if ($scope.projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/delete-note.html',
+                        controller: function ($scope, projetoExclusao, indice) {
+                            $scope.nota = projetoExclusao.notas[indice];
+                            $scope.ok = function () {
+                                if(projetoExclusao.notas && projetoExclusao.notas[indice]) {
+                                    projetoExclusao.notas.splice(indice, 1);
+                                    $scope.$close(true);
+                                }
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            projetoExclusao: function () {
+                                return $scope.projeto;
+                            },
+                            indice: function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {}, function () {});
+            }
+        };
+
         $scope.ok = function () {
             $scope.errorProjectName = "";
             if ($scope.projeto.nome) {

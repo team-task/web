@@ -1,0 +1,26 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">
+        Nova nota
+    </h4>
+</div>
+<div class="modal-body">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label>Data:</label>
+                {{nota.data.$date | date:"dd/MM/yyyy"}}
+            </div>
+
+            <div class="form-group">
+                <label for="notas">Nota</label>
+                <textarea id="notas" class="form-control" ng-model="nota.nota" rows="10"></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

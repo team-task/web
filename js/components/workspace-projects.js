@@ -183,6 +183,7 @@ angular.module('team-task')
                         loadTable();
                         $rootScope.$emit("CallLoadMenus", {});
                     }, function () {
+
                     });
             };
 

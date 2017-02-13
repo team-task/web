@@ -102,14 +102,28 @@
 
             <div class="form-group">
                 <label>Notas&nbsp;
-                    <button class="btn btn-success" uib-tooltip="Criar nova nota">
-                        <i class="fa fa-plus"></i>
-                    </button>
+                    <span class="pointer-action" uib-tooltip="Criar nova nota">
+                        <i class="fa fa-plus-square-o"></i>
+                    </span>
                 </label>
                 <div class="list-group notes-view-panel">
                     <div class="list-group-item" ng-repeat="nota in projeto.atividades[indice].notas | orderBy: 'data.$date'">
                         <div class="list-group-item-text">
-                            {{nota.data.$date | date:"dd/MM/yyyy"}}: {{nota.nota}}
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    {{nota.data.$date | date:"dd/MM/yyyy"}}: {{nota.nota}}
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="pointer-action" uib-tooltip="Editar nota" tooltip-placement="left">
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="pointer-action" uib-tooltip="Excluir nota" tooltip-placement="left">
+                                        <i class="fa fa-minus-square-o"></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
