@@ -63,8 +63,19 @@
             </div>
 
             <div class="form-group">
-                <label for="notas">Notas</label>
-                <textarea id="notas" class="form-control" ng-model="atividade.notas"></textarea>
+                <label>Notas&nbsp;
+                    <span class="pointer-action" uib-tooltip="Criar nova nota" ng-click="novaNota();">
+                        <i class="fa fa-plus-square-o"></i>
+                    </span>
+                </label>
+                <div class="list-group notes-view-panel">
+                    <div class="list-group-item" ng-repeat="nota in atividade.notas">
+                        <div class="list-group-item-text">
+                            <div notas nota="nota" remover="excluirNota($index)" editar="novaNota($index)" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

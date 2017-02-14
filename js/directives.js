@@ -20,28 +20,28 @@ angular.module('team-task')
             restrict: 'A',
             replace: true,
             templateUrl: 'views/header.html',
-            link: function($scope, elem, attr) {
+            link: function ($scope, elem, attr) {
                 $document.on('click', eventHandler);
 
-                function eventHandler (e) {
+                function eventHandler(e) {
                     var element;
                     var contem = false;
                     for (element = e.target; element; element = element.parentNode) {
-                        if(element.className && element.className.contains) {
+                        if (element.className && element.className.contains) {
                             if (element.className.contains("tt-search-listbox") || element.className.contains("tt-search-btn")) {
                                 contem = true;
                             }
                         }
                     }
 
-                    if(!contem) {
+                    if (!contem) {
                         $scope.searchDisplay = "nodisplay";
                         if (!$scope.$$phase) $scope.$apply();
                     }
                 }
             },
-            controller: ['$scope', '$rootScope', '$uibModal', 'SearchFactory', '$document', 'idFactory',
-                function ($scope, $rootScope, $uibModal, SearchFactory, $document, idFactory) {
+            controller: ['$scope', '$rootScope', '$uibModal', 'SearchFactory', '$document', 'idFactory', 'AjustesDB',
+                function ($scope, $rootScope, $uibModal, SearchFactory, $document, idFactory, AjustesDB) {
                     $scope.textSearch = "";
                     $scope.searchDisplay = "nodisplay";
                     $scope.refactoryIdActivity = function () {
@@ -95,7 +95,9 @@ angular.module('team-task')
                             }, function () {
                             });
                     };
-
+                    $scope.ajustes = function () {
+                        AjustesDB.ajusteDataNotasAtividades();
+                    };
                 }]
         };
     }])
@@ -131,7 +133,7 @@ angular.module('team-task')
             controller: ['$scope', '$rootScope', 'Projeto', 'Time', 'Atividade', '$filter', 'Pessoa', '$state', '$q',
                 function ($scope, $rootScope, Projeto, Time, Atividade, $filter, Pessoa, $state, $q) {
 
-                    if($state.current.data) {
+                    if ($state.current.data) {
 
                         loadMenus();
 
@@ -175,7 +177,7 @@ angular.module('team-task')
                             }
                         }
 
-                        function loadTeams () {
+                        function loadTeams() {
                             $scope.timesMenu = [];
                             if ($rootScope.usuarioLogado) {
                                 $scope.menuAtividadesLoading = true;
@@ -207,7 +209,7 @@ angular.module('team-task')
                             }
                         }
 
-                        function loadWorkforce () {
+                        function loadWorkforce() {
                             $scope.trabalhoPessoasMenu = [];
                             if ($rootScope.usuarioLogado) {
                                 $scope.menuCargaLoading = true;
@@ -216,7 +218,7 @@ angular.module('team-task')
                                     //por enquanto somente um subordinado.
                                     var arrayOids = [];
                                     //for (var r = 0; r < recursosTotais.length; r++) {
-                                        arrayOids.push({"$oid": $rootScope.usuarioLogado.subordinados[0]});
+                                    arrayOids.push({"$oid": $rootScope.usuarioLogado.subordinados[0]});
                                     //}
                                     var pesQuery = {
                                         "_id": {
@@ -348,6 +350,31 @@ angular.module('team-task')
                     }
                 }]
         };
+    })
+    .directive('notas', function () {
+        var ddo = {};
+        ddo.restrict = 'A';
+        ddo.scope = {
+            nota: '=',
+            indice: '=',
+            remover: '&',
+            editar: '&'
+        };
+        ddo.template = '<div class="row">' +
+            '<div class="col-lg-12">' +
+            '{{nota.data.$date | date:"dd/MM/yyyy"}}:' +
+            '&nbsp;<span class="pointer-action" uib-tooltip="Editar nota" tooltip-placement="left"' +
+            'ng-click="editar(indice);">' +
+            '<i class="fa fa-pencil-square-o"></i>' +
+            '</span>' +
+            '&nbsp;<span class="pointer-action" uib-tooltip="Excluir nota" tooltip-placement="left"' +
+            'ng-click="remover(indice)">' +
+            '<i class="fa fa-minus-square-o"></i>' +
+            '</span>' +
+            '<pre class="nota-preline">{{nota.nota}}</pre>' +
+            '</div>' +
+            '</div>';
+        return ddo;
     });
 function sendFileContent(contents) {
     return {"contents": contents};

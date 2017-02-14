@@ -42,9 +42,10 @@
             <div class="form-group">
                 <label>Notas</label>
                 <div class="list-group notes-view-panel">
-                    <div class="list-group-item" ng-repeat="nota in projeto.atividades[indice].notas | orderBy: 'data.$date'">
+                    <div class="list-group-item" ng-repeat="nota in projeto.atividades[indice].notas | orderBy: '-data.$date'">
                         <div class="list-group-item-text">
-                            {{nota.data.$date | date:"dd/MM/yyyy"}}: {{nota.nota}}
+                            {{nota.data.$date | date:"dd/MM/yyyy"}}:
+                            <pre class="nota-preline">{{nota.nota}}</pre>
                         </div>
                     </div>
                 </div>

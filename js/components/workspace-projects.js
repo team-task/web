@@ -181,7 +181,7 @@ angular.module('team-task')
                         }
                     }).result.then(function () {
                         loadTable();
-                        $rootScope.$emit("CallLoadMenus", {});
+                        $rootScope.$emit("CallLoadProjectMenu", {});
                     }, function () {
 
                     });

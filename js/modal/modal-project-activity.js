@@ -482,6 +482,89 @@ angular.module('team-task')
             }
         };
 
+        $scope.novaNota = function (indice) {
+            if ($scope.projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/new-note.html',
+                        controller: function ($scope, atividadeEdicao, indice) {
+                            $scope.projeto = atividadeEdicao;
+                            $scope.edicao = false;
+                            if(indice != undefined) {
+                                $scope.nota = atividadeEdicao.notas[indice];
+                                $scope.edicao = true;
+                            } else {
+                                $scope.nota = {"data": {"$date": new Date()},"nota": ""};
+                            }
+
+                            $scope.ok = function () {
+                                if($scope.nota.nota) {
+                                    if($scope.edicao) {
+                                        //edicao
+                                        atividadeEdicao.notas[indice].nota = "[Editada " +
+                                            moment(new Date()).format("DD/MM/YYYY") +
+                                            "] " + $scope.nota.nota;
+                                    } else {
+                                        //nova
+                                        if(atividadeEdicao.notas) {
+                                            atividadeEdicao.notas.push($scope.nota);
+                                        } else {
+                                            atividadeEdicao.notas = [];
+                                            atividadeEdicao.notas.push($scope.nota);
+                                        }
+                                    }
+                                    $scope.$close(true);
+                                }
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            atividadeEdicao: function () {
+                                return $scope.projeto.atividades[$scope.indice];
+                            },
+                            indice: function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {
+
+                    }, function () {
+
+                    });
+            }
+        };
+
+        $scope.excluirNota = function (indice) {
+            if ($scope.projeto) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/delete-note.html',
+                        controller: function ($scope, atividadeExclusao, indice) {
+                            $scope.nota = atividadeExclusao.notas[indice];
+                            $scope.ok = function () {
+                                if(atividadeExclusao.notas && atividadeExclusao.notas[indice]) {
+                                    atividadeExclusao.notas.splice(indice, 1);
+                                    $scope.$close(true);
+                                }
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            atividadeExclusao: function () {
+                                return $scope.projeto.atividades[$scope.indice];
+                            },
+                            indice: function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {}, function () {});
+            }
+        };
+
         $scope.deleteActivity = function () {
             if ($scope.projeto) {
                 $uibModal

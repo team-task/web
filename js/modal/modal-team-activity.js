@@ -229,38 +229,41 @@ angular.module('team-task')
 
         $scope.initModalEditTeamActivity = function () {
 
-            var pQuery;
-            if (timeSelecionado.lider === $rootScope.usuarioLogado._id.$oid) {
-                var listaIdPessoa = [];
-                for (var i = 0; i < $scope.time.recursos.length; i++) {
-                    listaIdPessoa.push({"$oid": $scope.time.recursos[i]});
-                }
-                pQuery = {
-                    "_id": {
-                        "$in": listaIdPessoa
-                    }
-                };
-            } else {
-                pQuery = {
-                    "_id" : {
-                        "$oid": $rootScope.usuarioLogado._id.$oid
-                    }
-                }
-            }
+            Atividade.getById(atividadeSelecionada.$id()).then(function (atividade) {
+                atividadeSelecionada = atividade;
 
-            Pessoa.query(pQuery).then(function (pessoas) {
-                $scope.pessoas = pessoas;
+                var pQuery;
+                if (timeSelecionado.lider === $rootScope.usuarioLogado._id.$oid) {
+                    var listaIdPessoa = [];
+                    for (var i = 0; i < $scope.time.recursos.length; i++) {
+                        listaIdPessoa.push({"$oid": $scope.time.recursos[i]});
+                    }
+                    pQuery = {
+                        "_id": {
+                            "$in": listaIdPessoa
+                        }
+                    };
+                } else {
+                    pQuery = {
+                        "_id" : {
+                            "$oid": $rootScope.usuarioLogado._id.$oid
+                        }
+                    }
+                }
+
+                Pessoa.query(pQuery).then(function (pessoas) {
+                    $scope.pessoas = pessoas;
+                });
+
+                if (atividadeSelecionada.inicio.$date) {
+                    atividadeSelecionada.inicio.$date =
+                        moment(atividadeSelecionada.inicio.$date).toDate();
+                    atividadeSelecionada.fim.$date =
+                        moment(atividadeSelecionada.fim.$date).toDate();
+                }
+
+                $scope.atividade = atividadeSelecionada;
             });
-
-            if (atividadeSelecionada.inicio.$date) {
-                atividadeSelecionada.inicio.$date =
-                    moment(atividadeSelecionada.inicio.$date).toDate();
-                atividadeSelecionada.fim.$date =
-                    moment(atividadeSelecionada.fim.$date).toDate();
-            }
-
-            $scope.atividade = atividadeSelecionada;
-
         };
 
         $scope.calculaFim = function () {
@@ -313,6 +316,88 @@ angular.module('team-task')
 
         $scope.cancel = function () {
             $scope.$dismiss();
+        };
+
+        $scope.novaNota = function (indice) {
+            if ($scope.atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/new-note.html',
+                        controller: function ($scope, atividadeEdicao, indice) {
+                            $scope.edicao = false;
+                            if(indice != undefined) {
+                                $scope.nota = atividadeEdicao.notas[indice];
+                                $scope.edicao = true;
+                            } else {
+                                $scope.nota = {"data": {"$date": new Date()},"nota": ""};
+                            }
+
+                            $scope.ok = function () {
+                                if($scope.nota.nota) {
+                                    if($scope.edicao) {
+                                        //edicao
+                                        atividadeEdicao.notas[indice].nota = "[Editada " +
+                                            moment(new Date()).format("DD/MM/YYYY") +
+                                            "] " + $scope.nota.nota;
+                                    } else {
+                                        //nova
+                                        if(atividadeEdicao.notas) {
+                                            atividadeEdicao.notas.push($scope.nota);
+                                        } else {
+                                            atividadeEdicao.notas = [];
+                                            atividadeEdicao.notas.push($scope.nota);
+                                        }
+                                    }
+                                    $scope.$close(true);
+                                }
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            atividadeEdicao: function () {
+                                return $scope.atividade;
+                            },
+                            indice: function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {
+
+                    }, function () {
+
+                    });
+            }
+        };
+
+        $scope.excluirNota = function (indice) {
+            if ($scope.atividade) {
+                $uibModal
+                    .open({
+                        templateUrl: 'views/modal/delete-note.html',
+                        controller: function ($scope, atividadeExclusao, indice) {
+                            $scope.nota = atividadeExclusao.notas[indice];
+                            $scope.ok = function () {
+                                if(atividadeExclusao.notas && atividadeExclusao.notas[indice]) {
+                                    atividadeExclusao.notas.splice(indice, 1);
+                                    $scope.$close(true);
+                                }
+                            };
+                            $scope.cancel = function () {
+                                $scope.$dismiss();
+                            };
+                        },
+                        resolve: {
+                            atividadeExclusao: function () {
+                                return $scope.atividade;
+                            },
+                            indice: function () {
+                                return indice;
+                            }
+                        }
+                    }).result.then(function () {}, function () {});
+            }
         };
 
         $scope.deleteTeamActivity = function () {

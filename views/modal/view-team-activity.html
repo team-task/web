@@ -35,8 +35,15 @@
             </div>
 
             <div class="form-group">
-                <label for="notas">Notas</label>
-                <textarea readonly id="notas" class="form-control" ng-model="atividade.notas"></textarea>
+                <label>Notas</label>
+                <div class="list-group notes-view-panel">
+                    <div class="list-group-item" ng-repeat="nota in atividade.notas | orderBy: '-data.$date'">
+                        <div class="list-group-item-text">
+                            {{nota.data.$date | date:"dd/MM/yyyy"}}:
+                            <pre class="nota-preline">{{nota.nota}}</pre>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

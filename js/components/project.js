@@ -25,7 +25,8 @@ angular.module('team-task')
                     "sortMode": ["model.atividade.nomeTime"],
                     "resize": false,
                     "dependencies": {
-                        "enabled": false
+                        "enabled": true,
+                        "readOnly": true
                     },
                     "timeFrames": {
                         closed: {
@@ -286,7 +287,7 @@ angular.module('team-task')
 
                                 $scope.ganttOptions.resize = true;
                                 $scope.ganttOptions.movable = true;
-                                $scope.ganttOptions.dependencies.enabled = true;
+                                $scope.ganttOptions.dependencies.readOnly = false;
 
                                 $scope.ganttOptions.contents = {
                                     'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" ' +
@@ -540,8 +541,7 @@ angular.module('team-task')
                         }
                     }).result.then(function () {
                         loadProject();
-                    }, function () {
-                        loadProject();
-                    });
+                        $rootScope.$emit("CallLoadProjectMenu", {});
+                    }, function () {});
             };
         }]);

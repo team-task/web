@@ -38,7 +38,10 @@ angular.module('team-task')
         $scope.errorProjectName = "";
 
         $scope.initModalNewProject = function () {
-            $scope.projeto = projetoEdicao;
+            Projeto.getById(projetoEdicao.$id()).then(function (projeto) {
+                projetoEdicao = projeto;
+                $scope.projeto = projetoEdicao;
+            });
         };
 
         $scope.deleteProject = function () {
