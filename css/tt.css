@@ -512,3 +512,9 @@ form.login label {
     white-space: pre-line;
     word-break: normal;
 }
+
+.data-animation {
+    visibility: visible;
+    animation-duration: 1s;
+    animation-name: fadeIn;
+}
