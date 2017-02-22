@@ -539,9 +539,14 @@ angular.module('team-task')
                                 return projeto;
                             }
                         }
-                    }).result.then(function () {
-                        loadProject();
+                    }).result.then(function (acao) {
                         $rootScope.$emit("CallLoadProjectMenu", {});
+                        if(acao === "delete") {
+                            $state.go("workspace.projects");
+                        } else {
+                            loadProject();
+                        }
+
                     }, function () {});
             };
         }]);

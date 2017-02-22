@@ -74,7 +74,7 @@ angular.module('team-task')
 
         function deleteProject() {
             $scope.projeto.$remove().then(function () {
-                $scope.$close(true);
+                $scope.$close("delete");
             });
         }
 
@@ -165,7 +165,7 @@ angular.module('team-task')
             $scope.errorProjectName = "";
             if ($scope.projeto.nome) {
                 $scope.projeto.$saveOrUpdate().then(function () {
-                    $scope.$close(true);
+                    $scope.$close("edicao");
                 });
             } else {
                 $scope.errorProjectName = "O Nome é obrigatório na criação do projeto.";
