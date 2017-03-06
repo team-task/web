@@ -136,12 +136,15 @@ angular.module('team-task')
 
                 $scope.atividadeNova.atividadeId =
                     md5.createHash(projetoSelecionado.nome + $scope.atividadeNova.nome + $scope.atividadeNova.time);
-                $scope.atividadeNova.id =
-                    md5.createHash(projetoSelecionado.nome + $scope.atividadeNova.nome + projetoSelecionado.atividades.length);
+
                 if (projetoSelecionado.atividades) {
+                    $scope.atividadeNova.id =
+                        md5.createHash(projetoSelecionado.nome + $scope.atividadeNova.nome + projetoSelecionado.atividades.length);
                     projetoSelecionado.atividades.push($scope.atividadeNova);
                 } else {
                     projetoSelecionado.atividades = [];
+                    $scope.atividadeNova.id =
+                        md5.createHash(projetoSelecionado.nome + $scope.atividadeNova.nome + projetoSelecionado.atividades.length);
                     projetoSelecionado.atividades.push($scope.atividadeNova);
                 }
 
