@@ -22,7 +22,7 @@ angular.module('team-task')
                     "tableHeaders": {'model.name': 'Time / Atividade'},
                     "taskContent": '<span></span>',
                     "daily": true,
-                    "sortMode": ["model.atividade.nomeTime"],
+                    "sortMode": ["from"],
                     "resize": false,
                     "dependencies": {
                         "enabled": true,
