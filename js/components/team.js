@@ -52,7 +52,8 @@ angular.module('team-task')
                             "time": time._id.$oid
                         };
                         if(time.lider !== idusuario) {
-                            aQuery.designado = idusuario;
+                            aQuery.$or = [{"designado": idusuario}, {"designado": null}];
+                            //aQuery.designado = idusuario;
                         }
                         Atividade.query(aQuery).then(function (atividades) {
                             angular.forEach(atividades, function (atividade, idAtividade) {

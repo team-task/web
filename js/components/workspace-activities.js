@@ -125,7 +125,7 @@ angular.module('team-task')
                                     };
                                 } else {
                                     aQuery = {
-                                        "designado": idusuario
+                                        "$or": [{"designado": idusuario}, {"designado": null}]
                                     };
                                 }
                                 prom.push(Atividade.query(aQuery).then(function (atividades) {
