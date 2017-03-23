@@ -15,22 +15,21 @@ angular.module('team-task')
         AjustesDB.ajusteNotasAtividades = function () {
             Atividade.all().then(function (atividades) {
                 angular.forEach(atividades, function (atividade) {
-                    var nota = atividade.notas;
-                    var notaObj = {
-                        data: atividade.inicio.$date,
-                        nota: nota
-                    };
-                    atividade.notas = [];
-                    if(nota) {
-                        atividade.notas.push(notaObj);
+
+                    if(!Array.isArray(atividade.notas)) {
+                        var nota = atividade.notas;
+                        var notaObj = {
+                            data: atividade.inicio,
+                            nota: nota
+                        };
+                        atividade.notas = [];
+                        if(nota) {
+                            atividade.notas.push(notaObj);
+                        }
+                        atividade.$saveOrUpdate().then(function () {
+                            console.log('salvo ' + atividade.nome)
+                        });
                     }
-
-
-                    atividade.$saveOrUpdate().then(function () {
-                        console.log('salvo ' + atividade.nome)
-                    });
-
-
                 })
             });
         };

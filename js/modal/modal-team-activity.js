@@ -115,6 +115,18 @@ angular.module('team-task')
             if (novaAtividadeValida()) {
                 waitingDialog.show('Salvando atividade. Aguarde');
 
+                if($scope.atividadeNova.notas) {
+                    var nota = $scope.atividadeNova.notas;
+                    $scope.atividadeNova.notas = [{
+                        nota: nota,
+                        data: {
+                            $date : new Date()
+                        }
+                    }];
+                } else {
+                    $scope.atividadeNova.notas = [];
+                }
+
                 $scope.atividadeNova.$saveOrUpdate().then(function () {
                     waitingDialog.hide();
                     $scope.$close(true);
@@ -207,7 +219,17 @@ angular.module('team-task')
 
             if (novaAtividadeValida()) {
                 waitingDialog.show('Salvando atividade. Aguarde');
-
+                if($scope.atividadeNova.notas) {
+                    var nota = $scope.atividadeNova.notas;
+                    $scope.atividadeNova.notas = [{
+                        nota: nota,
+                        data: {
+                            $date: new Date()
+                        }
+                    }];
+                } else {
+                    $scope.atividadeNova.notas = [];
+                }
                 $scope.atividadeNova.$saveOrUpdate().then(function () {
                     waitingDialog.hide();
                     $scope.$close(true);

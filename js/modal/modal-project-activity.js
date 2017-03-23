@@ -150,6 +150,18 @@ angular.module('team-task')
 
                 projetoSelecionado.duracao = Math.floor(moment(projetoSelecionado.fim.$date).businessDiff(moment(projetoSelecionado.inicio.$date), 'days')) + 1;
 
+                if($scope.atividadeNova.notas) {
+                    var nota = $scope.atividadeNova.notas;
+                    $scope.atividadeNova.notas = [{
+                        nota: nota,
+                        data: {
+                            $date: new Date()
+                        }
+                    }]
+                } else {
+                    $scope.atividadeNova.notas = [];
+                }
+
                 projetoSelecionado.$saveOrUpdate().then(function () {
                     waitingDialog.hide();
                     $scope.$close("novo");

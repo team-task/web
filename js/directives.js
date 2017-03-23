@@ -96,7 +96,7 @@ angular.module('team-task')
                             });
                     };
                     $scope.ajustes = function () {
-                        AjustesDB.ajusteDataNotasAtividades();
+                        AjustesDB.ajusteNotasAtividades();
                     };
                 }]
         };
