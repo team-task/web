@@ -117,6 +117,7 @@ angular.module('team-task')
                 });
 
                 $rootScope.showLoading = false;
+
             }
 
             $scope.editarAtividade = function (model) {
@@ -238,7 +239,7 @@ angular.module('team-task')
             };
 
             $scope.initWorkforce = function () {
-                $scope.filtro = [true, true, true];
+                $scope.filtro = [true, true, false];
                 $scope.dateFormat = "dddd, DD/MM/YYYY";
                 $scope.usuarioLogado = $rootScope.usuarioLogado;
                 $scope.fromDate = null;
@@ -282,6 +283,9 @@ angular.module('team-task')
                     '</small>',
                     api: function(api) {
                         $scope.api = api;
+                        api.core.on.rendered($scope, function() {
+                            $scope.filterChange();
+                        });
                     }
                 };
                 loadTable();
