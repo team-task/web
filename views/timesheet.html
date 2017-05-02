@@ -1,0 +1,54 @@
+<div class="task-list-panel container-fluid wow fadeIn data-animation" data-wow-duration="1s" ng-init="initWorkspaceTimesheet()">
+    <div>
+        <h3 class="page-header">
+            Planilha de Horas
+            <button ng-click="adicionarHora();" class="btn btn-danger btn-sm tt-btn-round"
+                    uib-tooltip="Adicionar Marcação">
+                <i class="fa fa-plus"></i>
+            </button>
+            <div class="dropdown pull-right">
+                <button class="btn btn-primary btn-inverse tt-btn-bordeless"
+                        data-toggle="dropdown" id="dropdownProjectMenu">
+                    <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
+                    <li>
+                        <span class="pointer-action upload-csv" ng-click="exportarTabela();">
+                            <i class="fa fa-file-excel-o"></i>&nbsp;Exportar Planilha de Horas
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </h3>
+    </div>
+    <div ng-excel="" type="'excel'" data="excel.data" xlsfilename="'timesheet.xls'" down="excel.down"></div>
+    <div class="form-group form-inline">
+        <label>Data</label>
+        <input class="form-control" type="date" ng-model="dataPesquisa">
+        <button ng-clic="mudarData();" class="btn btn-primary">Buscar</button>
+    </div>
+    <table datatable="ng" dt-options="dtOptions" class="table table-hover">
+        <thead>
+        <tr>
+            <td>Projeto / Atividade</td>
+            <td>Inicio</td>
+            <td>Até</td>
+            <td>Status</td>
+            <td>Alerta</td>
+            <td>Infos</td>
+            <td>Atividades</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="timesheet in timesheets">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

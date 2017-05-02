@@ -11,6 +11,9 @@ angular.module('team-task')
 	.factory('Time', function ($mongolabResourceHttp) {
 		return $mongolabResourceHttp('time');
 	})
+    .factory('Hora', function ($mongolabResourceHttp) {
+        return $mongolabResourceHttp('horas');
+    })
 	.factory('AjustesDB', function AjustesDB (Atividade) {
         AjustesDB.ajusteNotasAtividades = function () {
             Atividade.all().then(function (atividades) {

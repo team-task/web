@@ -103,5 +103,15 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 requiredlogin: true,
                 collapsed: ["", "", "in"]
             }
+        })
+        .state('workspace.timesheet', {
+            url: '/timesheet',
+            templateUrl: 'views/timesheet.html',
+            reloadOnSearch: false,
+            controller: 'WorkspaceTimesheetController',
+            data: {
+                requiredlogin: true,
+                collapsed: ["", "", ""]
+            }
         });
 });

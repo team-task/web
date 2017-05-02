@@ -1,0 +1,61 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">
+        Nova Marcação de Hora
+    </h4>
+</div>
+<form novalidate name="formulario" ng-submit="ok();">
+    <div class="modal-body">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label>Data</label>
+                    <input class="form-control" type="date" ng-model="hora.data.$date">
+                </div>
+
+                <div class="form-group">
+                    <label>Tempo</label>
+                    <input class="form-control" type="time" ng-model="hora.tempo.$date" min="00:00:01" max="23:59:59">
+                </div>
+
+                <div class="form-group">
+                    <label for="atividade">Projeto / Atividade</label>
+                    <select id="atividade" class="form-control" ng-model="hora.atividade"
+                            ng-options="atividade.ids as atividade.nome for atividade in listaAtividades"
+                            aria-describedby="helpBlock" ng-focus="activityErro = ''">
+                        <option value="">Selecione uma Atividade</option>
+                    </select>
+                    <span ng-show="activityErro !==''" class="help-block alert-danger">
+                    {{activityErro}}
+                    </span>
+                    <span id="helpBlock" class="help-block" ng-show="showSelectLoading">
+                        <div class="progress mini-progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                <span class="sr-only">100% Complete</span>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo da Marcação</label>
+                    <select class="form-control" ng-model="hora.tipo"
+                            ng-options="tipo for tipo in listaTipos">
+                        <option value="">Selecione um Tipo de Marcação</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notas">Nota</label>
+                    <textarea id="notas" class="form-control" ng-model="hora.nota" rows="5"></textarea>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+        <button type="submit" class="btn btn-success">Confirmar</button>
+    </div>
+</form>
