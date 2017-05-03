@@ -25,29 +25,33 @@
     <div class="form-group form-inline">
         <label>Data</label>
         <input class="form-control" type="date" ng-model="dataPesquisa">
-        <button ng-clic="mudarData();" class="btn btn-primary">Buscar</button>
+        <button ng-click="mudarData();" class="btn btn-primary">Buscar Data</button>
+        <button ng-click="mudarMes();" class="btn btn-primary">Buscar Mes</button>
     </div>
     <table datatable="ng" dt-options="dtOptions" class="table table-hover">
         <thead>
         <tr>
-            <td>Projeto / Atividade</td>
-            <td>Inicio</td>
-            <td>Até</td>
-            <td>Status</td>
-            <td>Alerta</td>
-            <td>Infos</td>
-            <td>Atividades</td>
+            <td>Data</td>
+            <td>Atividade</td>
+            <td>Código SO / Chamado</td>
+            <td>Horas</td>
+            <td>Observação</td>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="timesheet in timesheets">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+
+            <td class="tb-project-name" data-order="{{timesheet.data.$date | timeMils}}">
+                {{timesheet.data.$date | date: "dd/MM/yyyy"}}
+                <span class="btn-edit-project" ng-click="adicionarHora(timesheet);">
+                    <i class="fa fa-pencil-square-o"></i>
+                </span>
+            </td>
+
+            <td>{{timesheet.tipo}}</td>
+            <td>{{timesheet.atividade.nome}}</td>
+            <td>{{timesheet.tempo.$date | date: "HH:mm"}}</td>
+            <td>{{timesheet.nota}}</td>
         </tr>
         </tbody>
     </table>

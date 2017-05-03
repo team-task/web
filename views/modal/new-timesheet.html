@@ -15,19 +15,28 @@
 
                 <div class="form-group">
                     <label>Tempo</label>
-                    <input class="form-control" type="time" ng-model="hora.tempo.$date" min="00:00:01" max="23:59:59">
+                    <input class="form-control" type="time" ng-model="hora.tempo.$date" min="00:00:01" max="23:59:59" autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo da Marcação</label>
+                    <select id="tipo" class="form-control" ng-model="hora.tipo"
+                            ng-options="tipo for tipo in listaTipos">
+                        <option value="">Selecione um Tipo de Marcação</option>
+                    </select>
+                    <span ng-show="activityErro !==''" class="help-block alert-danger">
+                    {{activityErro}}
+                    </span>
                 </div>
 
                 <div class="form-group">
                     <label for="atividade">Projeto / Atividade</label>
                     <select id="atividade" class="form-control" ng-model="hora.atividade"
-                            ng-options="atividade.ids as atividade.nome for atividade in listaAtividades"
-                            aria-describedby="helpBlock" ng-focus="activityErro = ''">
+                            ng-options="atividade as atividade.nome for atividade in listaAtividades | orderBy: ['tipo', 'nome']"
+                            aria-describedby="helpBlock">
                         <option value="">Selecione uma Atividade</option>
                     </select>
-                    <span ng-show="activityErro !==''" class="help-block alert-danger">
-                    {{activityErro}}
-                    </span>
+
                     <span id="helpBlock" class="help-block" ng-show="showSelectLoading">
                         <div class="progress mini-progress">
                             <div class="progress-bar progress-bar-striped active" role="progressbar"
@@ -39,15 +48,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Tipo da Marcação</label>
-                    <select class="form-control" ng-model="hora.tipo"
-                            ng-options="tipo for tipo in listaTipos">
-                        <option value="">Selecione um Tipo de Marcação</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="notas">Nota</label>
+                    <label for="notas">Observação</label>
                     <textarea id="notas" class="form-control" ng-model="hora.nota" rows="5"></textarea>
                 </div>
 
