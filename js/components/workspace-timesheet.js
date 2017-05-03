@@ -9,6 +9,7 @@ angular.module('team-task')
             $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').toDate();
             $scope.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(25);
             $scope.initWorkspaceTimesheet = function () {
+                $scope.events = [];
                 if ($rootScope.usuarioLogado) {
                     if ($rootScope.usuarioLogado.perfil === 'gerente') {
                         $scope.idUsuario = $rootScope.usuarioLogado.subordinado;
@@ -22,24 +23,51 @@ angular.module('team-task')
                     }
                 };
 
-                loadTable();
-
                 $scope.mudarMes = function () {
                     $scope.dataStart = moment($scope.dataPesquisa).startOf('day').startOf('month').toDate();
                     $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').endOf('month').toDate();
                     loadTable();
                 };
 
+                $scope.mudarMes();
+
                 $scope.mudarData = function () {
                     $scope.dataStart = moment($scope.dataPesquisa).startOf('day').toDate();
                     $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').toDate();
                     loadTable();
                 };
+
+                $scope.uiConfig = {
+                    calendar:{
+                        lang: 'pt-br',
+                        height: 'auto',
+                        editable: true,
+                        header:{
+                            left: 'title',
+                            center: '',
+                            right: 'today prev,next'
+                        },
+                        views: {
+                            month: {
+                                titleFormat: 'MMMM YY'
+                            }
+                        },
+                        dayClick: $scope.diaClicado,
+                        events: $scope.events
+                    }
+                };
+            };
+
+            $scope.diaClicado = function (date) {
+                //angular.element(this).css('background-color', 'red');
+                console.log(date, date.toDate());
+                $scope.dataPesquisa = date.toDate();
+                $scope.mudarData();
             };
 
             function loadTable() {
                 $rootScope.showLoading = true;
-
+                $scope.events = [];
                 var query = {
                     'data': {
                         '$gte': {
@@ -52,7 +80,25 @@ angular.module('team-task')
                     usuario: $scope.idUsuario
                 };
                 Hora.query(query).then(function (horas) {
+                    var horasMaxima = moment(new Date(1970, 0, 1, 8, 0, 0));
                     $scope.timesheets = horas;
+                    var grupos = $filter('groupBy')(horas, 'dataStr');
+                    angular.forEach(grupos, function (grupo, key) {
+                        var total = moment(new Date(1970, 0, 1, 0, 0, 0));
+                        for (var i = 0; i < grupo.length; i++) {
+                            var tempoMoment = moment(grupo[i].tempo.$date);
+                            total.add(tempoMoment.hour(), 'h').add(tempoMoment.minute(), 'm');
+                        }
+                        var event = {
+                            title: total.format("HH:mm"),
+                            start: moment(key).toDate(),
+                            allDay: true
+                        };
+                        if(total.isBefore(horasMaxima)) {
+                            event.color = '#a94442';
+                        }
+                        $scope.events.push(event);
+                    });
                     $rootScope.showLoading = false;
                 })
             }
@@ -188,16 +234,19 @@ angular.module('team-task')
                             }
 
                             $scope.ok = function () {
-                                if($scope.edicao) {
-                                    horaSelecionada.$saveOrUpdate().then(function () {
-                                        $scope.$close(true);
-                                    });
-                                } else {
-                                    var novamaracao = new Hora();
-                                    novamaracao = angular.merge(novamaracao, $scope.hora);
-                                    novamaracao.$saveOrUpdate().then(function () {
-                                        $scope.$close(true);
-                                    });
+                                if($scope.hora.data.$date) {
+                                    $scope.hora.dataStr = moment($scope.hora.data.$date).format("YYYY-MM-DD");
+                                    if ($scope.edicao) {
+                                        horaSelecionada.$saveOrUpdate().then(function () {
+                                            $scope.$close(true);
+                                        });
+                                    } else {
+                                        var novamaracao = new Hora();
+                                        novamaracao = angular.merge(novamaracao, $scope.hora);
+                                        novamaracao.$saveOrUpdate().then(function () {
+                                            $scope.$close(true);
+                                        });
+                                    }
                                 }
                             };
 

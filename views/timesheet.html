@@ -23,10 +23,13 @@
     </div>
     <div ng-excel="" type="'excel'" data="excel.data" xlsfilename="'timesheet.xls'" down="excel.down"></div>
     <div class="form-group form-inline">
+        <!--
         <label>Data</label>
         <input class="form-control" type="date" ng-model="dataPesquisa">
         <button ng-click="mudarData();" class="btn btn-primary">Buscar Data</button>
         <button ng-click="mudarMes();" class="btn btn-primary">Buscar Mes</button>
+        -->
+        <div id="calendar" ui-calendar="uiConfig.calendar"></div>
     </div>
     <table datatable="ng" dt-options="dtOptions" class="table table-hover">
         <thead>

@@ -518,3 +518,9 @@ form.login label {
     animation-duration: 1s;
     animation-name: fadeIn;
 }
+
+#calendar {
+
+    margin: 0 auto;
+    font-size: 10px;
+}
