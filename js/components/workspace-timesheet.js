@@ -10,6 +10,7 @@ angular.module('team-task')
             $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').toDate();
             $scope.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(25);
             $scope.initWorkspaceTimesheet = function () {
+                $scope.excel = {down: function () {}};
                 $scope.eventSources = [{
                     events: function (start, end, b, callback) {
                         if ($rootScope.usuarioLogado) {
@@ -60,15 +61,61 @@ angular.module('team-task')
                     }
                 }];
 
-                $scope.excel = {
-                    down: function () {
-                    }
-                };
-
                 $scope.mudarData = function () {
                     $scope.dataStart = moment($scope.dataPesquisa).startOf('day').toDate();
                     $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').toDate();
                     loadTable();
+                };
+
+                $scope.exportarTabela = function () {
+                    if($scope.timesheets) {
+                        waitingDialog.show('Gerando arquivo. Aguarde.');
+                        //exportar só o mês
+                        var dateGetted = uiCalendarConfig.calendars['timesheet'].fullCalendar('getDate');
+                        dateGetted = moment(dateGetted.format("YYYY-MM-DD"));
+                        var start = dateGetted.startOf('month').startOf('day');
+                        var end = dateGetted.endOf('month').endOf('day');
+                        console.log('start', start, 'end', end);
+                        var query = {
+                            'data': {
+                                '$gte': {
+                                    '$date': start.toDate()
+                                },
+                                '$lte': {
+                                    '$date': end.toDate()
+                                }
+                            },
+                            usuario: $scope.idUsuario
+                        };
+                        Hora.query(query, {sort: {data: 1}}).then(function (horas) {
+                            var cabecalho = [
+                                "Gestor","Funcionário","Data","Atividade",
+                                "Código da SO ou Chamado Exclusivo","Qtd de Horas (hh:mm)",
+                                "Qtd em % 	Observação (preenchimento opcional)"];
+                            var dados = [];
+                            dados.push(cabecalho);
+                            for (var i = 0; i < horas.length; i++) {
+                                var linha = [
+                                    "SCHUNK",
+                                    $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                    moment(horas[i].data.$date).format("DD/MM/YYYY"),
+                                    horas[i].tipo,
+                                    horas[i].atividade ? horas[i].atividade.atividade : "",
+                                    moment(horas[i].tempo.$date).format("HH:mm"),
+                                    horas[i].nota
+                                ];
+                                dados.push(linha);
+                            }
+                            var excelData = [
+                                {
+                                    "name": "timesheet",
+                                    "data": dados
+                                }
+                            ];
+                            waitingDialog.hide();
+                            $scope.excel.down(excelData);
+                        });
+                    }
                 };
 
                 $scope.uiConfig = {
