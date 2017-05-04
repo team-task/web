@@ -1,35 +1,69 @@
 angular.module('team-task')
     .controller('WorkspaceTimesheetController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
-        '$resource', '$filter', 'Pessoa', 'Projeto', '$q', 'DTOptionsBuilder', '$uibModal', 'Hora',
+        '$resource', '$filter', 'Pessoa', 'Projeto', '$q', 'DTOptionsBuilder', '$uibModal', 'Hora', 'uiCalendarConfig',
         function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q, DTOptionsBuilder,
-                  $uibModal, Hora) {
+                  $uibModal, Hora, uiCalendarConfig) {
             $scope.timesheets = [];
             $scope.dataPesquisa = moment().toDate();
+            $scope.dataFiltro = "";
             $scope.dataStart = moment($scope.dataPesquisa).startOf('day').toDate();
             $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').toDate();
             $scope.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(25);
             $scope.initWorkspaceTimesheet = function () {
-                $scope.events = [];
-                if ($rootScope.usuarioLogado) {
-                    if ($rootScope.usuarioLogado.perfil === 'gerente') {
-                        $scope.idUsuario = $rootScope.usuarioLogado.subordinado;
-                    } else {
-                        $scope.idUsuario = $rootScope.usuarioLogado._id.$oid;
+                $scope.eventSources = [{
+                    events: function (start, end, b, callback) {
+                        if ($rootScope.usuarioLogado) {
+                            if ($rootScope.usuarioLogado.perfil === 'gerente') {
+                                $scope.idUsuario = $rootScope.usuarioLogado.subordinado;
+                            } else {
+                                $scope.idUsuario = $rootScope.usuarioLogado._id.$oid;
+                            }
+                        }
+                        var query = {
+                            'data': {
+                                '$gte': {
+                                    '$date': start.startOf('day').toDate()
+                                },
+                                '$lte': {
+                                    '$date': end.endOf('day').toDate()
+                                }
+                            },
+                            usuario: $scope.idUsuario
+                        };
+                        Hora.query(query).then(function (horas) {
+                            var events = [];
+                            var horasMaxima = moment(new Date(1970, 0, 1, 8, 0, 0));
+                            $scope.timesheets = horas;
+                            var grupos = $filter('groupBy')(horas, 'dataStr');
+                            var proms = [];
+                            proms.push(angular.forEach(grupos, function (grupo, key) {
+                                var total = moment(new Date(1970, 0, 1, 0, 0, 0));
+                                for (var i = 0; i < grupo.length; i++) {
+                                    var tempoMoment = moment(grupo[i].tempo.$date);
+                                    total.add(tempoMoment.hour(), 'h').add(tempoMoment.minute(), 'm');
+                                }
+                                var event = {
+                                    title: total.format("HH:mm"),
+                                    start: moment(key).toDate(),
+                                    allDay: true
+                                };
+                                if (total.isBefore(horasMaxima)) {
+                                    event.color = '#a94442';
+                                }
+                                events.push(event);
+                            }));
+                            $q.all(proms).then(function () {
+                                callback(events);
+                            });
+                        });
+
                     }
-                }
+                }];
 
                 $scope.excel = {
                     down: function () {
                     }
                 };
-
-                $scope.mudarMes = function () {
-                    $scope.dataStart = moment($scope.dataPesquisa).startOf('day').startOf('month').toDate();
-                    $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').endOf('month').toDate();
-                    loadTable();
-                };
-
-                $scope.mudarMes();
 
                 $scope.mudarData = function () {
                     $scope.dataStart = moment($scope.dataPesquisa).startOf('day').toDate();
@@ -38,11 +72,11 @@ angular.module('team-task')
                 };
 
                 $scope.uiConfig = {
-                    calendar:{
+                    calendar: {
                         lang: 'pt-br',
                         height: 'auto',
                         editable: true,
-                        header:{
+                        header: {
                             left: 'title',
                             center: '',
                             right: 'today prev,next'
@@ -52,55 +86,56 @@ angular.module('team-task')
                                 titleFormat: 'MMMM YY'
                             }
                         },
-                        dayClick: $scope.diaClicado,
-                        events: $scope.events
+                        eventSources: $scope.eventSources,
+                        dayClick: $scope.diaClicado
                     }
                 };
             };
-
+            var tempVar = "";
+            var tempColor = "";
+            $scope.cancelarFiltro = function () {
+                $scope.dataFiltro = "";
+                angular.element(tempVar).css('background-color', tempColor);
+                uiCalendarConfig.calendars['timesheet'].fullCalendar('refetchEvents');
+            };
             $scope.diaClicado = function (date) {
-                //angular.element(this).css('background-color', 'red');
-                console.log(date, date.toDate());
-                $scope.dataPesquisa = date.toDate();
-                $scope.mudarData();
+                //var iscurrentDate = date.isSame(new Date(), "day");
+                if (tempVar === "") {
+                    tempColor = angular.element(this).css('background-color');
+                    angular.element(this).css('background-color', '#5bc0de');
+                    tempVar = this;
+                } else {
+                    var _color = angular.element(this).css('background-color');
+                    angular.element(this).css('background-color', '#5bc0de');
+                    angular.element(tempVar).css('background-color', tempColor);
+                    tempColor = _color;
+                    tempVar = this;
+                }
+                var start = moment(date).startOf('day').toDate();
+                var end = moment(date).endOf('day').toDate();
+                //vou informar o filtro.
+                $scope.dataFiltro = date.format("DD/MM/YYYY");
+                //faço o filtro somente na tabela.
+                loadTable(start, end);
             };
 
-            function loadTable() {
+            function loadTable(start, end) {
                 $rootScope.showLoading = true;
-                $scope.events = [];
                 var query = {
                     'data': {
                         '$gte': {
-                            '$date': $scope.dataStart
+                            '$date': start
                         },
                         '$lte': {
-                            '$date': $scope.dataEnd
+                            '$date': end
                         }
                     },
                     usuario: $scope.idUsuario
                 };
                 Hora.query(query).then(function (horas) {
-                    var horasMaxima = moment(new Date(1970, 0, 1, 8, 0, 0));
                     $scope.timesheets = horas;
-                    var grupos = $filter('groupBy')(horas, 'dataStr');
-                    angular.forEach(grupos, function (grupo, key) {
-                        var total = moment(new Date(1970, 0, 1, 0, 0, 0));
-                        for (var i = 0; i < grupo.length; i++) {
-                            var tempoMoment = moment(grupo[i].tempo.$date);
-                            total.add(tempoMoment.hour(), 'h').add(tempoMoment.minute(), 'm');
-                        }
-                        var event = {
-                            title: total.format("HH:mm"),
-                            start: moment(key).toDate(),
-                            allDay: true
-                        };
-                        if(total.isBefore(horasMaxima)) {
-                            event.color = '#a94442';
-                        }
-                        $scope.events.push(event);
-                    });
                     $rootScope.showLoading = false;
-                })
+                });
             }
 
             $scope.adicionarHora = function (horaSelecionada) {
@@ -109,11 +144,12 @@ angular.module('team-task')
                         templateUrl: 'views/modal/new-timesheet.html',
                         controller: function ($scope, idUsuario, horaSelecionada) {
                             $scope.edicao = false;
-                            if(horaSelecionada) {
+                            if (horaSelecionada) {
                                 $scope.edicao = true;
                                 $scope.hora = horaSelecionada;
                                 $scope.hora.data.$date = new Date(horaSelecionada.data.$date);
                                 $scope.hora.tempo.$date = new Date(horaSelecionada.tempo.$date);
+
                             } else {
 
                                 $scope.hora = {
@@ -187,7 +223,7 @@ angular.module('team-task')
                                                         nome: time.nome + " / " + atividade.nome,
                                                         atividade: atividade.nome,
                                                         tipo: 1,
-                                                        ids : {
+                                                        ids: {
                                                             atividade: atividade.id,
                                                             time: atividade.time
                                                         }
@@ -203,17 +239,17 @@ angular.module('team-task')
                                         proms.push(Projeto.query(pQuery).then(function (projetos) {
                                             angular.forEach(projetos, function (projeto) {
                                                 angular.forEach(projeto.atividades, function (atividade) {
-                                                    var timeF = $filter('filter')(times, {_id: {$oid: atividade.time }});
+                                                    var timeF = $filter('filter')(times, {_id: {$oid: atividade.time}});
                                                     var nomeTime = "";
-                                                    if(timeF && timeF.length > 0){
+                                                    if (timeF && timeF.length > 0) {
                                                         nomeTime = " / " + timeF[0].nome;
                                                     }
-                                                    if(atividade.designado === idUsuario) {
+                                                    if (atividade.designado === idUsuario) {
                                                         $scope.listaAtividades.push({
                                                             nome: projeto.nome + nomeTime + " / " + atividade.nome,
                                                             tipo: 0,
                                                             atividade: atividade.nome,
-                                                            ids : {
+                                                            ids: {
                                                                 projeto: projeto._id.$oid,
                                                                 atividade: atividade.id,
                                                                 time: atividade.time
@@ -224,6 +260,15 @@ angular.module('team-task')
                                             });
                                         }));
                                         $q.all(proms).then(function () {
+                                            if($scope.hora.atividade) {
+                                                var atv = $filter('filter')($scope.listaAtividades, {nome: $scope.hora.atividade.nome});
+                                                if (atv.length > 0) {
+                                                    var indexList = $scope.listaAtividades.indexOf(atv[0]);
+                                                    if (indexList > -1) {
+                                                        $scope.listaAtividades[indexList] = $scope.hora.atividade;
+                                                    }
+                                                }
+                                            }
                                             $scope.showSelectLoading = false;
                                         });
                                     } else {
@@ -234,7 +279,7 @@ angular.module('team-task')
                             }
 
                             $scope.ok = function () {
-                                if($scope.hora.data.$date) {
+                                if ($scope.hora.data.$date) {
                                     $scope.hora.dataStr = moment($scope.hora.data.$date).format("YYYY-MM-DD");
                                     if ($scope.edicao) {
                                         horaSelecionada.$saveOrUpdate().then(function () {
@@ -253,6 +298,33 @@ angular.module('team-task')
                             $scope.cancel = function () {
                                 $scope.$dismiss();
                             };
+
+                            $scope.delete = function (hora) {
+                                $uibModal
+                                    .open({
+                                            templateUrl: 'views/modal/delete-timesheet.html',
+                                            controller: function ($scope, hora) {
+                                                $scope.hora = hora;
+                                                $scope.ok = function () {
+                                                    $scope.$close(true);
+                                                };
+                                                $scope.cancel = function () {
+                                                    $scope.$dismiss();
+                                                };
+                                            },
+                                        resolve: {
+                                            hora: function () {
+                                                return hora;
+                                            }
+                                        }
+                                    }).result.then(function () {
+                                        hora.$remove().then(function () {
+                                            $scope.$close(true);
+                                        });
+                                }, function () {
+                                });
+
+                            }
                         },
                         resolve: {
                             idUsuario: function () {
@@ -263,7 +335,7 @@ angular.module('team-task')
                             }
                         }
                     }).result.then(function () {
-                        loadTable();
+                    uiCalendarConfig.calendars['timesheet'].fullCalendar('refetchEvents');
                 }, function () {
                 });
             };

@@ -29,7 +29,16 @@
         <button ng-click="mudarData();" class="btn btn-primary">Buscar Data</button>
         <button ng-click="mudarMes();" class="btn btn-primary">Buscar Mes</button>
         -->
-        <div id="calendar" ui-calendar="uiConfig.calendar"></div>
+        <div id="calendar" ui-calendar="uiConfig.calendar" calendar="timesheet"></div>
+    </div>
+
+    <div>
+        <div class="tags" ng-show="dataFiltro">
+            <div class="tag label label-success">
+                Filtrando: {{dataFiltro}}&nbsp;<a ng-click="cancelarFiltro();" class="close">x</a>
+            </div>
+        </div>
+
     </div>
     <table datatable="ng" dt-options="dtOptions" class="table table-hover">
         <thead>

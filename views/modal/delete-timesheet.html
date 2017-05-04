@@ -1,0 +1,22 @@
+<div class="modal-header text-center">
+    <h4 class="modal-title">Excluindo Marcação</h4>
+</div>
+<div class="modal-body">
+    <div class="alert alert-danger text-center" role="alert">
+        <p>Você deseja excluir a marcação?</p>
+        <p><strong>DATA:</strong> {{hora.data.$date | date:"dd/MM/yyyy"}} <strong>TEMPO:</strong> {{hora.tempo.$date | date:"HH:mm"}}</p>
+        <p>
+            <strong>Atividade:</strong> {{hora.tipo}}
+        </p>
+        <p ng-show="hora.atividade">
+            <strong>SO/Chamado:</strong> {{hora.atividade.nome}}
+        </p>
+        <label ng-show="hora.nota">Observação</label>
+        <pre ng-show="hora.nota" class="nota-preline text-left">{{hora.nota}}</pre>
+        <p>Essa ação não poderá ser desfeita.</p>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-success" ng-click="ok()">Confirmar</button>
+</div>

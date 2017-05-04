@@ -1,6 +1,7 @@
 <div class="modal-header text-center">
     <h4 class="modal-title">
-        Nova Marcação de Hora
+        <span ng-hide="edicao">Nova&nbsp;</span>Marcação de Hora
+        &nbsp;<span ng-show="edicao" class="pointer-action" ng-click="delete(hora)"><i class="fa fa-trash-o"></i></span>
     </h4>
 </div>
 <form novalidate name="formulario" ng-submit="ok();">
