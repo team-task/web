@@ -75,7 +75,7 @@ angular.module('team-task')
                     calendar: {
                         lang: 'pt-br',
                         height: 'auto',
-                        editable: true,
+                        editable: false,
                         header: {
                             left: 'title',
                             center: '',
@@ -98,6 +98,11 @@ angular.module('team-task')
                 angular.element(tempVar).css('background-color', tempColor);
                 uiCalendarConfig.calendars['timesheet'].fullCalendar('refetchEvents');
             };
+            $scope.diaRender = function (date, cell) {
+                angular.element(cell).on('dblclick', function () {
+                    console.log('date', date);
+                });
+            };
             $scope.diaClicado = function (date) {
                 //var iscurrentDate = date.isSame(new Date(), "day");
                 if (tempVar === "") {
@@ -115,6 +120,7 @@ angular.module('team-task')
                 var end = moment(date).endOf('day').toDate();
                 //vou informar o filtro.
                 $scope.dataFiltro = date.format("DD/MM/YYYY");
+                $scope.dataClicada = moment(date.format("YYYY-MM-DD")).startOf('day').toDate();
                 //faço o filtro somente na tabela.
                 loadTable(start, end);
             };
@@ -138,11 +144,11 @@ angular.module('team-task')
                 });
             }
 
-            $scope.adicionarHora = function (horaSelecionada) {
+            $scope.adicionarHora = function (horaSelecionada, dataClicada) {
                 $uibModal
                     .open({
                         templateUrl: 'views/modal/new-timesheet.html',
-                        controller: function ($scope, idUsuario, horaSelecionada) {
+                        controller: function ($scope, idUsuario, horaSelecionada, dataClicada) {
                             $scope.edicao = false;
                             if (horaSelecionada) {
                                 $scope.edicao = true;
@@ -151,10 +157,10 @@ angular.module('team-task')
                                 $scope.hora.tempo.$date = new Date(horaSelecionada.tempo.$date);
 
                             } else {
-
+                                var dataSelecao = dataClicada ? moment(dataClicada).toDate() : moment().toDate();
                                 $scope.hora = {
                                     data: {
-                                        $date: moment().toDate()
+                                        $date: dataSelecao
                                     },
                                     tempo: {
                                         $date: new Date(1970, 0, 1, 0, 0, 0)
@@ -332,6 +338,9 @@ angular.module('team-task')
                             },
                             horaSelecionada: function () {
                                 return horaSelecionada;
+                            },
+                            dataClicada: function () {
+                                return dataClicada;
                             }
                         }
                     }).result.then(function () {
