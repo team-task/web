@@ -10,7 +10,7 @@ angular.module('team-task')
             $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').toDate();
             $scope.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(25);
             $scope.initWorkspaceTimesheet = function () {
-                $scope.excel = {down: function () {}};
+
                 $scope.eventSources = [{
                     events: function (start, end, b, callback) {
                         if ($rootScope.usuarioLogado) {
@@ -136,6 +136,7 @@ angular.module('team-task')
                                     horas[i].tipo,
                                     horas[i].atividade ? horas[i].atividade.atividade : "",
                                     moment(horas[i].tempo.$date).format("HH:mm"),
+                                    "",
                                     horas[i].nota
                                 ];
                                 dados.push(linha);
