@@ -4,7 +4,7 @@ angular.module('team-task', [
     'ngAnimate', 'ngExcel',
     'gantt', 'gantt.table', 'gantt.tooltips', 'gantt.overlap', 'gantt.dependencies', 'gantt.progress',
     'gantt.movable', 'gantt.resizeSensor',
-    'checklist-model', 'ngSanitize', 'ngCsv', 'angular-md5', 'ui.calendar'
+    'checklist-model', 'ngSanitize', 'ngCsv', 'angular-md5', 'ui.calendar', 'angular-js-xlsx'
 ])
     .constant('MONGOLAB_CONFIG', {API_KEY: 'YXgR-q92vuVCKlSm-ji3nplDTE7rHIQh', DB_NAME: 'tt'})
     .run(function (amMoment) {
