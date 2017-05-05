@@ -56,7 +56,19 @@
             </li>
             <li class="nav-divider"></li>
             <li>
-                <a ui-sref="workspace.timesheet" class="pointer-action link-leftnavigation">Planilha de Horas</a>
+                <a ng-hide="userManager" ui-sref="workspace.timesheet" class="pointer-action link-leftnavigation">Planilha de Horas</a>
+                <span ng-show="userManager" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTimesheet"
+                      data-target="#collapseTimesheet" class="pointer-action pull-right fa fa-arrow-down collapse-link"></span>
+                <a ng-show="userManager" ui-sref="workspace.timesheet" class="pointer-action link-leftnavigation">Planilha de Horas
+                    &nbsp;<span ng-show="menuTimesheetLoading" class="glyphicon glyphicon-refresh rotating"></span>
+                </a>
+                <ul ng-show="userManager" class="nav collapse {{collapsed[3]}}" id="collapseTimesheet">
+                    <li class="tt-sub-menu" ng-repeat="pessoa in recursosMenu | orderBy: 'nome'">
+                        <a ui-sref="workspace.resourcetimesheet({'id': pessoa._id.$oid})">
+                            {{pessoa.nome}}
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>

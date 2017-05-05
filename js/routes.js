@@ -21,7 +21,7 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             },
             data: {
                 requiredlogin: true,
-                collapsed: ["in", "", ""],
+                collapsed: ["in", "", "", ""],
                 showMenu: true
             }
         })
@@ -32,7 +32,7 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             reloadOnSearch: false,
             data: {
                 requiredlogin: true,
-                collapsed: ["in", "", ""],
+                collapsed: ["in", "", "", ""],
                 showMenu: true
             }
         })
@@ -43,7 +43,7 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             controller: 'WorkspaceActivitiesController',
             data: {
                 requiredlogin: true,
-                collapsed: ["", "in", ""]
+                collapsed: ["", "in", "", ""]
             }
         })
         .state('workspace.project', {
@@ -81,7 +81,7 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             controller: 'TeamActivitiesController',
             data: {
                 requiredlogin: true,
-                collapsed: ["", "in", ""]
+                collapsed: ["", "in", "", ""]
             }
         })
         .state('workspace.workforces', {
@@ -91,7 +91,7 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             controller: 'WorkspaceWorkforceController',
             data: {
                 requiredlogin: true,
-                collapsed: ["", "", "in"]
+                collapsed: ["", "", "in", ""]
             }
         })
         .state('workspace.workforce', {
@@ -101,7 +101,17 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             controller: 'WorkforceController',
             data: {
                 requiredlogin: true,
-                collapsed: ["", "", "in"]
+                collapsed: ["", "", "in", ""]
+            }
+        })
+        .state('workspace.resourcetimesheet', {
+            url: '/timesheet/:id',
+            templateUrl: 'views/timesheet.html',
+            reloadOnSearch: false,
+            controller: 'WorkspaceTimesheetController',
+            data: {
+                requiredlogin: true,
+                collapsed: ["", "", "", "in"]
             }
         })
         .state('workspace.timesheet', {
@@ -111,7 +121,7 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
             controller: 'WorkspaceTimesheetController',
             data: {
                 requiredlogin: true,
-                collapsed: ["", "", ""]
+                collapsed: ["", "", "", "in"]
             }
         });
 });

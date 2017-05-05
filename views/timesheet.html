@@ -1,7 +1,7 @@
 <div class="task-list-panel container-fluid wow fadeIn data-animation" data-wow-duration="1s" ng-init="initWorkspaceTimesheet()">
     <div>
         <h3 class="page-header">
-            Planilha de Horas
+            Planilha de Horas<span ng-show="usuarioPlanilha">: {{usuarioPlanilha}}</span>
             <button ng-click="adicionarHora(null, dataClicada);" class="btn btn-danger btn-sm tt-btn-round"
                     uib-tooltip="Adicionar Marcação">
                 <i class="fa fa-plus"></i>
@@ -14,7 +14,12 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownProjectMenu">
                     <li>
                         <span class="pointer-action upload-csv" ng-click="exportarTabela();">
-                            <i class="fa fa-file-excel-o"></i>&nbsp;Exportar Planilha de Horas
+                            <i class="fa fa-file-excel-o"></i>&nbsp;Exportar Minha Planilha de Horas
+                        </span>
+                    </li>
+                    <li ng-show="userManager">
+                        <span class="pointer-action upload-csv" ng-click="exportarTabelaEquipe();">
+                            <i class="fa fa-file-excel-o"></i>&nbsp;Exportar Planilha de Horas da Equipe
                         </span>
                     </li>
                 </ul>

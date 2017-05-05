@@ -153,6 +153,27 @@ angular.module('team-task')
                             loadWorkforce();
                         });
 
+                        $rootScope.$on("CallLoadWorkforceMenus", function () {
+                            loadTimesheet();
+                        });
+
+                        function loadTimesheet() {
+                            $scope.recursosMenu = [];
+                            if ($rootScope.usuarioLogado) {
+                                $scope.userManager = false;
+                                $scope.menuTimesheetLoading  = true;
+                                if ($rootScope.usuarioLogado.perfil === 'lider') {
+                                    $scope.userManager = true;
+                                    var qPessoa = {
+                                        cadastrado: $rootScope.usuarioLogado._id.$oid
+                                    };
+                                    Pessoa.query(qPessoa, {f: {'nome': 1, '_id': 1}}).then(function (pessoas) {
+                                        $scope.recursosMenu = pessoas;
+                                        $scope.menuTimesheetLoading = false;
+                                    });
+                                }
+                            }
+                        }
 
                         function loadProjects() {
                             $scope.projetosMenu = [];
@@ -342,9 +363,11 @@ angular.module('team-task')
 
                         function loadMenus() {
                             if ($rootScope.usuarioLogado) {
+                                $scope.userManager = false;
                                 loadProjects();
                                 loadTeams();
                                 loadWorkforce();
+                                loadTimesheet();
                             }
                         }
                     }

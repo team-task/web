@@ -1,25 +1,35 @@
 angular.module('team-task')
-    .controller('WorkspaceTimesheetController', ['$scope', '$rootScope', '$state', 'Atividade', 'Time',
+    .controller('WorkspaceTimesheetController', ['$scope', '$rootScope', '$state', '$stateParams', 'Atividade', 'Time',
         '$resource', '$filter', 'Pessoa', 'Projeto', '$q', 'DTOptionsBuilder', '$uibModal', 'Hora', 'uiCalendarConfig',
-        function ($scope, $rootScope, $state, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q, DTOptionsBuilder,
-                  $uibModal, Hora, uiCalendarConfig) {
+        function ($scope, $rootScope, $state, $stateParams, Atividade, Time, $resource, $filter, Pessoa, Projeto, $q,
+                  DTOptionsBuilder, $uibModal, Hora, uiCalendarConfig) {
             $scope.timesheets = [];
             $scope.dataPesquisa = moment().toDate();
             $scope.dataFiltro = "";
             $scope.dataStart = moment($scope.dataPesquisa).startOf('day').toDate();
             $scope.dataEnd = moment($scope.dataPesquisa).endOf('day').toDate();
             $scope.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(25);
+            var cabecalho = [
+                "Gestor", "Funcionário", "Data", "Atividade",
+                "Código da SO ou Chamado Exclusivo", "Qtd de Horas (hh:mm)",
+                "Qtd em % 	Observação (preenchimento opcional)"];
             $scope.initWorkspaceTimesheet = function () {
+                $scope.resourceUserId = $stateParams.id;
+                $rootScope.collapsed = $state.current.data.collapsed;
+                if ($rootScope.usuarioLogado) {
+                    $scope.usuarioPlanilha = "";
+                    if ($scope.resourceUserId && $scope.resourceUserId !== $rootScope.usuarioLogado._id.$oid) {
+                        $scope.idUsuario = $scope.resourceUserId;
+                        Pessoa.getById($scope.resourceUserId).then(function (usuario) {
+                            $scope.usuarioPlanilha = usuario.nome;
+                        });
+                    } else {
+                        $scope.idUsuario = $rootScope.usuarioLogado._id.$oid;
+                    }
+                }
 
                 $scope.eventSources = [{
                     events: function (start, end, b, callback) {
-                        if ($rootScope.usuarioLogado) {
-                            if ($rootScope.usuarioLogado.perfil === 'gerente') {
-                                $scope.idUsuario = $rootScope.usuarioLogado.subordinado;
-                            } else {
-                                $scope.idUsuario = $rootScope.usuarioLogado._id.$oid;
-                            }
-                        }
                         var query = {
                             'data': {
                                 '$gte': {
@@ -68,43 +78,100 @@ angular.module('team-task')
                 };
 
                 function Workbook() {
-                    if(!(this instanceof Workbook)) return new Workbook();
+                    if (!(this instanceof Workbook)) return new Workbook();
                     this.SheetNames = [];
                     this.Sheets = {};
                 }
 
                 function sheet_from_array_of_arrays(data, opts) {
                     var ws = {};
-                    var range = {s: {c:10000000, r:10000000}, e: {c:0, r:0 }};
-                    for(var R = 0; R !== data.length; ++R) {
-                        for(var C = 0; C !== data[R].length; ++C) {
-                            if(range.s.r > R) range.s.r = R;
-                            if(range.s.c > C) range.s.c = C;
-                            if(range.e.r < R) range.e.r = R;
-                            if(range.e.c < C) range.e.c = C;
-                            var cell = {v: data[R][C] };
-                            if(cell.v === null) continue;
-                            var cell_ref = XLSX.utils.encode_cell({c:C,r:R});
+                    var range = {s: {c: 10000000, r: 10000000}, e: {c: 0, r: 0}};
+                    for (var R = 0; R !== data.length; ++R) {
+                        for (var C = 0; C !== data[R].length; ++C) {
+                            if (range.s.r > R) range.s.r = R;
+                            if (range.s.c > C) range.s.c = C;
+                            if (range.e.r < R) range.e.r = R;
+                            if (range.e.c < C) range.e.c = C;
+                            var cell = {v: data[R][C]};
 
-                            if(typeof cell.v === 'number') cell.t = 'n';
-                            else if(typeof cell.v === 'boolean') cell.t = 'b';
+                            if (cell.v === null) continue;
+                            var cell_ref = XLSX.utils.encode_cell({c: C, r: R});
+
+                            if (typeof cell.v === 'number') cell.t = 'n';
+                            else if (typeof cell.v === 'boolean') cell.t = 'b';
                             else cell.t = 's';
 
                             ws[cell_ref] = cell;
                         }
                     }
-                    if(range.s.c < 10000000) ws['!ref'] = XLSX.utils.encode_range(range);
+                    if (range.s.c < 10000000) ws['!ref'] = XLSX.utils.encode_range(range);
                     return ws;
                 }
+
                 function s2ab(s) {
                     var buf = new ArrayBuffer(s.length);
                     var view = new Uint8Array(buf);
-                    for (var i=0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                    for (var i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
                     return buf;
                 }
 
+                $scope.exportarTabelaEquipe = function () {
+                    waitingDialog.show('Gerando arquivo de Equipe. Aguarde.');
+                    //exportar só o mês
+                    var dateGetted = uiCalendarConfig.calendars['timesheet'].fullCalendar('getDate');
+                    var start = moment(dateGetted.toDate()).startOf('month').startOf('day');
+                    var end = moment(dateGetted.toDate()).endOf('month').endOf('day');
+                    var query = {
+                        'data': {
+                            '$gte': {
+                                '$date': start.toDate()
+                            },
+                            '$lte': {
+                                '$date': end.toDate()
+                            }
+                        },
+                        usuario: {
+                            $in: []
+                        }
+                    };
+                    var qPessoa = {
+                        cadastrado: $rootScope.usuarioLogado._id.$oid
+                    };
+                    Pessoa.query(qPessoa, {s: {'nome': 1}, f: {'nome': 1, '_id': 1, 'usuario': 1}}).then(function (pessoas) {
+                        for(var index = 0; index < pessoas.length; index++) {
+                            query.usuario.$in.push(pessoas[index]._id.$oid);
+                        }
+                        Hora.query(query, {sort: {usuario: 1, data: 1}}).then(function (horas) {
+                            var dados = [];
+                            dados.push(cabecalho);
+                            for (var i = 0; i < horas.length; i++) {
+                                var usuario = $filter('filter')(pessoas, {_id : {$oid: horas[i].usuario}})[0];
+                                var linha = [
+                                    $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                    usuario.usuario.toUpperCase(),
+                                    moment(horas[i].data.$date).format("DD/MM/YYYY"),
+                                    horas[i].tipo,
+                                    horas[i].atividade ? horas[i].atividade.atividade : "",
+                                    moment(horas[i].tempo.$date).format("HH:mm"),
+                                    "",
+                                    horas[i].nota
+                                ];
+                                dados.push(linha);
+                            }
+                            waitingDialog.hide();
+                            //$scope.excel.down(excelData);
+                            var ws_name = "Timesheet";
+                            var wb = new Workbook(), ws = sheet_from_array_of_arrays(dados);
+                            wb.SheetNames.push(ws_name);
+                            wb.Sheets[ws_name] = ws;
+                            var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: true, type: 'binary'});
+                            saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), "Timesheet.xlsx")
+                        });
+                    });
+                };
+
                 $scope.exportarTabela = function () {
-                    if($scope.timesheets) {
+                    if ($scope.timesheets) {
                         waitingDialog.show('Gerando arquivo. Aguarde.');
                         //exportar só o mês
                         var dateGetted = uiCalendarConfig.calendars['timesheet'].fullCalendar('getDate');
@@ -122,10 +189,6 @@ angular.module('team-task')
                             usuario: $scope.idUsuario
                         };
                         Hora.query(query, {sort: {data: 1}}).then(function (horas) {
-                            var cabecalho = [
-                                "Gestor","Funcionário","Data","Atividade",
-                                "Código da SO ou Chamado Exclusivo","Qtd de Horas (hh:mm)",
-                                "Qtd em % 	Observação (preenchimento opcional)"];
                             var dados = [];
                             dados.push(cabecalho);
                             for (var i = 0; i < horas.length; i++) {
@@ -141,22 +204,14 @@ angular.module('team-task')
                                 ];
                                 dados.push(linha);
                             }
-                            /*
-                            var excelData = [
-                                {
-                                    "name": "Timesheet",
-                                    "data":  dados
-                                }
-                            ];
-                            */
                             waitingDialog.hide();
                             //$scope.excel.down(excelData);
                             var ws_name = "Timesheet";
                             var wb = new Workbook(), ws = sheet_from_array_of_arrays(dados);
                             wb.SheetNames.push(ws_name);
                             wb.Sheets[ws_name] = ws;
-                            var wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-                            saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "Timesheet.xlsx")
+                            var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: true, type: 'binary'});
+                            saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), "Timesheet.xlsx")
                         });
                     }
                 };
@@ -356,7 +411,7 @@ angular.module('team-task')
                                             });
                                         }));
                                         $q.all(proms).then(function () {
-                                            if($scope.hora.atividade) {
+                                            if ($scope.hora.atividade) {
                                                 var atv = $filter('filter')($scope.listaAtividades, {nome: $scope.hora.atividade.nome});
                                                 if (atv.length > 0) {
                                                     var indexList = $scope.listaAtividades.indexOf(atv[0]);
@@ -398,25 +453,25 @@ angular.module('team-task')
                             $scope.delete = function (hora) {
                                 $uibModal
                                     .open({
-                                            templateUrl: 'views/modal/delete-timesheet.html',
-                                            controller: function ($scope, hora) {
-                                                $scope.hora = hora;
-                                                $scope.ok = function () {
-                                                    $scope.$close(true);
-                                                };
-                                                $scope.cancel = function () {
-                                                    $scope.$dismiss();
-                                                };
-                                            },
+                                        templateUrl: 'views/modal/delete-timesheet.html',
+                                        controller: function ($scope, hora) {
+                                            $scope.hora = hora;
+                                            $scope.ok = function () {
+                                                $scope.$close(true);
+                                            };
+                                            $scope.cancel = function () {
+                                                $scope.$dismiss();
+                                            };
+                                        },
                                         resolve: {
                                             hora: function () {
                                                 return hora;
                                             }
                                         }
                                     }).result.then(function () {
-                                        hora.$remove().then(function () {
-                                            $scope.$close(true);
-                                        });
+                                    hora.$remove().then(function () {
+                                        $scope.$close(true);
+                                    });
                                 }, function () {
                                 });
 
