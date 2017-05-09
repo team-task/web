@@ -123,5 +123,15 @@ angular.module('team-task').config(function ($stateProvider, $urlRouterProvider)
                 requiredlogin: true,
                 collapsed: ["", "", "", "in"]
             }
+        })
+        .state('workspace.dashboards', {
+            url: '/dashboards',
+            templateUrl: 'views/dashboards.html',
+            reloadOnSearch: false,
+            controller: 'WorkspaceDashboardsController',
+            data: {
+                requiredlogin: true,
+                collapsed: ["", "", "", ""]
+            }
         });
 });

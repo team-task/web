@@ -1,20 +1,20 @@
 angular.module('team-task')
     .directive(
-    "mAppLoading",
-    function ($animate) {
-        return ({
-            link: link,
-            restrict: "C"
-        });
-        function link(scope, element, attributes) {
-            $animate.leave(element.children().eq(1)).then(
-                function cleanupAfterAnimation() {
-                    element.remove();
-                    scope = element = attributes = null;
-                }
-            );
-        }
-    })
+        "mAppLoading",
+        function ($animate) {
+            return ({
+                link: link,
+                restrict: "C"
+            });
+            function link(scope, element, attributes) {
+                $animate.leave(element.children().eq(1)).then(
+                    function cleanupAfterAnimation() {
+                        element.remove();
+                        scope = element = attributes = null;
+                    }
+                );
+            }
+        })
     .directive('header', ['$document', function ($document) {
         return {
             restrict: 'A',
@@ -60,8 +60,8 @@ angular.module('team-task')
                                 templateUrl: 'views/modal/my-profile.html',
                                 controller: 'ModalMyProfileController'
                             }).result.then(function () {
-                            }, function () {
-                            });
+                        }, function () {
+                        });
                     };
                     $scope.editarAtividadeTimeSearch = function (atividade) {
                         $uibModal
@@ -77,9 +77,9 @@ angular.module('team-task')
                                     }
                                 }
                             }).result.then(function () {
-                                $rootScope.$emit("CallLoadMenus", {});
-                            }, function () {
-                            });
+                            $rootScope.$emit("CallLoadMenus", {});
+                        }, function () {
+                        });
                     };
                     $scope.mostrarDetalheAtividadeTimeSearch = function (atividade) {
                         $uibModal
@@ -92,8 +92,8 @@ angular.module('team-task')
                                     }
                                 }
                             }).result.then(function () {
-                            }, function () {
-                            });
+                        }, function () {
+                        });
                     };
                     $scope.ajustes = function () {
                         AjustesDB.ajusteNotasAtividades();
@@ -161,7 +161,7 @@ angular.module('team-task')
                             $scope.recursosMenu = [];
                             if ($rootScope.usuarioLogado) {
                                 $scope.userManager = false;
-                                $scope.menuTimesheetLoading  = true;
+                                $scope.menuTimesheetLoading = true;
                                 if ($rootScope.usuarioLogado.perfil === 'lider') {
                                     $scope.userManager = true;
                                     var qPessoa = {
@@ -397,6 +397,144 @@ angular.module('team-task')
             '<pre class="nota-preline">{{nota.nota}}</pre>' +
             '</div>' +
             '</div>';
+        return ddo;
+    })
+    .directive('heatmapTimesheetChart', function ($window) {
+        var ddo = {};
+        ddo.restrict = 'AE';
+        ddo.template = "<svg></svg>";
+        ddo.scope = {
+            heatmapData: '=',
+            heatmapDays: '=',
+            heamapDaysMonth: '='
+        };
+        ddo.link = function (scope, elem, attrs) {
+            var d3 = $window.d3;
+            var rawSvg = elem.find("svg")[0];
+            var margin = {top: 50, right: 0, bottom: 100, left: 100},
+                width = 880 - margin.left - margin.right,
+                height = 600 - margin.top - margin.bottom,
+                gridSize = Math.floor(width / scope.heamapDaysMonth),
+                legendElementWidth = gridSize * 2,
+                buckets = 9,
+                colors = ["#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58"],
+                recursos = [],
+                recursosLabels = [],
+                dataPlot = [];
+
+
+            scope.$watch('heatmapData', function (newVal, oldVal) {
+
+                var svg = d3.select(rawSvg).attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                d3.selectAll('svg > g > *').remove();
+
+                var dias = scope.heatmapDays;
+                var diasLabel = svg.selectAll(".diasLabel")
+                    .data(dias)
+                    .enter().append("text")
+                    .text(function (d) {
+                        return d;
+                    })
+                    .attr("x", function (d, i) {
+                        return i * gridSize;
+                    })
+                    .attr("y", 0)
+                    .style("text-anchor", "middle")
+                    .attr("transform", "translate(" + gridSize / 2 + ", -6)");
+
+                recursosLabels = [];
+                recursos = [];
+                for (var b = 0; b < scope.heatmapData.length; b++) {
+                    recursosLabels.push(scope.heatmapData[b].recurso);
+                    recursos.push(b);
+                }
+                var recursosLabel = svg.selectAll(".recursosLabel")
+                    .data(recursos)
+                    .enter().append("text")
+                    .text(function (d) {
+                        return recursosLabels[d];
+                    })
+                    .attr("x", 0)
+                    .attr("y", function (d, i) {
+                        return i * gridSize;
+                    })
+                    .style("text-anchor", "end")
+                    .attr("transform", "translate(-6," + gridSize / 1.5 + ")");
+                for (var a = 0; a < scope.heatmapData.length; a++) {
+                    dataPlot = dataPlot.concat(scope.heatmapData[a].horas)
+                }
+                var colorScale = d3.scaleQuantile()
+                    .domain([0, 4, 8])
+                    .range(colors);
+
+                var cards = svg.selectAll(".hour")
+                    .data(dataPlot, function (d) {
+                        return d.recurso + ':' + d.data;
+                    });
+                cards.append("title");
+
+                cards.enter().append("rect")
+                    .attr("x", function (d) {
+                        return (d.data - 1) * gridSize;
+                    })
+                    .attr("y", function (d) {
+                        return (d.recurso - 1) * gridSize;
+                    })
+                    .attr("rx", 4)
+                    .attr("ry", 4)
+                    .attr("class", "hour bordered")
+                    .attr("width", gridSize)
+                    .attr("height", gridSize)
+                    .style("fill", function (d) {
+                        return colorScale(d.horas);
+                    });
+
+                cards.transition().duration(1000)
+                    .style("fill", function (d) {
+                        return colorScale(d.horas);
+                    });
+
+                cards.select("title").text(function (d) {
+                    return d.horas;
+                });
+
+                cards.exit().remove();
+
+                var legend = svg.selectAll(".legend")
+                    .data([0].concat(colorScale.quantiles()), function (d) {
+                        return d;
+                    });
+
+                legend.enter().append("g")
+                    .attr("class", "legend");
+
+                legend.append("rect")
+                    .attr("x", function (d, i) {
+                        return legendElementWidth * i;
+                    })
+                    .attr("y", height)
+                    .attr("width", legendElementWidth)
+                    .attr("height", gridSize / 2)
+                    .style("fill", function (d, i) {
+                        return colors[i];
+                    });
+
+                legend.append("text")
+                    .text(function (d) {
+                        return "≥ " + Math.round(d);
+                    })
+                    .attr("x", function (d, i) {
+                        return legendElementWidth * i;
+                    })
+                    .attr("y", height + gridSize);
+
+                legend.exit().remove();
+            });
+        };
         return ddo;
     });
 function sendFileContent(contents) {
