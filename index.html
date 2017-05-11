@@ -104,12 +104,19 @@
                 </div>
                 <script>
                     var progress = 1;
-                    window.setTimeout(IndeterminateProgress(), 100);
+                    IndeterminateProgress();
+                    var progressInterval = window.setInterval(function () { IndeterminateProgress(); }, 100);
                     function IndeterminateProgress() {
                         progress = progress < 100 ? (progress + 1) : 1;
-                        document.getElementById("indeterminate-progress").setAttribute("style", "width: " + progress + "%");
+                        var element = document.getElementById("indeterminate-progress");
+                        if(!element) {
+                            clearInterval(progressInterval);
+                        } else {
+                            element.setAttribute("style", "width: " + progress + "%");
+                        }
                     }
-                    IndeterminateProgress();
+
+
                 </script>
             </div>
             <p>
