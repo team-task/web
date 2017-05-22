@@ -1,5 +1,5 @@
 <div class="modal-header text-center">
-    <h4 class="modal-title">Editando Atividade de: {{projeto.nome}}&nbsp;<span class="pointer-action" ng-click="deleteActivity()"><i class="fa fa-trash-o"></i></span></h4>
+    <h4 class="modal-title">Editando Atividade de: {{projeto.nome}}&nbsp;<span ng-hide="disableEdit" class="pointer-action" ng-click="deleteActivity()"><i class="fa fa-trash-o"></i></span></h4>
 </div>
 <div class="modal-body" ng-init="initModalEditActivity()">
     <div class="panel panel-primary">
@@ -7,7 +7,8 @@
             <div class="form-group">
                 <label>Nome</label>
                 <input type="text" class="form-control" ng-model="projeto.atividades[indice].nome"
-                       placeholder="Nome da nova atividade" ng-focus="activityNameErro = ''">
+                       placeholder="Nome da nova atividade" ng-focus="activityNameErro = ''"
+                ng-readonly="disableEdit">
                 <span ng-show="activityNameErro !==''" class="help-block alert-danger">
                     {{activityNameErro}}
                 </span>
@@ -18,7 +19,7 @@
                 <select id="status" class="form-control" ng-model="projeto.atividades[indice].status">
                     <option value="Aguardando">Aguardando</option>
                     <option value="Iniciada">Iniciada</option>
-                    <option value="Cancelada">Cancelada</option>
+                    <option ng-hide="disableEdit" value="Cancelada">Cancelada</option>
                     <option value="Concluída">Concluída</option>
                 </select>
             </div>
@@ -46,7 +47,7 @@
                 <label>Inicio</label>
                 <input type="date" class="form-control" ng-model="projeto.atividades[indice].inicio.$date"
                        placeholder="Data de Inicio" ng-change="calculaFim();"
-                       ng-focus="activityInicioErro = ''">
+                       ng-focus="activityInicioErro = ''" ng-readonly="disableEdit">
                 <span ng-show="activityInicioErro !==''" class="help-block alert-danger">
                     {{activityInicioErro}}
                 </span>
@@ -55,7 +56,7 @@
             <div class="form-group">
                 <label>Duração</label>
                 <input type="number" min="1" max="999" step="1" class="form-control" ng-model="projeto.atividades[indice].duracao"
-                       placeholder="Duração" ng-change="calculaFim();" ng-focus="activityDuracaoErro = ''">
+                       placeholder="Duração" ng-change="calculaFim();" ng-focus="activityDuracaoErro = ''" ng-readonly="disableEdit">
                 <span ng-show="activityDuracaoErro !==''" class="help-block alert-danger">
                     {{activityDuracaoErro}}
                 </span>
@@ -76,7 +77,7 @@
             <div class="form-group">
                 <label for="time">Time</label>
                 <select id="time" class="form-control" ng-model="projeto.atividades[indice].time" ng-options="time._id.$oid as time.nome for time in listaTimes"
-                        ng-change="carregaPessoas();" aria-describedby="helpBlock" ng-focus="activityTimeErro = ''">
+                        ng-change="carregaPessoas();" aria-describedby="helpBlock" ng-focus="activityTimeErro = ''" ng-readonly="disableEdit">
                     <option value="">Sem time</option>
                 </select>
                 <span ng-show="activityTimeErro !==''" class="help-block alert-danger">
@@ -95,7 +96,7 @@
             <div class="form-group">
                 <label for="designado">Desigando para</label>
                 <select id="designado" class="form-control" ng-model="projeto.atividades[indice].designado"
-                        ng-options="recurso._id.$oid as recurso.nome for recurso in listaRecursos">
+                        ng-options="recurso._id.$oid as recurso.nome for recurso in listaRecursos" ng-readonly="disableEdit">
                     <option value="">Sem designação</option>
                 </select>
             </div>

@@ -90,18 +90,22 @@
                         <td data-order="{{atividade.nomeTime}}">{{atividade.nomeTime}}</td>
                         <td class="tb-project-name">
                             <a ng-click="mostrarDetalheAtividade($index)" class="pointer-action">{{atividade.nome}}</a>&nbsp;
-                            <div class="dropdown tt-dropdown" ng-show="usuarioLogado._id.$oid === projeto.administrador">
-                                <span ng-show="usuarioLogado._id.$oid === projeto.administrador" class="btn-edit-project"
+                            <div class="dropdown tt-dropdown" ng-show="usuarioLogado._id.$oid === projeto.administrador || usuarioLogado._id.$oid === atividade.designado">
+                                <span ng-show="usuarioLogado._id.$oid === projeto.administrador || usuarioLogado._id.$oid === atividade.designado"
+                                      class="btn-edit-project"
                                       data-toggle="dropdown" id="dropdownMenu1">
                                     <i class="fa fa-ellipsis-h"></i></span>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                    <li><a ng-click="editarAtividade($index);">
+                                    <li ng-show="usuarioLogado._id.$oid === projeto.administrador || usuarioLogado._id.$oid === atividade.designado">
+                                        <a ng-click="editarAtividade($index);">
                                         <i class="fa fa-pencil-square-o"></i>&nbsp;Editar</a>
                                     </li>
-                                    <li><a ng-click="copiarAtividade($index);">
+                                    <li ng-show="usuarioLogado._id.$oid === projeto.administrador">
+                                        <a ng-click="copiarAtividade($index);">
                                         <i class="fa fa-clone"></i>&nbsp;Copiar</a>
                                     </li>
-                                    <li><a ng-click="moverAtividade($index);">
+                                    <li ng-show="usuarioLogado._id.$oid === projeto.administrador">
+                                        <a ng-click="moverAtividade($index);">
                                         <i class="fa fa-scissors"></i>&nbsp;Recortar</a>
                                     </li>
                                 </ul>

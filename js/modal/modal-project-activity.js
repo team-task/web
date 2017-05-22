@@ -264,15 +264,28 @@ angular.module('team-task')
             $scope.projeto = projetoSelecionado;
 
             var idusuario = $rootScope.usuarioLogado._id.$oid;
-            var qTime = {"lider": idusuario};
-            Time.query(qTime, {"sort": {"nome": 1}}).then(function (times) {
-                if (times[0]) {
-                    $scope.listaTimes = times;
-                    //if (projetoSelecionado.atividades[indice].designado) {
-                    $scope.carregaPessoas();
-                    //}
-                }
-            });
+            $scope.disableEdit = $rootScope.usuarioLogado._id.$oid !== projetoSelecionado.administrador;
+            //usuario nao é o administrador
+            if($scope.disableEdit) {
+                Time.getById(projetoSelecionado.atividades[indice].time).then(function (time) {
+                    if(time) {
+                        $scope.listaTimes.push(time);
+                        $scope.carregaPessoas();
+                    }
+                });
+            } else {
+                var qTime = {"lider": idusuario};
+                Time.query(qTime, {"sort": {"nome": 1}}).then(function (times) {
+                    if (times[0]) {
+                        $scope.listaTimes = times;
+                        //if (projetoSelecionado.atividades[indice].designado) {
+                        $scope.carregaPessoas();
+                        //}
+                    }
+                });
+
+            }
+
 
             /*
             if(projetoSelecionado.atividades[indice].designado) {
