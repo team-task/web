@@ -295,6 +295,8 @@ angular.module('team-task')
                         templateUrl: 'views/modal/new-timesheet.html',
                         controller: function ($scope, idUsuario, horaSelecionada, dataClicada) {
                             $scope.edicao = false;
+                            $scope.multiplos = false;
+                            $scope.quantidadeDias = null;
                             if (horaSelecionada) {
                                 $scope.edicao = true;
                                 $scope.hora = horaSelecionada;
@@ -437,6 +439,25 @@ angular.module('team-task')
                                             $scope.$close(true);
                                         });
                                     } else {
+                                        //multiplos dias foi marcado.
+                                        if($scope.multiplos && $scope.quantidadeDias > 0) {
+                                            var horaClone = angular.copy($scope.hora);
+                                            var loops = [];
+                                            for (var idx = 0; idx < $scope.quantidadeDias; idx++) {
+                                                if(idx !== 0) {
+                                                    var dia = horaClone.data.$date;
+                                                    var diaMoment = moment(dia).businessAdd(1);
+
+                                                }
+                                                var novamaracaoLoop = new Hora();
+                                                novamaracaoLoop = angular.merge(novamaracaoLoop, horaClone);
+                                                loops.push(novamaracaoLoop.$saveOrUpdate().then(function () {}));
+                                            }
+                                            $q.all(loops).then(function () {
+                                                $scope.$close(true);
+                                            });
+                                        }
+
                                         var novamaracao = new Hora();
                                         novamaracao = angular.merge(novamaracao, $scope.hora);
                                         novamaracao.$saveOrUpdate().then(function () {

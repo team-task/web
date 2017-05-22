@@ -51,14 +51,9 @@
         </thead>
         <tbody>
         <tr ng-repeat="timesheet in timesheets">
-
-            <td class="tb-project-name" data-order="{{timesheet.data.$date | timeMils}}">
-                {{timesheet.data.$date | date: "dd/MM/yyyy"}}
-                <span class="btn-edit-project" ng-click="adicionarHora(timesheet);">
-                    <i class="fa fa-pencil-square-o"></i>
-                </span>
+            <td data-order="{{timesheet.data.$date | timeMils}}">
+                <span class="btn-edit-timesheet" ng-click="adicionarHora(timesheet);">{{timesheet.data.$date | date: "dd/MM/yy"}}&nbsp;<i class="fa fa-pencil-square-o"></i> </span>
             </td>
-
             <td>{{timesheet.tipo}}</td>
             <td>{{timesheet.atividade.nome}}</td>
             <td>{{timesheet.tempo.$date | date: "HH:mm"}}</td>

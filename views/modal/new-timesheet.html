@@ -14,6 +14,13 @@
                     <input class="form-control" type="date" ng-model="hora.data.$date">
                 </div>
 
+                <div class="form-group" ng-hide="true">
+                    <label>
+                        <input type="checkbox" ng-model="multiplos"> Múltiplos dias?
+                    </label>
+                    <input class="form-control" type="number" ng-model="quantidadeDias" min="1" max="22" ng-disabled="!multiplos">
+                </div>
+
                 <div class="form-group">
                     <label>Tempo</label>
                     <input class="form-control" type="time" ng-model="hora.tempo.$date" min="00:00:01" max="23:59:59" autofocus>

@@ -345,6 +345,11 @@ form.login label {
     color: #0000FF;
 }
 
+.btn-edit-timesheet {
+    cursor: pointer;
+    color: #0000FF;
+}
+
 .tt-bgcolor-blue{
     background-color: #17ACFF
 }
