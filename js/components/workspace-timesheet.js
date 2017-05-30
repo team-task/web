@@ -83,7 +83,7 @@ angular.module('team-task')
                     this.Sheets = {};
                 }
 
-                function sheet_from_array_of_arrays(data, opts) {
+                function sheet_from_array_of_arrays(data) {
                     var ws = {};
                     var range = {s: {c: 10000000, r: 10000000}, e: {c: 0, r: 0}};
                     for (var R = 0; R !== data.length; ++R) {
@@ -137,15 +137,18 @@ angular.module('team-task')
                     var qPessoa = {
                         cadastrado: $rootScope.usuarioLogado._id.$oid
                     };
-                    Pessoa.query(qPessoa, {s: {'nome': 1}, f: {'nome': 1, '_id': 1, 'usuario': 1}}).then(function (pessoas) {
-                        for(var index = 0; index < pessoas.length; index++) {
+                    Pessoa.query(qPessoa, {
+                        s: {'nome': 1},
+                        f: {'nome': 1, '_id': 1, 'usuario': 1}
+                    }).then(function (pessoas) {
+                        for (var index = 0; index < pessoas.length; index++) {
                             query.usuario.$in.push(pessoas[index]._id.$oid);
                         }
                         Hora.query(query, {sort: {usuario: 1, data: 1}}).then(function (horas) {
                             var dados = [];
                             dados.push(cabecalho);
                             for (var i = 0; i < horas.length; i++) {
-                                var usuario = $filter('filter')(pessoas, {_id : {$oid: horas[i].usuario}})[0];
+                                var usuario = $filter('filter')(pessoas, {_id: {$oid: horas[i].usuario}})[0];
                                 var linha = [
                                     $rootScope.usuarioLogado.usuario.toUpperCase(),
                                     usuario.usuario.toUpperCase(),
@@ -362,7 +365,13 @@ angular.module('team-task')
                                         for (var i = 0; i < times.length; i++) {
                                             listaTimes.push(times[i]._id.$oid);
                                         }
-                                        proms.push(Atividade.query({"designado": idUsuario}).then(function (atividades) {
+                                        var aQuery = {
+                                            "designado": idUsuario,
+                                            "status": {
+                                                "$in": ["aguardando", "iniciada"]
+                                            }
+                                        };
+                                        proms.push(Atividade.query(aQuery).then(function (atividades) {
                                             angular.forEach(atividades, function (atividade) {
                                                 var _id = {
                                                     "_id": {
@@ -387,29 +396,33 @@ angular.module('team-task')
                                         var pQuery = {
                                             "$or": [
                                                 {"administrador": idUsuario}
-                                                , {"atividades.designado": idUsuario}]
+                                                , {"atividades.designado": idUsuario}
+                                            ],
+                                            "status": "Ativo"
                                         };
                                         proms.push(Projeto.query(pQuery).then(function (projetos) {
                                             angular.forEach(projetos, function (projeto) {
                                                 angular.forEach(projeto.atividades, function (atividade) {
-                                                    var timeF = $filter('filter')(times, {_id: {$oid: atividade.time}});
-                                                    var nomeTime = "";
-                                                    if (timeF && timeF.length > 0) {
-                                                        nomeTime = " / " + timeF[0].nome;
+                                                    if (atividade.status === "Aguardando" || atividade.status === "Iniciada") {
+                                                        var timeF = $filter('filter')(times, {_id: {$oid: atividade.time}});
+                                                        var nomeTime = "";
+                                                        if (timeF && timeF.length > 0) {
+                                                            nomeTime = " / " + timeF[0].nome;
+                                                        }
+                                                        if (atividade.designado === idUsuario) {
+                                                            $scope.listaAtividades.push({
+                                                                nome: projeto.nome + nomeTime + " / " + atividade.nome,
+                                                                tipo: 0,
+                                                                atividade: atividade.nome,
+                                                                ids: {
+                                                                    projeto: projeto._id.$oid,
+                                                                    atividade: atividade.id,
+                                                                    time: atividade.time
+                                                                }
+                                                            });
+                                                        }
                                                     }
-                                                    if (atividade.designado === idUsuario) {
-                                                        $scope.listaAtividades.push({
-                                                            nome: projeto.nome + nomeTime + " / " + atividade.nome,
-                                                            tipo: 0,
-                                                            atividade: atividade.nome,
-                                                            ids: {
-                                                                projeto: projeto._id.$oid,
-                                                                atividade: atividade.id,
-                                                                time: atividade.time
-                                                            }
-                                                        });
-                                                    }
-                                                })
+                                                });
                                             });
                                         }));
                                         $q.all(proms).then(function () {
@@ -440,29 +453,33 @@ angular.module('team-task')
                                         });
                                     } else {
                                         //multiplos dias foi marcado.
-                                        if($scope.multiplos && $scope.quantidadeDias > 0) {
+                                        if ($scope.multiplos && $scope.quantidadeDias > 0) {
                                             var horaClone = angular.copy($scope.hora);
                                             var loops = [];
                                             for (var idx = 0; idx < $scope.quantidadeDias; idx++) {
-                                                if(idx !== 0) {
+                                                if (idx !== 0) {
                                                     var dia = horaClone.data.$date;
-                                                    var diaMoment = moment(dia).businessAdd(1);
-
+                                                    horaClone.data.$date = moment(dia).businessAdd(1).toDate();
+                                                    horaClone.dataStr = moment(horaClone.data.$date).format("YYYY-MM-DD");
                                                 }
                                                 var novamaracaoLoop = new Hora();
                                                 novamaracaoLoop = angular.merge(novamaracaoLoop, horaClone);
-                                                loops.push(novamaracaoLoop.$saveOrUpdate().then(function () {}));
+                                                loops.push(novamaracaoLoop.$saveOrUpdate().then(function () {
+                                                }));
                                             }
+
                                             $q.all(loops).then(function () {
                                                 $scope.$close(true);
                                             });
-                                        }
 
-                                        var novamaracao = new Hora();
-                                        novamaracao = angular.merge(novamaracao, $scope.hora);
-                                        novamaracao.$saveOrUpdate().then(function () {
-                                            $scope.$close(true);
-                                        });
+                                        } else {
+
+                                            var novamaracao = new Hora();
+                                            novamaracao = angular.merge(novamaracao, $scope.hora);
+                                            novamaracao.$saveOrUpdate().then(function () {
+                                                $scope.$close(true);
+                                            });
+                                        }
                                     }
                                 }
                             };
@@ -489,7 +506,8 @@ angular.module('team-task')
                                                 return hora;
                                             }
                                         }
-                                    }).result.then(function () {
+                                    })
+                                    .result.then(function () {
                                     hora.$remove().then(function () {
                                         $scope.$close(true);
                                     });
@@ -509,7 +527,8 @@ angular.module('team-task')
                                 return dataClicada;
                             }
                         }
-                    }).result.then(function () {
+                    })
+                    .result.then(function () {
                     uiCalendarConfig.calendars['timesheet'].fullCalendar('refetchEvents');
                 }, function () {
                 });
