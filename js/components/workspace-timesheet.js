@@ -130,9 +130,7 @@ angular.module('team-task')
                                 '$date': end.toDate()
                             }
                         },
-                        usuario: {
-                            $in: []
-                        }
+                        usuario: ""
                     };
                     var qPessoa = {
                         cadastrado: $rootScope.usuarioLogado._id.$oid
@@ -141,26 +139,53 @@ angular.module('team-task')
                         s: {'nome': 1},
                         f: {'nome': 1, '_id': 1, 'usuario': 1}
                     }).then(function (pessoas) {
+                        var proms = [];
+                        var dados = [];
+                        var diasNoMes = start.daysInMonth();
+                        dados.push(cabecalho);
                         for (var index = 0; index < pessoas.length; index++) {
-                            query.usuario.$in.push(pessoas[index]._id.$oid);
+                            query.usuario = pessoas[index]._id.$oid;
+                            var idUsuario = pessoas[index]._id.$oid;
+                            proms.push(Hora.query(query, {sort: {usuario: 1, data: 1}}).then(function (horas) {
+                                var mDiaPesquisa = moment(start);
+                                var usuario = $filter('filter')(pessoas, {_id: {$oid: idUsuario}})[0];
+                                for (var indice = 0; indice < diasNoMes; indice++) {
+                                    var dataStr = mDiaPesquisa.format("YYYY-MM-DD");
+                                    var horasFiltro = [];
+                                    horasFiltro = $filter('filter')(horas, {dataStr: dataStr});
+                                    if (horasFiltro && horasFiltro.length > 0) {
+                                        for (var j = 0; j < horasFiltro.length; j++) {
+                                            var linhaLocalizada = [
+                                                $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                                usuario.usuario.toUpperCase(),
+                                                moment(horasFiltro[j].data.$date).format("DD/MM/YYYY"),
+                                                horasFiltro[j].tipo,
+                                                horasFiltro[j].atividade ? horasFiltro[j].atividade.atividade : "",
+                                                moment(horasFiltro[j].tempo.$date).format("HH:mm"),
+                                                "",
+                                                horasFiltro[j].nota
+                                            ];
+                                            dados.push(linhaLocalizada);
+                                        }
+                                    } else {
+                                        var linhaVazia = [
+                                            $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                            usuario.usuario.toUpperCase(),
+                                            mDiaPesquisa.format("DD/MM/YYYY"),
+                                            "",
+                                            "",
+                                            "00:00",
+                                            "",
+                                            ""
+                                        ];
+                                        dados.push(linhaVazia);
+                                    }
+                                    mDiaPesquisa.add(1, "d");
+                                }
+                            }));
                         }
-                        Hora.query(query, {sort: {usuario: 1, data: 1}}).then(function (horas) {
-                            var dados = [];
-                            dados.push(cabecalho);
-                            for (var i = 0; i < horas.length; i++) {
-                                var usuario = $filter('filter')(pessoas, {_id: {$oid: horas[i].usuario}})[0];
-                                var linha = [
-                                    $rootScope.usuarioLogado.usuario.toUpperCase(),
-                                    usuario.usuario.toUpperCase(),
-                                    moment(horas[i].data.$date).format("DD/MM/YYYY"),
-                                    horas[i].tipo,
-                                    horas[i].atividade ? horas[i].atividade.atividade : "",
-                                    moment(horas[i].tempo.$date).format("HH:mm"),
-                                    "",
-                                    horas[i].nota
-                                ];
-                                dados.push(linha);
-                            }
+
+                        $q.all(proms).then(function () {
                             waitingDialog.hide();
                             //$scope.excel.down(excelData);
                             var ws_name = "Timesheet";
@@ -194,18 +219,41 @@ angular.module('team-task')
                         Hora.query(query, {sort: {data: 1}}).then(function (horas) {
                             var dados = [];
                             dados.push(cabecalho);
-                            for (var i = 0; i < horas.length; i++) {
-                                var linha = [
-                                    "SCHUNK",
-                                    $rootScope.usuarioLogado.usuario.toUpperCase(),
-                                    moment(horas[i].data.$date).format("DD/MM/YYYY"),
-                                    horas[i].tipo,
-                                    horas[i].atividade ? horas[i].atividade.atividade : "",
-                                    moment(horas[i].tempo.$date).format("HH:mm"),
-                                    "",
-                                    horas[i].nota
-                                ];
-                                dados.push(linha);
+
+                            var diasNoMes = start.daysInMonth();
+                            var mDiaPesquisa = moment(start);
+                            for (var indice = 0; indice < diasNoMes; indice++) {
+                                var dataStr = mDiaPesquisa.format("YYYY-MM-DD");
+                                var horasFiltro = [];
+                                horasFiltro = $filter('filter')(horas, {dataStr: dataStr});
+                                if (horasFiltro && horasFiltro.length > 0) {
+                                    for (var i = 0; i < horasFiltro.length; i++) {
+                                        var linhaLocalizada = [
+                                            "SCHUNK",
+                                            $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                            moment(horasFiltro[i].data.$date).format("DD/MM/YYYY"),
+                                            horasFiltro[i].tipo,
+                                            horasFiltro[i].atividade ? horasFiltro[i].atividade.atividade : "",
+                                            moment(horasFiltro[i].tempo.$date).format("HH:mm"),
+                                            "",
+                                            horasFiltro[i].nota
+                                        ];
+                                        dados.push(linhaLocalizada);
+                                    }
+                                } else {
+                                    var linhaVazia = [
+                                        "SCHUNK",
+                                        $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                        mDiaPesquisa.format("DD/MM/YYYY"),
+                                        "",
+                                        "",
+                                        "00:00",
+                                        "",
+                                        ""
+                                    ];
+                                    dados.push(linhaVazia);
+                                }
+                                mDiaPesquisa.add(1, "d");
                             }
                             waitingDialog.hide();
                             //$scope.excel.down(excelData);
