@@ -146,43 +146,9 @@ angular.module('team-task')
                         for (var index = 0; index < pessoas.length; index++) {
                             query.usuario = pessoas[index]._id.$oid;
                             var idUsuario = pessoas[index]._id.$oid;
-                            proms.push(Hora.query(query, {sort: {usuario: 1, data: 1}}).then(function (horas) {
-                                var mDiaPesquisa = moment(start);
-                                var usuario = $filter('filter')(pessoas, {_id: {$oid: idUsuario}})[0];
-                                for (var indice = 0; indice < diasNoMes; indice++) {
-                                    var dataStr = mDiaPesquisa.format("YYYY-MM-DD");
-                                    var horasFiltro = [];
-                                    horasFiltro = $filter('filter')(horas, {dataStr: dataStr});
-                                    if (horasFiltro && horasFiltro.length > 0) {
-                                        for (var j = 0; j < horasFiltro.length; j++) {
-                                            var linhaLocalizada = [
-                                                $rootScope.usuarioLogado.usuario.toUpperCase(),
-                                                usuario.usuario.toUpperCase(),
-                                                moment(horasFiltro[j].data.$date).format("DD/MM/YYYY"),
-                                                horasFiltro[j].tipo,
-                                                horasFiltro[j].atividade ? horasFiltro[j].atividade.atividade : "",
-                                                moment(horasFiltro[j].tempo.$date).format("HH:mm"),
-                                                "",
-                                                horasFiltro[j].nota
-                                            ];
-                                            dados.push(linhaLocalizada);
-                                        }
-                                    } else {
-                                        var linhaVazia = [
-                                            $rootScope.usuarioLogado.usuario.toUpperCase(),
-                                            usuario.usuario.toUpperCase(),
-                                            mDiaPesquisa.format("DD/MM/YYYY"),
-                                            "",
-                                            "",
-                                            "00:00",
-                                            "",
-                                            ""
-                                        ];
-                                        dados.push(linhaVazia);
-                                    }
-                                    mDiaPesquisa.add(1, "d");
-                                }
-                            }));
+                            proms.push(Hora.query(query, {sort: {usuario: 1, data: 1}}).then(
+                                horasHandler.bind(null, start, idUsuario, diasNoMes, pessoas, dados)
+                            ));
                         }
 
                         $q.all(proms).then(function () {
@@ -197,6 +163,44 @@ angular.module('team-task')
                         });
                     });
                 };
+
+                function horasHandler (start, idUsuario, diasNoMes, pessoas, dados, horas) {
+                    var mDiaPesquisa = moment(start);
+                    var usuario = $filter('filter')(pessoas, {_id: {$oid: idUsuario}})[0];
+                    for (var indice = 0; indice < diasNoMes; indice++) {
+                        var dataStr = mDiaPesquisa.format("YYYY-MM-DD");
+                        var horasFiltro = [];
+                        horasFiltro = $filter('filter')(horas, {dataStr: dataStr});
+                        if (horasFiltro && horasFiltro.length > 0) {
+                            for (var j = 0; j < horasFiltro.length; j++) {
+                                var linhaLocalizada = [
+                                    $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                    usuario.usuario.toUpperCase(),
+                                    moment(horasFiltro[j].data.$date).format("DD/MM/YYYY"),
+                                    horasFiltro[j].tipo,
+                                    horasFiltro[j].atividade ? horasFiltro[j].atividade.atividade : "",
+                                    moment(horasFiltro[j].tempo.$date).format("HH:mm"),
+                                    "",
+                                    horasFiltro[j].nota
+                                ];
+                                dados.push(linhaLocalizada);
+                            }
+                        } else {
+                            var linhaVazia = [
+                                $rootScope.usuarioLogado.usuario.toUpperCase(),
+                                usuario.usuario.toUpperCase(),
+                                mDiaPesquisa.format("DD/MM/YYYY"),
+                                "",
+                                "",
+                                "00:00",
+                                "",
+                                ""
+                            ];
+                            dados.push(linhaVazia);
+                        }
+                        mDiaPesquisa.add(1, "d");
+                    }
+                }
 
                 $scope.exportarTabela = function () {
                     if ($scope.timesheets) {
