@@ -120,7 +120,7 @@ angular.module('team-task')
                     //exportar só o mês
 
                     var view = uiCalendarConfig.calendars['timesheet'].fullCalendar('getView');
-                    dateGetted = moment("01 " + view.title, "DD MMMM YY");
+                    var dateGetted = moment("01 " + view.title, "DD MMMM YY");
                     var start = moment(dateGetted.toDate()).startOf('month').startOf('day');
                     var end = moment(dateGetted.toDate()).endOf('month').endOf('day');
                     var query = {
@@ -209,7 +209,7 @@ angular.module('team-task')
                         waitingDialog.show('Gerando arquivo. Aguarde.');
                         //exportar só o mês
                         var view = uiCalendarConfig.calendars['timesheet'].fullCalendar('getView');
-                        dateGetted = moment("01 " + view.title, "DD MMMM YY");
+                        var dateGetted = moment("01 " + view.title, "DD MMMM YY");
                         var start = moment(dateGetted.toDate()).startOf('month').startOf('day');
                         var end = moment(dateGetted.toDate()).endOf('month').endOf('day');
                         var query = {
