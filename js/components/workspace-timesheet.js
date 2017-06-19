@@ -165,7 +165,7 @@ angular.module('team-task')
                                                         moment(horasFiltro[j].data.$date).format("DD/MM/YYYY"),
                                                         horasFiltro[j].tipo,
                                                         horasFiltro[j].atividade ? horasFiltro[j].atividade.atividade : "",
-                                                        moment(horasFiltro[j].tempo.$date).format("H:mm"),
+                                                        moment(horasFiltro[j].tempo.$date).format("H:mm:ss"),
                                                         "",
                                                         horasFiltro[j].nota
                                                     ];
@@ -178,7 +178,7 @@ angular.module('team-task')
                                                     mDiaPesquisa.format("DD/MM/YYYY"),
                                                     "",
                                                     "",
-                                                    "00:00",
+                                                    "00:00:00",
                                                     "",
                                                     ""
                                                 ];
@@ -241,7 +241,7 @@ angular.module('team-task')
                                             moment(horasFiltro[i].data.$date).format("DD/MM/YYYY"),
                                             horasFiltro[i].tipo,
                                             horasFiltro[i].atividade ? horasFiltro[i].atividade.atividade : "",
-                                            moment(horasFiltro[i].tempo.$date).format("H:mm"),
+                                            moment(horasFiltro[i].tempo.$date).format("H:mm:ss"),
                                             "",
                                             horasFiltro[i].nota
                                         ];

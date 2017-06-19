@@ -8,15 +8,56 @@ angular.module('team-task')
 
             $scope.initWorkspaceProjects = function () {
                 $scope.excel = {down: function() {}};
-                $scope.filtro = [true, true, false, false];
+                $scope.filtro = [true, false, false, false];
                 $scope.listaFiltro= ["Ativo", "Suspenso", "Concluído", "Cancelado"];
                 $rootScope.collapsed = $state.current.data.collapsed;
+
+                $scope.ganttData = [];
+                $scope.ganttOptions= {
+                    "zoom": 1,
+                    "scale": "week",
+                    "width": true,
+                    "currentDate": 'line',
+                    "tableHeaders": {'model.name': 'Projeto'},
+                    "taskContent": '<span></span>',
+                    "daily": true,
+                    "sortMode": ["from"],
+                    "resize": false,
+                    "dependencies": {
+                        "enabled": true,
+                        "readOnly": true
+                    },
+                    "timeFrames": {
+                        closed: {
+                            magnet: false,
+                            working: false
+                        }
+                    },
+                    "dateFrames": {
+                        weekend: {
+                            evaluator: function(date) {
+                                return date.isoWeekday() === 6 || date.isoWeekday() === 7;
+                            },
+                            targets: ['closed']
+                        }
+                    },
+                    "movable": false,
+                    "contents": {
+                        'model.name': '<a ng-click="scope.mostrarDetalheAtividadeGantt(row.model)" ' +
+                        'class="pointer-action">{{getValue()}}</a>'
+                    },
+                    "filtertask": ["Ativo", "Suspenso", "Concluído", "Cancelado"],
+                    api: function (api) {
+                        $scope.api = api;
+                    }
+                };
+
                 loadTable();
             };
 
             function loadTable() {
                 $rootScope.showLoading = true;
-
+                $scope.ganttData = [];
                 $scope.listaProjetos = [];
                 $scope.listaProjetosRoot = [];
                 if($rootScope.usuarioLogado) {
@@ -47,6 +88,35 @@ angular.module('team-task')
                             Projeto.query(pQuery).then(function (projetos) {
                                 $scope.listaProjetos = projetos;
                                 $scope.listaProjetosRoot = projetos;
+
+                                for (var at = 0; at < projetos.length; at++) {
+                                    var projeto = projetos[at];
+                                    var rowPr = {
+                                        "name": projeto.nome,
+                                        "projeto": projeto,
+                                        "status": projeto.status,
+                                        "indiceAt": at
+                                    };
+                                    rowPr.tasks = [];
+
+                                    var statusColor = projeto.status.toLowerCase() === 'ativo' ? '#5bc0de' :
+                                        projeto.status.toLowerCase() === 'suspenso' ? '#f0ad4e' :
+                                            projeto.status.toLowerCase() === 'concluído' ? '#5cb85c' : '#d9534f';
+                                    if(projeto.inicio) {
+                                        rowPr.tasks.push({
+                                            "id": projeto._id.$oid,
+                                            "name": projeto.nome,
+                                            "from": moment(projeto.inicio.$date),
+                                            "to": moment(projeto.fim.$date),
+                                            "color": statusColor,
+                                            "status": projeto.status
+                                        });
+                                    }
+
+                                    $scope.ganttData.push(rowPr);
+
+                                }
+
                                 $scope.filterChange();
                                 $rootScope.showLoading = false;
                             });
@@ -76,8 +146,22 @@ angular.module('team-task')
                     if(listaFiltro.length > 0) {
                         $scope.listaFiltro = listaFiltro;
                         $scope.listaProjetos = $filter('filter')($scope.listaProjetosRoot, filterFunction);
+                        $scope.ganttOptions.filtertask = listaFiltro;
                     } else {
                         $scope.listaProjetos = [];
+                        $scope.ganttOptions.filtertask = "";
+                    }
+                }
+                $scope.api.rows.refresh();
+            };
+
+            $scope.filterFunctionGantt = function (item) {
+
+                if(item && item.model) {
+                    if($scope.ganttOptions.filtertask) {
+                        return $scope.ganttOptions.filtertask.indexOf(item.model.status) > -1;
+                    } else {
+                        return false;
                     }
                 }
             };

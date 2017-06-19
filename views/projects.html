@@ -23,78 +23,132 @@
     </div>
     <div ng-excel="" type="'excel'" data="excel.data" xlsfilename="'projetos.xls'" down="excel.down"></div>
     <div>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="filtro[0]" value="Ativo"
-                   ng-click="filterChange();">Ativo
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="filtro[1]" value="Suspenso"
-                   ng-click="filterChange();">Suspenso
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="filtro[2]" value="Concluído"
-                   ng-click="filterChange();">Concluído
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="filtro[3]" value="Cancelado"
-                   ng-click="filterChange();">Cancelado
-        </label>
-    </div>
-    <table datatable="ng" dt-options="dtOptions" class="table table-hover">
-        <thead>
-        <tr>
-            <td>Projeto</td>
-            <td>Inicio</td>
-            <td>Até</td>
-            <td>Status</td>
-            <td>Alerta</td>
-            <td>Infos</td>
-            <td>Atividades</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="projeto in listaProjetos">
-            <td class="tb-project-name">
-                <a ui-sref="workspace.project({'id' : projeto._id.$oid})">{{projeto.nome}}</a>&nbsp;
-                <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
-                      class="btn-edit-project" ng-click="editarProjeto(projeto);">
-                    <i class="fa fa-pencil-square-o"></i>
-                </span>
-            </td>
-            <td data-order="{{projeto.inicio.$date | timeMils}}">{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
-            <td data-order="{{projeto.fim.$date | timeMils}}">{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
-            <td>{{projeto.status}}</td>
-            <td data-search="{{projeto.alerta}}">
-                <span class="label"
-                      ng-class="projeto.alerta === 'verde' ? 'label-success' :
-                      projeto.alerta === 'amarelo' ? 'label-warning' : 'label-danger'"
-                      uib-tooltip="{{projeto.alerta}}">
-                    &nbsp;&nbsp;&nbsp;
-                </span>
-            </td>
-            <td>
-                <div class="dropdown tt-dropdown">
-                    <a data-toggle="dropdown" id="dropdownExtra1">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownExtra1">
-                        <li>
-                            <a ng-show="projeto.descricao !== ''"
-                               ng-click="mostrarDescricao(projeto);" class="pointer-action">
-                                <i class="fa fa-file-text-o"></i>&nbsp;Descrição
-                            </a>
-                        </li>
-                        <li>
-                            <a ng-show="projeto.notas !== ''"
-                               ng-click="mostrarNotas(projeto);" class="pointer-action">
-                               <i class="fa fa-sticky-note-o"></i>&nbsp;Notas
-                            </a>
-                        </li>
-                    </ul>
+        <uib-tabset>
+            <uib-tab index="0" heading="Tabela">
+                <br />
+                <div>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="filtro[0]" value="Ativo"
+                               ng-click="filterChange();">Ativo
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="filtro[1]" value="Suspenso"
+                               ng-click="filterChange();">Suspenso
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="filtro[2]" value="Concluído"
+                               ng-click="filterChange();">Concluído
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="filtro[3]" value="Cancelado"
+                               ng-click="filterChange();">Cancelado
+                    </label>
                 </div>
-            </td>
-            <td>{{projeto.atividades.length}}</td>
-        </tr>
-        </tbody>
-    </table>
+                <table datatable="ng" dt-options="dtOptions" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <td>Projeto</td>
+                        <td>Inicio</td>
+                        <td>Até</td>
+                        <td>Status</td>
+                        <td>Alerta</td>
+                        <td>Infos</td>
+                        <td>Atividades</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="projeto in listaProjetos">
+                        <td class="tb-project-name">
+                            <a ui-sref="workspace.project({'id' : projeto._id.$oid})">{{projeto.nome}}</a>&nbsp;
+                            <span ng-show="usuarioLogado._id.$oid === projeto.administrador"
+                                  class="btn-edit-project" ng-click="editarProjeto(projeto);">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </span>
+                        </td>
+                        <td data-order="{{projeto.inicio.$date | timeMils}}">{{projeto.inicio.$date | date : 'dd/MM/yyyy'}}</td>
+                        <td data-order="{{projeto.fim.$date | timeMils}}">{{projeto.fim.$date | date : 'dd/MM/yyyy'}}</td>
+                        <td>{{projeto.status}}</td>
+                        <td data-search="{{projeto.alerta}}">
+                    <span class="label"
+                          ng-class="projeto.alerta === 'verde' ? 'label-success' :
+                          projeto.alerta === 'amarelo' ? 'label-warning' : 'label-danger'"
+                          uib-tooltip="{{projeto.alerta}}">
+                        &nbsp;&nbsp;&nbsp;
+                    </span>
+                        </td>
+                        <td>
+                            <div class="dropdown tt-dropdown">
+                                <a data-toggle="dropdown" id="dropdownExtra1">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownExtra1">
+                                    <li>
+                                        <a ng-show="projeto.descricao !== ''"
+                                           ng-click="mostrarDescricao(projeto);" class="pointer-action">
+                                            <i class="fa fa-file-text-o"></i>&nbsp;Descrição
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a ng-show="projeto.notas !== ''"
+                                           ng-click="mostrarNotas(projeto);" class="pointer-action">
+                                            <i class="fa fa-sticky-note-o"></i>&nbsp;Notas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>{{projeto.atividades.length}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+            <uib-tab index="1" heading="Gannt">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div gantt
+                             api="ganttOptions.api"
+                             data="ganttData"
+                             view-scale="ganttOptions.scale"
+                             current-date="ganttOptions.currentDate"
+                             sort-mode="ganttOptions.sortMode"
+                             daily="ganttOptions.daily"
+                             task-content="ganttOptions.taskContent"
+                             filter-row="filterFunctionGantt"
+                             time-frames="ganttOptions.timeFrames"
+                             date-frames="ganttOptions.dateFrames"
+                             js-plumb-defaults="ganttOptions.jsPlumbDefaults">
+                            <gantt-table headers="ganttOptions.tableHeaders"
+                                         contents="ganttOptions.contents"></gantt-table>
+                            <gantt-tooltips date-format="dateFormat"></gantt-tooltips>
+                            <gantt-progress enabled="true"></gantt-progress>
+                            <gantt-resize-sensor enabled="ganttOptions.resize"></gantt-resize-sensor>
+                            <gantt-movable enabled="ganttOptions.movable" allow-row-switching="false"></gantt-movable>
+                            <gantt-dependencies enabled="ganttOptions.dependencies.enabled"
+                                                read-only="ganttOptions.dependencies.readOnly">
+                            </gantt-dependencies>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <label class="label label-info checkbox-inline tt-filter-label">
+                            <input type="checkbox" ng-model="filtro[0]" value="Ativo"
+                                   ng-click="filterChange();">Ativo
+                        </label>
+                        <label class="label label-warning checkbox-inline tt-filter-label">
+                            <input type="checkbox" ng-model="filtro[1]" value="Suspenso"
+                                   ng-click="filterChange();">Suspenso
+                        </label>
+                        <label class="label label-success checkbox-inline tt-filter-label">
+                            <input type="checkbox" ng-model="filtro[2]" value="Concluído"
+                                   ng-click="filterChange();">Concluído
+                        </label>
+                        <label class="label label-danger checkbox-inline tt-filter-label">
+                            <input type="checkbox" ng-model="filtro[3]" value="Cancelado"
+                                   ng-click="filterChange();">Cancelado
+                        </label>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+
 </div>

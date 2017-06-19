@@ -417,7 +417,8 @@ angular.module('team-task')
                 gridSize = Math.floor(width / scope.heamapDaysMonth),
                 legendElementWidth = gridSize * 2,
                 buckets = 9,
-                colors = ["#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58"],
+                //colors = ["#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58"],
+                colors = ["#ffffd9", "#7fcdbb", "#1d91c0"],
                 recursos = [],
                 recursosLabels = [],
                 dataPlot = [];
@@ -468,7 +469,7 @@ angular.module('team-task')
                     dataPlot = dataPlot.concat(scope.heatmapData[a].horas)
                 }
                 var colorScale = d3.scaleQuantile()
-                    .domain([0, 4, 8])
+                    .domain([0, 7, 9])
                     .range(colors);
 
                 var cards = svg.selectAll(".hour")
