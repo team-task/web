@@ -152,7 +152,9 @@ angular.module('team-task')
                         $scope.ganttOptions.filtertask = "";
                     }
                 }
-                $scope.api.rows.refresh();
+                if($scope.api) {
+                    $scope.api.rows.refresh();
+                }
             };
 
             $scope.filterFunctionGantt = function (item) {
