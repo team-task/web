@@ -70,6 +70,90 @@ angular.module('team-task')
 
                     }
                 }];
+                //cuidado .. funcao de de-para para modificar muito a base
+                $scope.dePara = function () {
+                    waitingDialog.show("fazendo o de para");
+                    var proms = [];
+                    Hora.all({limit: 2000}).then(function (horas) {
+                        angular.forEach(horas, function (hora) {
+                            switch (hora.tipo) {
+                                case "Analista / Executor de Testes":
+                                    hora.tipo = "Gestão de Projetos e Portfólio";
+                                    break;
+                                case "Analista / Programador de Sistemas (Ch.Exclusivo, SO)":
+                                    hora.tipo = "Gestão de Projetos e Portfólio";
+                                    break;
+                                case "Analista de Suporte - Consultoria Processos (HTU)":
+                                    hora.tipo = "Sustentação e Operação - Incidentes";
+                                    break;
+                                case "Analista de Suporte (Ch.Comum / BO / OI / CallSite)":
+                                    hora.tipo = "Sustentação e Operação - Incidentes";
+                                    break;
+                                case "Atividade Administrativa de apoio à secretária de diretoria":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                case "Atividade Administrativa de TI (SAP, STF, Reunião)":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                case "Atividades de Auditorias, SOX, GMUD, ICG, outros":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                case "Ausência Legal (férias, licença médica, liberação empresa, banco de horas)":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                case "Especialista Técnico":
+                                    hora.tipo = "Sustentação e Operação - Requisição de serviço";
+                                    break;
+                                case "Gestão / Coordenação de Equipe":
+                                    hora.tipo = "Gestão da área";
+                                    break;
+                                case "Gestão de Projetos":
+                                    hora.tipo = "Gestão de Projetos e Portfólio";
+                                    break;
+                                case "Gestão de Testes":
+                                    hora.tipo = "Gestão de Projetos e Portfólio";
+                                    break;
+                                case "Gestão Prioridades":
+                                    hora.tipo = "Gestão de Demandas";
+                                    break;
+                                case "Handover":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                case "Indics Suporte Sists":
+                                    hora.tipo = "Sustentação e Operação - Incidentes";
+                                    break;
+                                case "Motivo 1":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                case "Motivo 2":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                case "On going (atividade técnica sem chamado, investigação)":
+                                    hora.tipo = "Sustentação e Operação - Incidentes";
+                                    break;
+                                case "Plantão":
+                                    hora.tipo = "Sustentação e Operação - Incidentes";
+                                    break;
+                                case "Reunião Técnica / HLE":
+                                    hora.tipo = "Gestão de Demandas";
+                                    break;
+                                case "Treinamento / Capacitação":
+                                    hora.tipo = "Atividades Administrativas";
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            proms.push(hora.$saveOrUpdate().then(function () {
+                                console.log("saved");
+                            }));
+                        });
+                        $q.all(proms).then(function () {
+                            console.log("complete");
+                            waitingDialog.hide();
+                        });
+                    });
+                };
 
                 $scope.mudarData = function () {
                     $scope.dataStart = moment($scope.dataPesquisa).startOf('day').toDate();
@@ -376,33 +460,21 @@ angular.module('team-task')
                                     usuario: idUsuario
                                 };
                             }
+
                             $scope.listaTipos = [
-                                "Analista / Executor de Testes",
-                                "Analista / Programador de Sistemas (Ch.Exclusivo, SO)",
-                                "Analista de Suporte - Consultoria Processos (HTU)",
-                                "Analista de Suporte (Ch.Comum / BO / OI / CallSite)",
-                                "Atividade Administrativa de apoio à secretária de diretoria",
-                                "Atividade Administrativa de TI (SAP, STF, Reunião)",
-                                "Atividades de Auditorias, SOX, GMUD, ICG, outros",
-                                "Ausência Legal (férias, licença médica, liberação empresa, banco de horas)",
-                                "Especialista Técnico",
-                                "Gestão / Coordenação de Equipe",
-                                "Gestão de Projetos",
-                                "Gestão de Testes",
-                                "Gestão Prioridades",
-                                "Handover",
-                                "Indics Suporte Sists",
-                                "Motivo 1",
-                                "Motivo 2",
-                                "On going (atividade técnica sem chamado, investigação)",
-                                "Plantão",
-                                "Reunião Técnica / HLE",
-                                "Treinamento / Capacitação"
+                                "Atividades Administrativas",
+                                "Gestão da área",
+                                "Gestão de Demandas",
+                                "Gestão de Projetos e Portfólio",
+                                "Sustentação e Operação - Requisição de serviço",
+                                "Sustentação e Operação - Incidentes",
+                                "Sustentação e Operação - Monitoramento"
                             ];
 
 
                             $scope.showSelectLoading = true;
                             loadAtividades();
+
                             function loadAtividades() {
                                 $scope.listaAtividades = [];
                                 $scope.showSelectLoading = true;
